@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.0.4 #Gallery\Photo.dart에서 필요로함함
+  provider: ^6.0.3 #Gallery\Photo.dart에서 필요로함, 이미지 저장용
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
