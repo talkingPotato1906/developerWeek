@@ -122,6 +122,7 @@ class _PhotoPageState extends State<PhotoPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(languageProvider.getLanguage(message: "나의 보관함")),
         actions: [
           IconButton(

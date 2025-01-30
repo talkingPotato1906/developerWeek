@@ -1,4 +1,5 @@
 import 'package:dv/gallery/showroom.dart';
+import 'package:dv/main.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
@@ -84,7 +85,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             if (mounted && context.mounted) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ShowroomPage()),
+                MaterialPageRoute(builder: (context) => MyHomePage()),
               );
             }
           }),

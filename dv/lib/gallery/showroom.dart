@@ -11,6 +11,7 @@ class ShowroomPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(languageProvider.getLanguage(message: "갤러리")), // 페이지 1 제목
       ),
       body: Center(
