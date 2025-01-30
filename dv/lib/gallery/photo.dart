@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -25,19 +26,21 @@ class _PhotoPageState extends State<PhotoPage> {
         builder: (context) {
           TextEditingController titleController = TextEditingController();
           TextEditingController contentController = TextEditingController();
+          final languageProvider = Provider.of<LanguageProvider>(context);
           return AlertDialog(
-            title: Text("제목과 내용 입력"),
+            title: Text(languageProvider.getLanguage(message: "제목과 내용 입력")),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: titleController,
-                  decoration: InputDecoration(hintText: "제목을 입력하세요"),
+                  decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요")),
                 ),
                 TextField(
                   controller: contentController,
-                  decoration: InputDecoration(hintText: "내용을 입력하세요"),
+                  decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "내용을 입력하세요"),
                 ),
+                )
               ],
             ),
             actions: [
@@ -48,7 +51,7 @@ class _PhotoPageState extends State<PhotoPage> {
                     "content": contentController.text
                   });
                 },
-                child: Text("확인"),
+                child: Text(languageProvider.getLanguage(message: "확인")),
               ),
             ],
           );
@@ -257,10 +260,11 @@ class _PhotoPageState extends State<PhotoPage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ImageProviderClass>(context);
     final images = provider.images;
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("나의 보관함"),
+        title: Text(languageProvider.getLanguage(message: "나의 보관함")),
       ), // ✅ 상단 이미지 추가 버튼 삭제
 
       body: Padding(

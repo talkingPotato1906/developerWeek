@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,14 +66,17 @@ class ShowroomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return Consumer<ImageProviderClass>(
       builder: (context, provider, child) {
         final selectedImages = provider.selectedImages;
 
         return Scaffold(
-          appBar: AppBar(title: Text("갤러리")),
+          appBar: AppBar(title: Text(languageProvider.getLanguage(message: "갤러리"))),
           body: selectedImages.isEmpty
-              ? Center(child: Text("갤러리가 비어있습니다"))
+              ? Center(child: Text(languageProvider.getLanguage(message: "갤러리가 비어있습니다")))
               : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
