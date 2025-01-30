@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return MaterialApp(
-              home: ImageRiseAnimation(),
+              home: ImageFadeInAnimation(),
             );
           }
 
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               title: 'Flutter Demo',
               theme: themeProvider.getTheme(),
-              home: const MyHomePage(),
+              home: ImageFadeInAnimation(),
             );
           });
         });

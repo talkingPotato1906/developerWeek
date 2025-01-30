@@ -2,57 +2,44 @@ import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dv/main.dart'; // 홈 화면 import
 
-// 앱 로고가 위로 올라가는 애니메이션
-class ImageRiseAnimation extends StatefulWidget {
+class ImageFadeInAnimation extends StatefulWidget {
   @override
-  ImageRiseAnimationState createState() => ImageRiseAnimationState();
+  ImageFadeInAnimationState createState() => ImageFadeInAnimationState();
 }
 
-class ImageRiseAnimationState extends State<ImageRiseAnimation>
+class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
     with SingleTickerProviderStateMixin {
-  // 애니메이션 컨트롤러와 애니메이션 변수 선언
   late AnimationController _controller;
-  late Animation<double> _positionAnimation;
-  late Animation<double> _bounceAnimation;
-  double screenHeight = 0.0; // 화면 높이 저장
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // 애니메이션 컨트롤러 초기화
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2), // 2초 동안 실행
+      duration: Duration(seconds: 2), // 2초 동안 페이드 인
     );
 
-    // 애니메이션 실행 (딜레이 추가)
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+
     Future.delayed(Duration(milliseconds: 500), () {
       if (mounted) {
-        setState(() {
-          screenHeight = MediaQuery.of(context).size.height;  // 화면 높이 가져오기
-          double startPosition = screenHeight + 80; // 화면 아래에서 시작
-          double endPosition = (screenHeight / 2) - 50; // 중앙에 도착 (이미지 높이 고려)
-
-          // 시작과 끝 위치를 지정한 애니메이션
-          _positionAnimation = Tween<double>(begin: startPosition, end: endPosition).animate(
-            CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+        _controller.forward().then((_) {
+          // 애니메이션이 끝나면 홈 화면으로 전환
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()), // main.dart의 홈 화면
           );
-
-          // 튀는 효과를 주는 애니메이션
-          _bounceAnimation = Tween<double>(begin: 0, end: -10).animate(
-            CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-          );
-
-          // 애니메이션 시작
-          _controller.forward();
         });
       }
     });
   }
 
-  // 앱 종료 시 애니메이션 컨트롤러 해제
   @override
   void dispose() {
     _controller.dispose();
@@ -61,44 +48,21 @@ class ImageRiseAnimationState extends State<ImageRiseAnimation>
 
   @override
   Widget build(BuildContext context) {
-
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-
-    if (screenHeight == 0.0) {
-      return Scaffold(
-        backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],  // 배경색 color_palette.dart에서 가져오기
-        body: Center(child: CircularProgressIndicator()), // 높이를 가져올 때까지 로딩 표시
-      );
-    }
-
     return Scaffold(
-      backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],  // 배경색 color_palette.dart에서 가져오기
-      body: Stack(
-        alignment: Alignment.center,  // 중앙 정렬
-        children: [
-          // 이미지 애니메이션
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Positioned(
-                top: _positionAnimation.value + _bounceAnimation.value, // 마지막 튀는 효과 추가
-                child: Opacity(
-                  opacity: _controller.value,
-                  child: Image.asset(
-                    'assets/title/logo.png', // 사용할 이미지 경로
-                    width: 150, // 크기 고정
-                    height: 150, // 크기 고정
-                  ),
-                ),
-              );
-            },
+      backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+      body: Center(
+        child: FadeTransition(
+          opacity: _fadeAnimation, // 서서히 나타나는 효과
+          child: Image.asset(
+            'assets/title/logo.png',
+            width: 150,
+            height: 150,
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
-
 
