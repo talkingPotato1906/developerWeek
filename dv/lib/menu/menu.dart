@@ -1,3 +1,4 @@
+import 'package:dv/color_palette.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -70,9 +71,10 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: themeProvider.getTheme().scaffoldBackgroundColor,
+
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 5),
+          BoxShadow(color: ColorPalette.palette[0][1], blurRadius: 10),
         ],
       ),
       child: Column(

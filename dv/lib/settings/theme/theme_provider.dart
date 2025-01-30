@@ -9,20 +9,24 @@ class ThemeProvider extends ChangeNotifier {
 
 
   // 생성자
+
   ThemeProvider() {
     loadTheme();
   }
+
 
   // 테마 변경 및 즉시 반영
   Future<void> changeTheme(int index) async {
     _selectedThemeIndex = index;
     notifyListeners();
 
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt("selectedThemeIndex", index);
   }
 
   // 테마 로드
+
   Future<void> loadTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _selectedThemeIndex = prefs.getInt("selectedThemeIndex") ?? 0;
@@ -36,6 +40,7 @@ class ThemeProvider extends ChangeNotifier {
         colorScheme: ColorScheme.light(
             primary: ColorPalette.palette[_selectedThemeIndex][0].withValues(alpha: 128),
             secondary: ColorPalette.palette[_selectedThemeIndex][1].withValues(alpha: 128),),
+
         scaffoldBackgroundColor: ColorPalette.palette[_selectedThemeIndex][0],
         textTheme: TextTheme(bodyLarge: TextStyle(color: textColor),
           bodyMedium: TextStyle(color: textColor),

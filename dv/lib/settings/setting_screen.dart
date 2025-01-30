@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 class SettingScreen extends StatelessWidget {
   final List<String> themeNames = ["식물", "식기", "술", "원석"];
 
+
   SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -79,6 +79,8 @@ class SettingScreen extends StatelessWidget {
           ),
         ),
       ),
+
     );
   }
 }
+

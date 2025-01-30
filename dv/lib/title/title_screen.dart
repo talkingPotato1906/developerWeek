@@ -59,6 +59,8 @@ class ImageRiseAnimationState extends State<ImageRiseAnimation>
 
   @override
   Widget build(BuildContext context) {
+
+
     if (screenHeight == 0.0) {
       return Scaffold(
         backgroundColor: ColorPalette.palette[0][0],  // 배경색 color_palette.dart에서 가져오기

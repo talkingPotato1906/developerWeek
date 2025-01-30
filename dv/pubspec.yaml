@@ -34,6 +34,7 @@ dependencies:
   provider: ^6.0.3 #Gallery\Photo.dart에서 필요로함, 이미지 저장용
   shared_preferences: ^2.0.8 #Settings/Theme/Theme_provider.dart에서 필요로함. 테마 저장용.
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
