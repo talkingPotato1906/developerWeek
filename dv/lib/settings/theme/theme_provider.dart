@@ -35,12 +35,20 @@ class ThemeProvider extends ChangeNotifier {
 
   // 테마 색상 반환
   ThemeData getTheme() {
+    Color textColor = ColorPalette.palette[_selectedThemeIndex][3];
     return ThemeData(
         colorScheme: ColorScheme.light(
-            primary: ColorPalette.palette[_selectedThemeIndex][0],
-            secondary: ColorPalette.palette[_selectedThemeIndex][1]),
+            primary: ColorPalette.palette[_selectedThemeIndex][0].withValues(alpha: 128),
+            secondary: ColorPalette.palette[_selectedThemeIndex][1].withValues(alpha: 128),),
 
         scaffoldBackgroundColor: ColorPalette.palette[_selectedThemeIndex][0],
+        textTheme: TextTheme(bodyLarge: TextStyle(color: textColor),
+          bodyMedium: TextStyle(color: textColor),
+          bodySmall: TextStyle(color: textColor),
+          titleLarge: TextStyle(color: textColor),
+          titleMedium: TextStyle(color: textColor),
+          titleSmall: TextStyle(color: textColor),
+        ),
         useMaterial3: true);
   }
 }
