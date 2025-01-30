@@ -1,5 +1,7 @@
 import 'package:dv/settings/setting_screen.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FloatingMenuButton extends StatefulWidget {
   const FloatingMenuButton({Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             onTap: _toggleMenu,
             child: Container(
               color: Colors.black.withValues(alpha: 0.5),
-              width: screenWidth / 2,
+              width: screenWidth,
               height: screenHeight,
             ),
           ),
@@ -60,11 +62,14 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
   }
 
   Widget _buildMenu(BuildContext context) {
+
+    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeProvider.getTheme().scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(color: Colors.black26, blurRadius: 5),
@@ -91,13 +96,16 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
   }
 
   Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+
+  final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
   return GestureDetector(
     onTap: onTap,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       child: Row(
         children: [
-          Icon(icon, color: Colors.black),
+          Icon(icon, color: themeProvider.getTheme().textTheme.bodyLarge!.color),
           const SizedBox(width: 10),
           Text(title, style: TextStyle(fontSize: 16)),
         ],
