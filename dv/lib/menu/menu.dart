@@ -1,12 +1,13 @@
+import 'package:dv/gallery/showroom.dart';
 import 'package:dv/settings/language/language_provider.dart';
-import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/setting_screen.dart';
+import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FloatingMenuButton extends StatefulWidget {
-  const FloatingMenuButton({Key? key}) : super(key: key);
+  const FloatingMenuButton({super.key});
 
   @override
   _FloatingMenuButtonState createState() => _FloatingMenuButtonState();
@@ -33,18 +34,18 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
           GestureDetector(
             onTap: _toggleMenu,
             child: Container(
-              color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+              color: ColorPalette.palette[themeProvider.selectedThemeIndex][0].withAlpha(100),
               width: screenWidth,
               height: screenHeight,
             ),
           ),
-        
         Positioned(
           top: 50,
           right: 20,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              // 메뉴 버튼 누르면 메뉴 목록 보여주기
               if (_isMenuOpen) _buildMenu(context),
               FloatingActionButton(
                 heroTag: "menu",
@@ -60,7 +61,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
 
   Widget _buildMenu(BuildContext context) {
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-    final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
+    final LanguageProvider languageProvider =
+        Provider.of<LanguageProvider>(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -75,21 +77,29 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildMenuItem(Icons.home, languageProvider.getLanguage(message: "홈"), () {
-            print("홈 클릭");
-          }),
-          _buildMenuItem(Icons.settings, languageProvider.getLanguage(message: "설정"), () {
+          // 메뉴 아이템 생성
+          _buildMenuItem(Icons.home, languageProvider.getLanguage(message: "홈"),
+              () {
             _toggleMenu();
-            Future.delayed(const Duration(milliseconds: 300), () {
-              if (mounted && context.mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingScreen()),
-                );
-              }
-            });
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ShowroomPage()),
+              );
+            }
           }),
-          _buildMenuItem(Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
+          _buildMenuItem(
+              Icons.settings, languageProvider.getLanguage(message: "설정"), () {
+            _toggleMenu();
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingScreen()),
+              );
+            }
+          }),
+          _buildMenuItem(
+              Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
             print("로그아웃 클릭");
           }),
         ],
@@ -97,6 +107,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
     );
   }
 
+  // 메뉴 아이템 생성
   Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
@@ -106,7 +117,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         child: Row(
           children: [
-            Icon(icon, color: themeProvider.getTheme().textTheme.bodyLarge!.color),
+            Icon(icon,
+                color: themeProvider.getTheme().textTheme.bodyLarge!.color),
             const SizedBox(width: 10),
             Text(title, style: const TextStyle(fontSize: 16)),
           ],
@@ -115,4 +127,3 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
     );
   }
 }
-
