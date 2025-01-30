@@ -1,14 +1,15 @@
+import 'package:dv/color_palette.dart';
 import 'package:flutter/material.dart';
 
 // 테스트용 메인 함수. 실제 앱에서는 사용하지 않음(main.dart에서 실행)
 void main() {
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
+    debugShowCheckedModeBanner: false,  // 디버그 배너 제거
     home: ImageRiseAnimation(),
   ));
 }
 
-// 앱 로고고가 위로 올라가는 애니메이션
+// 앱 로고가 위로 올라가는 애니메이션
 class ImageRiseAnimation extends StatefulWidget {
   @override
   ImageRiseAnimationState createState() => ImageRiseAnimationState();
@@ -37,7 +38,7 @@ class ImageRiseAnimationState extends State<ImageRiseAnimation>
       if (mounted) {
         setState(() {
           screenHeight = MediaQuery.of(context).size.height;  // 화면 높이 가져오기
-          double startPosition = screenHeight + 100; // 화면 아래에서 시작
+          double startPosition = screenHeight + 80; // 화면 아래에서 시작
           double endPosition = (screenHeight / 2) - 50; // 중앙에 도착 (이미지 높이 고려)
 
           // 시작과 끝 위치를 지정한 애니메이션
@@ -68,13 +69,13 @@ class ImageRiseAnimationState extends State<ImageRiseAnimation>
   Widget build(BuildContext context) {
     if (screenHeight == 0.0) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: ColorPalette.palette[0][0],  // 배경색 color_palette.dart에서 가져오기
         body: Center(child: CircularProgressIndicator()), // 높이를 가져올 때까지 로딩 표시
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: ColorPalette.palette[0][0],  // 배경색 color_palette.dart에서 가져오기
       body: Stack(
         alignment: Alignment.center,  // 중앙 정렬
         children: [
