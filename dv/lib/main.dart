@@ -26,6 +26,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
+    return FutureBuilder(
+      future: Provider.of<ThemeProvider>(context, listen: false).loadTheme(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            home: ImageRiseAnimation(),
+          );
+        }
+
         return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, child) {
             return MaterialApp(
@@ -67,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Stack(
+        
         children: [GestureDetector(
           onHorizontalDragUpdate: (details) {
             if (details.primaryDelta! < 0) {
