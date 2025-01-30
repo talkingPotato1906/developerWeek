@@ -12,9 +12,10 @@ class LanguageChanger extends StatelessWidget{
 
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     final List<List<String>> languageNames = [
-      ["English", "Korean", "Japanese"],
-      ["영어", "한국어", "일본어"],
-      ["英語", "韓国語", "日本語"],
+      ["English", "Korean", "Japanese", "Chinese"],
+      ["영어", "한국어", "일본어", "중국어"],
+      ["英語", "韓国語", "日本語", "中国語"],
+      ["英语", "韩语", "日语", "中文"],
     ];
     final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
