@@ -1,7 +1,6 @@
 import 'package:dv/color_palette.dart';
 import 'package:flutter/material.dart';
 
-
 // 앱 로고가 위로 올라가는 애니메이션
 class ImageRiseAnimation extends StatefulWidget {
   @override

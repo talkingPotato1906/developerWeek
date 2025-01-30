@@ -8,6 +8,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return Scaffold(
@@ -16,6 +17,7 @@ class SettingScreen extends StatelessWidget {
           ),
           body: Container(
             color: ColorPalette.palette[themeProvider.selectedThemeIndex][0], // 배경색 적용
+
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +70,15 @@ class SettingScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      onChanged: (value) {
-                        if (value != null) {
-                          themeProvider.changeTheme(value);
-                        }
-                      },
-                    ),
-                  ),
+
+                    onChanged: (value) {
+                      if (value != null) {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .changeTheme(value);
+                      }
+                    },
+                  )
+
                 ],
               ),
             ),

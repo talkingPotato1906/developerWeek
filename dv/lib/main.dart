@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-
     return FutureBuilder(
       future: Provider.of<ThemeProvider>(context, listen: false).loadTheme(),
       builder: (context, snapshot) {
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
             home: ImageRiseAnimation(),
           );
         }
+
         return Consumer<ThemeProvider>(
           builder: (context, ThemeProvider themeProvider, child) {
             return MaterialApp(
@@ -46,8 +46,7 @@ class MyApp extends StatelessWidget {
           }
         );
       }
-    );
-  }
+    
 }
 
 class MyHomePage extends StatefulWidget {
