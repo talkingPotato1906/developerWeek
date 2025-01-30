@@ -1,5 +1,7 @@
 import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // 앱 로고가 위로 올라가는 애니메이션
 class ImageRiseAnimation extends StatefulWidget {
@@ -60,16 +62,18 @@ class ImageRiseAnimationState extends State<ImageRiseAnimation>
   @override
   Widget build(BuildContext context) {
 
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
 
     if (screenHeight == 0.0) {
       return Scaffold(
-        backgroundColor: ColorPalette.palette[0][0],  // 배경색 color_palette.dart에서 가져오기
+        backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],  // 배경색 color_palette.dart에서 가져오기
         body: Center(child: CircularProgressIndicator()), // 높이를 가져올 때까지 로딩 표시
       );
     }
 
     return Scaffold(
-      backgroundColor: ColorPalette.palette[0][0],  // 배경색 color_palette.dart에서 가져오기
+      backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],  // 배경색 color_palette.dart에서 가져오기
       body: Stack(
         alignment: Alignment.center,  // 중앙 정렬
         children: [
