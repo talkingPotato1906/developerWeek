@@ -71,7 +71,7 @@ class _PhotoPageState extends State<PhotoPage> {
   void _showImageContent(BuildContext context, int index) {
     final provider = Provider.of<ImageProviderClass>(context, listen: false);
     final imageData = provider.images[index];
-    final languageProvider = 
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     showDialog(
       context: context,
@@ -148,7 +148,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                     }
                                   },
                                 ),
-                                Text("갤러리에 추가"),
+                                Text(languageProvider.getLanguage(message: "갤러리에 추가")),
                               ],
                             ),
                           ),
@@ -161,7 +161,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                 _editImageContent(context, index);
                               },
                               icon: Icon(Icons.edit, color: Colors.white),
-                              label: Text("수정"),
+                              label: Text(languageProvider.getLanguage(message: "수정")),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                               ),
@@ -173,7 +173,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                 Navigator.of(context).pop();
                               },
                               icon: Icon(Icons.delete, color: Colors.white),
-                              label: Text("삭제"),
+                              label: Text(languageProvider.getLanguage(message: "삭제")),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                               ),
@@ -195,6 +195,7 @@ class _PhotoPageState extends State<PhotoPage> {
   void _editImageContent(BuildContext context, int index) {
     final provider = Provider.of<ImageProviderClass>(context, listen: false);
     final imageData = provider.images[index];
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     TextEditingController titleController =
         TextEditingController(text: imageData["title"]);
@@ -205,17 +206,17 @@ class _PhotoPageState extends State<PhotoPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("제목과 내용 수정"),
+          title: Text(languageProvider.getLanguage(message: "제목과 내용 수정")),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(hintText: "제목을 입력하세요"),
+                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요")),
               ),
               TextField(
                 controller: contentController,
-                decoration: InputDecoration(hintText: "내용을 입력하세요"),
+                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "내용을 입력하세요")),
               ),
             ],
           ),
@@ -231,7 +232,7 @@ class _PhotoPageState extends State<PhotoPage> {
                   _showImageContent(context, index);
                 });
               },
-              child: Text("저장"),
+              child: Text(languageProvider.getLanguage(message: "확인")),
             ),
           ],
         );
@@ -240,16 +241,18 @@ class _PhotoPageState extends State<PhotoPage> {
   }
 
   void _showMaxSelectionWarning(BuildContext context) {
+
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("갤러리 선택 제한"),
-          content: Text("최대 9개의 전시품만 선택할 수 있습니다."),
+          title: Text(languageProvider.getLanguage(message: "갤러리 선택 제한")),
+          content: Text(languageProvider.getLanguage(message: "최대 9개의 전시품만 선택할 수 있습니다.")),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("확인"),
+              child: Text(languageProvider.getLanguage(message: "확인")),
             ),
           ],
         );
