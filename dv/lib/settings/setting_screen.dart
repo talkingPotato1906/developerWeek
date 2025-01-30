@@ -24,8 +24,8 @@ class SettingScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ThemeChanger(),
-              LanguageChanger()
+              ThemeChanger(), //  테마 변경 위젯
+              LanguageChanger() // 언어 변경 위젯
             ],
           ),
         )

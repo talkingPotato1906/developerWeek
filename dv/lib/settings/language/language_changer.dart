@@ -20,15 +20,16 @@ class LanguageChanger extends StatelessWidget{
     final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
+      padding: const EdgeInsets.all(20),
+      child: Row(
         children: [
           Text(
-            languageProvider.getLanguage(message: "언어"),  // 언어 선택
+            languageProvider.getLanguage(message: "언어 선택"),  // 언어 선택
             style: TextStyle(fontSize: 20),
+            textAlign: TextAlign.left,
           ),
           SizedBox(
-            height: 10,
+            width: 30,
           ),
           // 테마 변경 드롭다운 버튼
           DropdownButton<int>(
