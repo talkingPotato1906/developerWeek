@@ -25,7 +25,16 @@ class LanguageProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  List<String> getLanguage(){
-    return LanguageList.languageMessages[_selectedLanguageIndex];
+  String getLanguage({required String? message}){
+    if (message == null || !LanguageList.languageMessages.containsKey(message)) {
+      return message ?? "Unknown"; // Fallback value if message is null or not found
+    }
+
+    List<String> translations = LanguageList.languageMessages[message] ?? [];
+    if (_selectedLanguageIndex >= translations.length) {
+      return translations.isNotEmpty ? translations[0] : "Unknown"; // Fallback to default language
+    }
+
+    return translations[_selectedLanguageIndex];
   }
 }

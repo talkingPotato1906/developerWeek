@@ -23,7 +23,7 @@ class LanguageChanger extends StatelessWidget{
       child: Column(
         children: [
           Text(
-            languageProvider.getLanguage()[1],  // 언어 선택
+            languageProvider.getLanguage(message: "언어"),  // 언어 선택
             style: TextStyle(fontSize: 20),
           ),
           SizedBox(

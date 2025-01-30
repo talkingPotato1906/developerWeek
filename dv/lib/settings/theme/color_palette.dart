@@ -13,10 +13,10 @@ class ColorPalette {
 
     // 식기 테마에 사용할 색상 팔레트
     [
-      Color(0xFFfff2c2),
       Color(0xFFd9dfc6),
       Color(0xFFfffdf0),
-      Color(0xFFeff3ea)
+      Color(0xFFeff3ea),
+      Color.fromARGB(255, 68, 43, 29)
       
     ],
 
@@ -29,6 +29,6 @@ class ColorPalette {
     ],
 
     // 원석 테마에 사용할 색상 팔레트
-    [Color(0xFF050c9c), Color(0xFF3572ef), Color(0xFF3abef9), Color(0xFFa7e6ff)]
+    [Color(0xFFa7e6ff), Color(0xFF3572ef),Color(0xFF3abef9), Color(0xFF050c9c)]
   ];
 }

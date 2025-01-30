@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -117,10 +118,11 @@ class _PhotoPageState extends State<PhotoPage> {
   Widget build(BuildContext context) {
     // 이미지를 공유하는 위젯
     final images = Provider.of<ImageProviderClass>(context).images;
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("나의 보관함"),
+        title: Text(languageProvider.getLanguage(message: "나의 보관함")),
         actions: [
           IconButton(
             icon: Icon(Icons.add_photo_alternate),

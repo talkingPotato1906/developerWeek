@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/language/language_changer.dart';
 import 'package:dv/settings/theme/theme_changer.dart';
@@ -12,10 +13,11 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('설정'),
+        title: Text(languageProvider.getLanguage(message: "설정")), // 설정 제목
       ),
       body: Container(
         color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
