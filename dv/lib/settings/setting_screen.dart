@@ -15,61 +15,66 @@ class SettingScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text('설정'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "테마 선택",
-                style: TextStyle(fontSize: 20),
+        body: 
+          Container(
+            color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "테마 선택",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // 테마 변경 드롭다운 버튼
+                  DropdownButton<int>(
+                    value: themeProvider.selectedThemeIndex,
+                    items: List.generate(
+                      themeNames.length,
+                      (index) {
+                        return DropdownMenuItem<int>(
+                          value: index,
+                          child: Row(
+                            children: [
+                              Text(themeNames[index]),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    color: ColorPalette.palette[index][0],
+                                    borderRadius: BorderRadius.circular(5)),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    color: ColorPalette.palette[index][1],
+                                    borderRadius: BorderRadius.circular(5)),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    onChanged: (value) {
+                      if (value != null) {
+                        themeProvider.changeTheme(value);
+                      }
+                    },
+                  )
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              // 테마 변경 드롭다운 버튼
-              DropdownButton<int>(
-                value: themeProvider.selectedThemeIndex,
-                items: List.generate(
-                  themeNames.length,
-                  (index) {
-                    return DropdownMenuItem<int>(
-                      value: index,
-                      child: Row(
-                        children: [
-                          Text(themeNames[index]),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                                color: ColorPalette.palette[index][0],
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                                color: ColorPalette.palette[index][1],
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                onChanged: (value) {
-                  if (value != null) {
-                    themeProvider.changeTheme(value);
-                  }
-                },
-              )
-            ],
+            ),
           ),
-        ));
+        );
   }
 }

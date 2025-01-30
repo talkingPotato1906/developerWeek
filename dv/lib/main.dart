@@ -24,16 +24,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     
 
     return Consumer<ThemeProvider>(
       builder: (context, ThemeProvider themeProvider, child) {
+        int selectedColorIndex = 0;
+        selectedColorIndex = themeProvider.selectedThemeIndex;
         return MaterialApp(
           title: 'Flutter Demo',
           // 테마 변경 사항 적용
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: ColorPalette.palette[themeProvider.selectedThemeIndex][1]),
+            colorScheme: ColorScheme.light(
+              primary: ColorPalette.palette[selectedColorIndex][1],
+              secondary: ColorPalette.palette[selectedColorIndex][2],
+            ),
+            scaffoldBackgroundColor: ColorPalette.palette[selectedColorIndex][0],
             useMaterial3: true,
           ),
           home: const MyHomePage(title: 'Flutter Demo Home Page'),
