@@ -100,6 +100,10 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             }
           }),
           _buildMenuItem(
+              Icons.sell, languageProvider.getLanguage(message: "포인트 상점"), () {
+            print("포인트 상점");
+          }),
+          _buildMenuItem(
               Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
             print("로그아웃 클릭");
           }),
