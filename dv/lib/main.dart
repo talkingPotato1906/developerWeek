@@ -1,3 +1,6 @@
+import 'package:dv/color_palette.dart';
+import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'gallery/showroom.dart'; // showroom.dart 전시대
@@ -6,8 +9,11 @@ import 'gallery/image_provider.dart'; // image_provider.dart
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ImageProviderClass(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ImageProviderClass()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -18,13 +24,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+
+    
+
+    return Consumer<ThemeProvider>(
+      builder: (context, ThemeProvider themeProvider, child) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          // 테마 변경 사항 적용
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: ColorPalette.palette[themeProvider.selectedThemeIndex][1]),
+            useMaterial3: true,
+          ),
+          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        );
+      }
     );
   }
 }
@@ -55,29 +69,33 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          if (details.primaryDelta! < 0) {
-            if (_pageController.page!.toInt() == 0) {
-              _pageController.animateToPage(1,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+      body: Stack(
+        children: [GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            if (details.primaryDelta! < 0) {
+              if (_pageController.page!.toInt() == 0) {
+                _pageController.animateToPage(1,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut);
+              }
+            } else if (details.primaryDelta! > 0) {
+              if (_pageController.page!.toInt() == 1) {
+                _pageController.animateToPage(0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut);
+              }
             }
-          } else if (details.primaryDelta! > 0) {
-            if (_pageController.page!.toInt() == 1) {
-              _pageController.animateToPage(0,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
-            }
-          }
-        },
-        child: PageView(
-          controller: _pageController,
-          children: [
-            ShowroomPage(), // 페이지 1: 전시대
-            PhotoPage(), // 페이지 2: 보관함
-          ],
+          },
+          child: PageView(
+            controller: _pageController,
+            children: [
+              ShowroomPage(), // 페이지 1: 전시대
+              PhotoPage(), // 페이지 2: 보관함
+            ],
+          ),
         ),
+        FloatingMenuButton(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
