@@ -1,14 +1,6 @@
 import 'package:dv/color_palette.dart';
 import 'package:flutter/material.dart';
 
-// 테스트용 메인 함수. 실제 앱에서는 사용하지 않음(main.dart에서 실행)
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,  // 디버그 배너 제거
-    home: ImageRiseAnimation(),
-  ));
-}
-
 // 앱 로고가 위로 올라가는 애니메이션
 class ImageRiseAnimation extends StatefulWidget {
   @override

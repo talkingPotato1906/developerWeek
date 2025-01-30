@@ -11,6 +11,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text('설정'),
@@ -67,7 +68,8 @@ class SettingScreen extends StatelessWidget {
                     ),
                     onChanged: (value) {
                       if (value != null) {
-                        themeProvider.changeTheme(value);
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .changeTheme(value);
                       }
                     },
                   )
