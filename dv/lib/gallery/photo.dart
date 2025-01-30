@@ -1,43 +1,24 @@
-import "package:flutter/material.dart";
-import "package:image_picker/image_picker.dart";
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'image_provider.dart'; // ImageProviderClass 추가
 
-// image_picker: ^1.0.4 pubspec.yaml에 추가했음
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PhotoPage extends StatefulWidget {
+  const PhotoPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: GalleryPage(),
-    );
-  }
+  _PhotoPageState createState() => _PhotoPageState();
 }
 
-class GalleryPage extends StatefulWidget {
-  const GalleryPage({super.key});
-
-  @override
-  _GalleryPageState createState() => _GalleryPageState();
-}
-
-class _GalleryPageState extends State<GalleryPage> {
-  final List<Map<String, dynamic>> _images = []; // 이미지와 제목, 내용을 저장
+class _PhotoPageState extends State<PhotoPage> {
   final ImagePicker _picker = ImagePicker();
 
-  // 📌 이미지 선택 후 제목과 내용 입력받는 함수
   Future<void> _pickImageAndComment() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes(); // 파일을 Uint8List로 변환
+      final bytes = await pickedFile.readAsBytes();
 
-      // 제목과 내용 입력받기
       final Map<String, String>? result = await showDialog<Map<String, String>>(
         context: context,
         builder: (context) {
@@ -74,18 +55,16 @@ class _GalleryPageState extends State<GalleryPage> {
       );
 
       if (result != null) {
-        setState(() {
-          _images.add({
-            "image": bytes,
-            "title": result["title"]!,
-            "content": result["content"]!
-          }); // 이미지와 제목, 내용을 저장
+        // ImageProviderClass를 사용하여 이미지 추가
+        Provider.of<ImageProviderClass>(context, listen: false).addImage({
+          "image": bytes,
+          "title": result["title"]!,
+          "content": result["content"]!
         });
       }
     }
   }
 
-  // 📌 이미지 클릭 시 내용 표시
   void _showImageContent(Map<String, dynamic> imageData) {
     showDialog(
       context: context,
@@ -95,25 +74,20 @@ class _GalleryPageState extends State<GalleryPage> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Container(
-            width:
-                MediaQuery.of(context).size.width * 0.8, // Dialog가 화면의 80% 차지
-            height:
-                MediaQuery.of(context).size.height * 0.8, // Dialog가 화면의 80% 차지
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
             padding: EdgeInsets.all(16.0),
             child: Row(
               children: [
-                // 이미지는 창의 왼쪽에 위치
                 SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      0.3, // 이미지의 크기를 30%로 설정
+                  width: MediaQuery.of(context).size.width * 0.3,
                   height: MediaQuery.of(context).size.height * 0.8,
                   child: Image.memory(
                     imageData["image"],
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(width: 16.0), // 이미지와 내용 사이의 간격
-                // 제목은 이미지 아래에, 내용은 오른쪽에 위치
+                SizedBox(width: 16.0),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,13 +115,16 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 이미지를 공유하는 위젯
+    final images = Provider.of<ImageProviderClass>(context).images;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("나의 보관함"),
         actions: [
           IconButton(
             icon: Icon(Icons.add_photo_alternate),
-            onPressed: _pickImageAndComment, // 이미지와 제목/내용 업로드
+            onPressed: _pickImageAndComment,
           ),
         ],
       ),
@@ -159,11 +136,11 @@ class _GalleryPageState extends State<GalleryPage> {
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
           ),
-          itemCount: _images.length,
+          itemCount: images.length,
           itemBuilder: (context, index) {
-            final imageData = _images[index];
+            final imageData = images[index];
             return GestureDetector(
-              onTap: () => _showImageContent(imageData), // 이미지 클릭 시 내용 보기
+              onTap: () => _showImageContent(imageData),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Stack(
