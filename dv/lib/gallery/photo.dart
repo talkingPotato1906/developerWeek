@@ -71,6 +71,7 @@ class _PhotoPageState extends State<PhotoPage> {
   void _showImageContent(BuildContext context, int index) {
     final provider = Provider.of<ImageProviderClass>(context, listen: false);
     final imageData = provider.images[index];
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     showDialog(
       context: context,
