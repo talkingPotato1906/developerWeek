@@ -1,6 +1,7 @@
 import 'package:dv/color_palette.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/title/title_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'gallery/showroom.dart'; // showroom.dart 전시대
@@ -26,22 +27,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
 
-    return Consumer<ThemeProvider>(
-      builder: (context, ThemeProvider themeProvider, child) {
-        int selectedColorIndex = 0;
-        selectedColorIndex = themeProvider.selectedThemeIndex;
-        return MaterialApp(
-          title: 'Flutter Demo',
-          // 테마 변경 사항 적용
-          theme: ThemeData(
-            colorScheme: ColorScheme.light(
-              primary: ColorPalette.palette[selectedColorIndex][1],
-              secondary: ColorPalette.palette[selectedColorIndex][2],
-            ),
-            scaffoldBackgroundColor: ColorPalette.palette[selectedColorIndex][0],
-            useMaterial3: true,
-          ),
-          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return FutureBuilder(
+      future: Provider.of<ThemeProvider>(context, listen: false).loadTheme(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            home: ImageRiseAnimation(),
+          );
+        }
+        return Consumer<ThemeProvider>(
+          builder: (context, ThemeProvider themeProvider, child) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              // 테마 변경 사항 적용
+              theme: themeProvider.getTheme(),
+              home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            );
+          }
         );
       }
     );
@@ -75,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Stack(
+        
         children: [GestureDetector(
           onHorizontalDragUpdate: (details) {
             if (details.primaryDelta! < 0) {
