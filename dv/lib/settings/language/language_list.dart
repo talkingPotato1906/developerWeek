@@ -3,7 +3,7 @@ class LanguageList {
     // English, Korean, Japanese, Chinese
     {
       // 기본 메시지
-      "App Bar": ["Gallery for Mania", "마니아를 위한 전시장", "マニアのためのギャラリー", "画廊"],
+      "앱 제목": ["Gallery for Mania", "마니아를 위한 전시장", "マニアのためのギャラリー", "为狂热者的画廊"],
       "설정": ["Settings", "설정", "設定", "设置"],
       "언어 선택": ["Select Language", "언어 선택", "言語選択", "选择语言"],
       "테마 선택": ["Select Theme", "테마 선택", "テーマ選択", "选择主题"],
