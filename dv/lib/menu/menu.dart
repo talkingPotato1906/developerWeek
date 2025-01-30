@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -46,6 +47,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             children: [
               if (_isMenuOpen) _buildMenu(context),
               FloatingActionButton(
+                heroTag: "menu",
                 onPressed: _toggleMenu,
                 child: Icon(_isMenuOpen ? Icons.close : Icons.menu),
               ),
@@ -58,6 +60,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
 
   Widget _buildMenu(BuildContext context) {
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -72,10 +75,10 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildMenuItem(Icons.home, "홈", () {
+          _buildMenuItem(Icons.home, languageProvider.getLanguage(message: "홈"), () {
             print("홈 클릭");
           }),
-          _buildMenuItem(Icons.settings, "설정", () {
+          _buildMenuItem(Icons.settings, languageProvider.getLanguage(message: "설정"), () {
             _toggleMenu();
             Future.delayed(const Duration(milliseconds: 300), () {
               if (mounted && context.mounted) {
@@ -86,7 +89,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
               }
             });
           }),
-          _buildMenuItem(Icons.logout, "로그아웃", () {
+          _buildMenuItem(Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
             print("로그아웃 클릭");
           }),
         ],

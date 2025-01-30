@@ -15,6 +15,7 @@ class ThemeChanger extends StatelessWidget {
       ["Plant", "Cutlery", "Liquor", "Gemstone"],
       ["식물", "식기", "주류", "원석"],
       ["植物", "食器", "酒", "宝石"],
+      ["植物", "餐具", "酒", "宝石"],
     ];
 
     return Padding(
