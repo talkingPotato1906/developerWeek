@@ -1,4 +1,3 @@
-import 'package:dv/color_palette.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/title/title_screen.dart';

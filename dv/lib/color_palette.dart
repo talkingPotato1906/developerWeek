@@ -13,10 +13,11 @@ class ColorPalette {
 
     // 식기 테마에 사용할 색상 팔레트
     [
+      Color(0xFFfff2c2),
       Color(0xFFd9dfc6),
-      Color(0xFFeff3ea),
       Color(0xFFfffdf0),
-      Color(0xFFfff2c2)
+      Color(0xFFeff3ea)
+      
     ],
 
     // 술 테마에 사용할 색상 팔레트
