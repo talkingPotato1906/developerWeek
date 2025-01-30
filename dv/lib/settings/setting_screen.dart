@@ -72,8 +72,7 @@ class SettingScreen extends StatelessWidget {
                 ),
                 onChanged: (value) {
                   if (value != null) {
-                    Provider.of<ThemeProvider>(context, listen: false)
-                        .changeTheme(value);
+                    context.read<ThemeProvider>().changeTheme(value);
                   }
                 },
               )

@@ -13,37 +13,31 @@ class FloatingMenuButton extends StatefulWidget {
 
 class _FloatingMenuButtonState extends State<FloatingMenuButton> {
   bool _isMenuOpen = false;
-  double screenHeight = 0.0;
-  double screenWidth = 0.0;
 
   void _toggleMenu() {
     setState(() {
       _isMenuOpen = !_isMenuOpen;
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // 화면 크기 가져오기
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Stack(
       children: [
-        // 메뉴 배경
         if (_isMenuOpen)
           GestureDetector(
             onTap: _toggleMenu,
             child: Container(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
               width: screenWidth,
               height: screenHeight,
             ),
           ),
         
-        // 메뉴 버튼
         Positioned(
           top: 50,
           right: 20,
@@ -63,7 +57,6 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
   }
 
   Widget _buildMenu(BuildContext context) {
-
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Container(
@@ -71,10 +64,9 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: themeProvider.getTheme().scaffoldBackgroundColor,
-
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(color: ColorPalette.palette[0][1], blurRadius: 10),
+          BoxShadow(color: Colors.black87, blurRadius: 10),
         ],
       ),
       child: Column(
@@ -84,10 +76,15 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             print("홈 클릭");
           }),
           _buildMenuItem(Icons.settings, "설정", () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingScreen()),
-            );
+            _toggleMenu();
+            Future.delayed(const Duration(milliseconds: 300), () {
+              if (mounted && context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()),
+                );
+              }
+            });
           }),
           _buildMenuItem(Icons.logout, "로그아웃", () {
             print("로그아웃 클릭");
@@ -98,22 +95,21 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
   }
 
   Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
-  final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-
-  return GestureDetector(
-    onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: themeProvider.getTheme().textTheme.bodyLarge!.color),
-          const SizedBox(width: 10),
-          Text(title, style: TextStyle(fontSize: 16)),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Row(
+          children: [
+            Icon(icon, color: themeProvider.getTheme().textTheme.bodyLarge!.color),
+            const SizedBox(width: 10),
+            Text(title, style: const TextStyle(fontSize: 16)),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
-}
