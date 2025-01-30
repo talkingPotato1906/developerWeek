@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               title: 'Flutter Demo',
               theme: themeProvider.getTheme(),
-              home: const MyHomePage(),
+              home: ImageRiseAnimation(),
             );
           });
         });
