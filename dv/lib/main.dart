@@ -1,4 +1,5 @@
 import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/title/title_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ImageProviderClass()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageProvider()),
       ],
       child: const MyApp(),
     ),

@@ -1,4 +1,4 @@
-import 'package:dv/color_palette.dart';
+import 'package:dv/settings/theme/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
