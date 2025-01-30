@@ -1,3 +1,4 @@
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -49,16 +50,29 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation, // 서서히 나타나는 효과
-          child: Image.asset(
-            'assets/title/logo.png',
-            width: 150,
-            height: 150,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/title/logo.png',
+                width: 200,
+                height: 200,
+              ),
+              SizedBox(height: 20),
+              Text(languageProvider.getLanguage(message: "앱 제목"),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
+                  )),
+            ],
           ),
         ),
       ),
