@@ -1,4 +1,5 @@
 import 'package:dv/login/login_page.dart';
+import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
@@ -35,7 +36,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
           GestureDetector(
             onTap: _toggleMenu,
             child: Container(
-              color: ColorPalette.palette[themeProvider.selectedThemeIndex][0].withAlpha(100),
+              color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]
+                  .withAlpha(100),
               width: screenWidth,
               height: screenHeight,
             ),
@@ -64,6 +66,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     final LanguageProvider languageProvider =
         Provider.of<LanguageProvider>(context);
+    final loginProvider = Provider.of<LogInProvider>(context, listen: false);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -90,7 +93,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             }
           }),
           _buildMenuItem(
-              Icons.person, languageProvider.getLanguage(message: "마이 페이지"), () {
+              Icons.person, languageProvider.getLanguage(message: "마이 페이지"),
+              () {
             print("마이 페이지");
           }),
           _buildMenuItem(
@@ -108,7 +112,10 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             print("포인트 상점");
           }),
           _buildMenuItem(
-              Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
+              loginProvider.isLoggedIn ? Icons.logout : Icons.login,
+              loginProvider.isLoggedIn
+                  ? languageProvider.getLanguage(message: "로그아웃")
+                  : languageProvider.getLanguage(message: "로그인"), () {
             _toggleMenu();
             if (mounted && context.mounted) {
               Navigator.push(
@@ -116,7 +123,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
                 MaterialPageRoute(builder: (context) => LoginPage()),
               );
             }
-          }),
+          })
         ],
       ),
     );
