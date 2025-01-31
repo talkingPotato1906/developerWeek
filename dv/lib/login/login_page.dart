@@ -1,4 +1,8 @@
+import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,20 +15,22 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
 
   void _login() {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
+      final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
       // 로그인 로직 (예: Firebase, API 요청)
       if (email == "test@example.com" && password == "123456") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("로그인 성공")),
+          SnackBar(content: Text(languageProvider.getLanguage(message: "로그인 성공"))),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("로그인 실패, 이메일 또는 비밀번호 확인")),
+          SnackBar(content: Text(languageProvider.getLanguage(message: "로그인 실패"))),
         );
       }
     }
@@ -32,8 +38,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     return Scaffold(
-      appBar: AppBar(title: Text("로그인")),
+      appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인"))),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -43,11 +52,15 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextFormField(
                 controller: emailController,
-                decoration: InputDecoration(labelText: "이메일"),
+                decoration: InputDecoration(labelText: languageProvider.getLanguage(message: "이메일"),
+                  labelStyle: TextStyle(color: themeProvider.getTheme().textTheme.bodyMedium?.color)
+                  
+                ),
+                
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "이메일을 입력하세요";
+                    return languageProvider.getLanguage(message: "이메일을 입력하세요");
                   }
                   return null;
                 },
@@ -55,11 +68,11 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 16),
               TextFormField(
                 controller: passwordController,
-                decoration: InputDecoration(labelText: "비밀번호"),
+                decoration: InputDecoration(labelText: languageProvider.getLanguage(message: "비밀번호")),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "비밀번호를 입력하세요";
+                    return languageProvider.getLanguage(message: "비밀번호를 입력하세요");
                   }
                   return null;
                 },
@@ -67,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _login,
-                child: Text("로그인"),
+                child: Text(languageProvider.getLanguage(message: "로그인")),
               ),
             ],
           ),
