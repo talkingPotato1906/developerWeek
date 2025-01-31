@@ -60,8 +60,11 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     labelText: languageProvider.getLanguage(message: "이메일"),
                     labelStyle: TextStyle(
-                        color:
-                            themeProvider.getTheme().textTheme.bodyMedium?.color),
+                        color: themeProvider
+                            .getTheme()
+                            .textTheme
+                            .bodyMedium
+                            ?.color),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: ColorPalette
@@ -76,7 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return languageProvider.getLanguage(message: "이메일을 입력하세요");
+                      return languageProvider.getLanguage(
+                          message: "이메일을 입력하세요");
                     }
                     return null;
                   },
@@ -87,8 +91,11 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     labelText: languageProvider.getLanguage(message: "비밀번호"),
                     labelStyle: TextStyle(
-                        color:
-                            themeProvider.getTheme().textTheme.bodyMedium?.color),
+                        color: themeProvider
+                            .getTheme()
+                            .textTheme
+                            .bodyMedium
+                            ?.color),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: ColorPalette
@@ -103,19 +110,29 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return languageProvider.getLanguage(message: "비밀번호를 입력하세요");
+                      return languageProvider.getLanguage(
+                          message: "비밀번호를 입력하세요");
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 28),
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
+                    backgroundColor: ColorPalette
+                        .palette[themeProvider.selectedThemeIndex][3],
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15)
                   ),
-                  child: Text(languageProvider.getLanguage(message: "로그인"),
-                  style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),),
+                  
+                  child: Text(
+                    languageProvider.getLanguage(message: "로그인"),
+                    style: TextStyle(
+                      color: ColorPalette
+                          .palette[themeProvider.selectedThemeIndex][0],
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ],
             ),
