@@ -117,7 +117,21 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
                   ? languageProvider.getLanguage(message: "로그아웃")
                   : languageProvider.getLanguage(message: "로그인"), () {
             _toggleMenu();
-            if (mounted && context.mounted) {
+
+            // ✅ 현재 상태가 true면 false로 변경 (로그아웃)
+            if (loginProvider.isLoggedIn) {
+              loginProvider.logout();
+              // ✅ 로그아웃 성공 알림 추가
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content:
+                      Text(languageProvider.getLanguage(message: "로그아웃 되었습니다")),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+            //로그인 페이지로 이동
+            else if (mounted && context.mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
