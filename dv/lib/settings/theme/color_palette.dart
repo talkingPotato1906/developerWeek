@@ -5,25 +5,25 @@ class ColorPalette {
     // 식물 테마에 사용할 색상 팔레트
     [
       Color(0xFF123524),
-      Color(0xFF3e7b27),
-      Color(0xFF85a947),
-      Color(0xFFefe3c2)
+      Color.fromARGB(255, 31, 80, 14),
+      Color.fromARGB(255, 79, 104, 37),
+      Color(0xFFefe3c2),
     ],
 
     // 식기 테마에 사용할 색상 팔레트
     [
-      Color(0xFFd9dfc6),
       Color(0xFFfffdf0),
-      Color(0xFFeff3ea),
+      Color.fromARGB(255, 214, 219, 196),
+      Color.fromARGB(255, 187, 201, 174),
       Color.fromARGB(255, 68, 43, 29)
     ],
 
     // 술 테마에 사용할 색상 팔레트
     [
       Color.fromARGB(255, 26, 26, 26),
-      Color(0xFF872341),
-      Color.fromARGB(255, 196, 69, 86),
-      Color.fromARGB(255, 211, 84, 84)
+      Color.fromARGB(255, 70, 17, 34),
+      Color.fromARGB(255, 104, 41, 55),
+      Color.fromARGB(255, 179, 160, 166),
     ],
 
     // 원석 테마에 사용할 색상 팔레트
@@ -37,8 +37,8 @@ class ColorPalette {
     // 원석 테마2
     [
       Color(0xFFfbfbfb),
-      Color(0xFFe8f9ff),
-      Color(0xFFc4d9ff),
+      Color.fromARGB(255, 202, 217, 223),
+      Color.fromARGB(255, 160, 176, 207),
       Color.fromARGB(255, 162, 152, 209)
     ]
   ];

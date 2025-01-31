@@ -1,4 +1,6 @@
 import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ class _PhotoPageState extends State<PhotoPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImageAndComment() async {
+
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -27,20 +30,41 @@ class _PhotoPageState extends State<PhotoPage> {
           TextEditingController titleController = TextEditingController();
           TextEditingController contentController = TextEditingController();
           final languageProvider = Provider.of<LanguageProvider>(context);
+          final themeProvider = Provider.of<ThemeProvider>(context);
           return AlertDialog(
-            title: Text(languageProvider.getLanguage(message: "제목과 내용 입력")),
+            title: Text(languageProvider.getLanguage(message: "제목과 내용 입력"),
+            style: themeProvider.getTheme().textTheme.titleMedium),
+            backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: titleController,
-                  decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요")),
+                  decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요",),
+                  hintStyle: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2],),
+                  fillColor: themeProvider.getTheme().textTheme.bodyMedium?.color,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2])
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+                  )
+                    ),
                 ),
                 TextField(
                   controller: contentController,
                   decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "내용을 입력하세요"),
+                   hintStyle: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2],),
+                  fillColor: themeProvider.getTheme().textTheme.bodyMedium?.color,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2])
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+                  )
+                  ),
                 ),
-                )
+                
               ],
             ),
             actions: [
@@ -51,7 +75,8 @@ class _PhotoPageState extends State<PhotoPage> {
                     "content": contentController.text
                   });
                 },
-                child: Text(languageProvider.getLanguage(message: "확인")),
+                child: Text(languageProvider.getLanguage(message: "확인"),
+                style: themeProvider.getTheme().textTheme.titleMedium,),
               ),
             ],
           );
@@ -72,6 +97,7 @@ class _PhotoPageState extends State<PhotoPage> {
     final provider = Provider.of<ImageProviderClass>(context, listen: false);
     final imageData = provider.images[index];
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     showDialog(
       context: context,
@@ -81,6 +107,7 @@ class _PhotoPageState extends State<PhotoPage> {
             bool isSelected = provider.selectedImages.contains(imageData);
 
             return Dialog(
+              backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
@@ -147,8 +174,12 @@ class _PhotoPageState extends State<PhotoPage> {
                                       provider.toggleGalleryImage(imageData);
                                     }
                                   },
+                                  side: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2]),
+                                  activeColor: ColorPalette.palette[themeProvider.selectedThemeIndex][2],
+                                  checkColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
                                 ),
-                                Text(languageProvider.getLanguage(message: "갤러리에 추가")),
+                                Text(languageProvider.getLanguage(message: "갤러리에 추가"),
+                                style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2], fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -160,10 +191,11 @@ class _PhotoPageState extends State<PhotoPage> {
                                 Navigator.of(context).pop();
                                 _editImageContent(context, index);
                               },
-                              icon: Icon(Icons.edit, color: Colors.white),
-                              label: Text(languageProvider.getLanguage(message: "수정")),
+                              icon: Icon(Icons.edit, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                              label: Text(languageProvider.getLanguage(message: "수정"),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0])),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][1],
                               ),
                             ),
                             SizedBox(width: 8.0),
@@ -172,10 +204,12 @@ class _PhotoPageState extends State<PhotoPage> {
                                 provider.removeImage(index);
                                 Navigator.of(context).pop();
                               },
-                              icon: Icon(Icons.delete, color: Colors.white),
-                              label: Text(languageProvider.getLanguage(message: "삭제")),
+                              icon: Icon(Icons.delete, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                              label: Text(languageProvider.getLanguage(message: "삭제"),
+                                style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                              ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
+                                backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][2],
                               ),
                             ),
                           ],
@@ -196,6 +230,7 @@ class _PhotoPageState extends State<PhotoPage> {
     final provider = Provider.of<ImageProviderClass>(context, listen: false);
     final imageData = provider.images[index];
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     TextEditingController titleController =
         TextEditingController(text: imageData["title"]);
@@ -206,17 +241,37 @@ class _PhotoPageState extends State<PhotoPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(languageProvider.getLanguage(message: "제목과 내용 수정")),
+          title: Text(languageProvider.getLanguage(message: "제목과 내용 수정"),
+          style: themeProvider.getTheme().textTheme.titleMedium),
+          backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+          
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요")),
+                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "제목을 입력하세요"),
+                hintStyle: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2],),
+                  fillColor: themeProvider.getTheme().textTheme.bodyMedium?.color,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2])
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+                  )),
+              
               ),
               TextField(
                 controller: contentController,
-                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "내용을 입력하세요")),
+                decoration: InputDecoration(hintText: languageProvider.getLanguage(message: "내용을 입력하세요"),
+                hintStyle: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2],),
+                  fillColor: themeProvider.getTheme().textTheme.bodyMedium?.color,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2])
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+                  )),
               ),
             ],
           ),
@@ -232,8 +287,10 @@ class _PhotoPageState extends State<PhotoPage> {
                   _showImageContent(context, index);
                 });
               },
-              child: Text(languageProvider.getLanguage(message: "확인")),
-            ),
+              child: Text(languageProvider.getLanguage(message: "확인"),
+              style: themeProvider.getTheme().textTheme.titleMedium,),
+              ),
+            
           ],
         );
       },
@@ -243,16 +300,22 @@ class _PhotoPageState extends State<PhotoPage> {
   void _showMaxSelectionWarning(BuildContext context) {
 
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(languageProvider.getLanguage(message: "갤러리 선택 제한")),
-          content: Text(languageProvider.getLanguage(message: "최대 9개의 전시품만 선택할 수 있습니다.")),
+          backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+              
+          title: Text(languageProvider.getLanguage(message: "갤러리 선택 제한"),
+          style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])),
+          content: Text(languageProvider.getLanguage(message: "최대 9개의 전시품만 선택할 수 있습니다."),
+          style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(languageProvider.getLanguage(message: "확인")),
+              child: Text(languageProvider.getLanguage(message: "확인"),
+              style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])),
             ),
           ],
         );
@@ -268,6 +331,7 @@ class _PhotoPageState extends State<PhotoPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(languageProvider.getLanguage(message: "나의 보관함")),
       ), // ✅ 상단 이미지 추가 버튼 삭제
 
@@ -283,6 +347,7 @@ class _PhotoPageState extends State<PhotoPage> {
           itemBuilder: (context, index) {
             final imageData = images[index];
             bool isSelected = provider.selectedImages.contains(imageData);
+            final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
             return GestureDetector(
               onTap: () => _showImageContent(context, index),
@@ -300,7 +365,7 @@ class _PhotoPageState extends State<PhotoPage> {
                       //갤러리에 추가 시 체크버튼(왼쪽아래래)
                       bottom: 8,
                       left: 8,
-                      child: Icon(Icons.check_circle, color: Colors.green),
+                      child: Icon(Icons.check_circle, color:ColorPalette.palette[themeProvider.selectedThemeIndex][2]),
                     ),
                 ],
               ),
