@@ -1,3 +1,4 @@
+import 'package:dv/login/login_page.dart';
 import 'package:dv/main.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
@@ -104,7 +105,13 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
           }),
           _buildMenuItem(
               Icons.logout, languageProvider.getLanguage(message: "로그아웃"), () {
-            print("로그아웃 클릭");
+            _toggleMenu();
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            }
           }),
         ],
       ),
