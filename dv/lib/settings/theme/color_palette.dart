@@ -24,7 +24,7 @@ class ColorPalette {
     [
       Color(0xFF09122c),
       Color(0xFF872341),
-      Color(0xFFbe3144),
+      Color.fromARGB(255, 196, 69, 86),
       Color(0xFFe17564)
     ],
 
