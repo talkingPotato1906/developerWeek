@@ -90,6 +90,10 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             }
           }),
           _buildMenuItem(
+              Icons.person, languageProvider.getLanguage(message: "마이 페이지"), () {
+            print("마이 페이지");
+          }),
+          _buildMenuItem(
               Icons.settings, languageProvider.getLanguage(message: "설정"), () {
             _toggleMenu();
             if (mounted && context.mounted) {
