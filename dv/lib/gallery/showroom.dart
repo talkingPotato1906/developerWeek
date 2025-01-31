@@ -74,7 +74,7 @@ class ShowroomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
-    final loginProvider = Provider.of<LogInProvider>(context, listen: false);
+    final loginProvider = Provider.of<LogInProvider>(context);
 
     return Consumer<ImageProviderClass>(
       builder: (context, provider, child) {
