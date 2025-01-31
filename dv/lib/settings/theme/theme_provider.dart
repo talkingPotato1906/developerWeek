@@ -36,19 +36,26 @@ class ThemeProvider extends ChangeNotifier {
   // 테마 색상 반환
   ThemeData getTheme() {
     Color textColor = ColorPalette.palette[_selectedThemeIndex][3];
+    Color buttonColor = ColorPalette.palette[_selectedThemeIndex][0];
+    
     return ThemeData(
         colorScheme: ColorScheme.light(
             primary: ColorPalette.palette[_selectedThemeIndex][0].withValues(alpha: 128),
             secondary: ColorPalette.palette[_selectedThemeIndex][1].withValues(alpha: 128),),
 
         scaffoldBackgroundColor: ColorPalette.palette[_selectedThemeIndex][0],
-        textTheme: TextTheme(bodyLarge: TextStyle(color: textColor),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: textColor),
           bodyMedium: TextStyle(color: textColor),
           bodySmall: TextStyle(color: textColor),
           titleLarge: TextStyle(color: textColor),
           titleMedium: TextStyle(color: textColor),
           titleSmall: TextStyle(color: textColor),
+          labelLarge: TextStyle(color: buttonColor),
+          labelMedium: TextStyle(color: buttonColor),
+          labelSmall: TextStyle(color: buttonColor),
         ),
         useMaterial3: true);
   }
+
 }

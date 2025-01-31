@@ -1,4 +1,6 @@
 import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,10 +10,12 @@ class ShowroomPage extends StatelessWidget {
   const ShowroomPage({super.key});
 
   void _showImageContent(BuildContext context, Map<String, dynamic> imageData) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
+          backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
@@ -74,7 +78,8 @@ class ShowroomPage extends StatelessWidget {
         final selectedImages = provider.selectedImages;
 
         return Scaffold(
-          appBar: AppBar(title: Text(languageProvider.getLanguage(message: "갤러리"))),
+          appBar: AppBar(title: Text(languageProvider.getLanguage(message: "갤러리")),
+          automaticallyImplyLeading: false,),
           body: selectedImages.isEmpty
               ? Center(child: Text(languageProvider.getLanguage(message: "갤러리가 비어있습니다")))
               : Padding(
