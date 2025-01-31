@@ -1,3 +1,4 @@
+import 'package:dv/login/login_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -20,19 +21,24 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
+      final loginProvider = Provider.of<LogInProvider>(context, listen: false);
       final languageProvider =
           Provider.of<LanguageProvider>(context, listen: false);
 
-      // 로그인 로직 (예: Firebase, API 요청)
       if (email == "test@example.com" && password == "123456") {
+        loginProvider.login(email); // ✅ 로그인 상태 업데이트
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(languageProvider.getLanguage(message: "로그인 성공"))),
+            content: Text("$email님 로그인 성공하셨습니다."),
+            duration: Duration(seconds: 2),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(languageProvider.getLanguage(message: "로그인 실패"))),
+            content: Text(languageProvider.getLanguage(message: "로그인 실패")),
+          ),
         );
       }
     }
@@ -43,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     final languageProvider =
         Provider.of<LanguageProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final loginProvider = Provider.of<LogInProvider>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인"))),
@@ -120,11 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorPalette
-                        .palette[themeProvider.selectedThemeIndex][3],
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15)
-                  ),
-                  
+                      backgroundColor: ColorPalette
+                          .palette[themeProvider.selectedThemeIndex][3],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
                   child: Text(
                     languageProvider.getLanguage(message: "로그인"),
                     style: TextStyle(
@@ -134,6 +140,32 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20),
+
+                // ✅ 로그인 성공 시 "마이 페이지로 이동" 버튼 표시
+                if (loginProvider.isLoggedIn)
+                  Column(
+                    children: [
+                      Text("${loginProvider.email}님 로그인 성공하셨습니다.",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          // 현재는 기능 없음 (마이페이지 화면 이동)
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
+                        ),
+                        child: Text(
+                          "마이 페이지로 이동",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
