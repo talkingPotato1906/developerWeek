@@ -11,11 +11,8 @@ class LanguageChanger extends StatelessWidget{
   Widget build(BuildContext context) {
 
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
-    final List<List<String>> languageNames = [
-      ["English", "Korean", "Japanese", "Chinese"],
-      ["영어", "한국어", "일본어", "중국어"],
-      ["英語", "韓国語", "日本語", "中国語"],
-      ["英语", "韩语", "日语", "中文"],
+    final List<String> languageNames = [
+      "English", "한국어", "日本語", "中文"
     ];
     final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
 
@@ -43,7 +40,7 @@ class LanguageChanger extends StatelessWidget{
                   value: index,
                   child: Row(
                     children: [
-                      Text(languageNames[languageProvider.selectedLanguageIndex][index]),
+                      Text(languageNames[index]),
                     ],
                   ),
                 );

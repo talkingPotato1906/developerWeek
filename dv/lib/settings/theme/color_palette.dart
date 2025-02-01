@@ -26,14 +26,6 @@ class ColorPalette {
       Color.fromARGB(255, 179, 160, 166),
     ],
 
-    // 원석 테마에 사용할 색상 팔레트
-    /*[
-      Color(0xFFa7e6ff),
-      Color(0xFF3abef9),
-      Color.fromARGB(255, 78, 128, 228),
-      Color.fromARGB(255, 31, 37, 160)
-    ],*/
-
     // 원석 테마2
     [
       Color(0xFFfbfbfb),

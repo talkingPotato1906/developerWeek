@@ -1,6 +1,7 @@
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
+import 'package:dv/mypage/my_page_screen.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
@@ -95,7 +96,13 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
           _buildMenuItem(
               Icons.person, languageProvider.getLanguage(message: "마이 페이지"),
               () {
-            print("마이 페이지");
+             _toggleMenu();
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPageScreen()),
+              );
+            }
           }),
           _buildMenuItem(
               Icons.settings, languageProvider.getLanguage(message: "설정"), () {
