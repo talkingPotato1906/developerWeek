@@ -1,3 +1,5 @@
+import 'package:dv/menu/menu.dart';
+import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/language/language_changer.dart';
@@ -6,9 +8,23 @@ import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   
-  SettingScreen({super.key});
+  const SettingScreen({super.key});
+
+  @override
+  _SettingScreenState createState() => _SettingScreenState();
+
+}
+
+class _SettingScreenState extends State<SettingScreen>{
+   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MenuProvider>().changeMenu(2);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +35,7 @@ class SettingScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(languageProvider.getLanguage(message: "설정")), // 설정 제목
       ),
+      floatingActionButton: FloatingMenuButton(),
       body: Container(
         color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
         child: SingleChildScrollView(
