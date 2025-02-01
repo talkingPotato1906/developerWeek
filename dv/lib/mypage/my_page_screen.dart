@@ -1,5 +1,4 @@
 import 'package:dv/menu/menu.dart';
-import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -16,14 +15,6 @@ class MyPageScreen extends StatefulWidget {
 class _MyPageScreenState extends State<MyPageScreen> {
   String nickname = "nickname"; //유저 닉네임(입력받으면 바꿔야 함)
   int point = 0; //포인트 초기값 설정
-
-   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuProvider>().changeMenu(1);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
