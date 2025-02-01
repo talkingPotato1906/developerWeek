@@ -6,6 +6,7 @@ import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/shop/shop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -121,8 +122,13 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
           }),
           _buildMenuItem(
               Icons.sell, languageProvider.getLanguage(message: "포인트 상점"), () {
-            print("포인트 상점");
-          }),
+            _toggleMenu();
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ShopScreen()),
+              );
+            }}),
            _buildMenuItem(
                   loginProvider.isLoggedIn ? Icons.logout : Icons.login,
                   loginProvider.isLoggedIn

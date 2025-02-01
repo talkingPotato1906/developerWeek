@@ -2,6 +2,7 @@ import 'package:dv/login/login_provider.dart'; //로그인 파트
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/shop/shop_item_provider.dart';
 import 'package:dv/title/title_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => LogInProvider()), //로그인파트 추가
+        ChangeNotifierProvider(create: (context) => ShopItemProvider(),)
       ],
       child: const MyApp(),
     ),
