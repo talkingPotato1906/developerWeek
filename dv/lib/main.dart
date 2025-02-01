@@ -1,5 +1,6 @@
 import 'package:dv/login/login_provider.dart'; //로그인 파트
 import 'package:dv/menu/menu.dart';
+import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/title/title_screen.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => LogInProvider()), //로그인파트 추가
+        ChangeNotifierProvider(create: (context) => MenuProvider()), // 메뉴 
       ],
       child: const MyApp(),
     ),
@@ -57,15 +59,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  // 홈 화면 상태 표시
+   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MenuProvider>().changeMenu(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SwipePageView(), // 화면 좌우이동 기능
+      body:
+          SwipePageView(),
+      floatingActionButton:  // 화면 좌우이동 기능
           FloatingMenuButton(),
-        ],
-      ),
-    );
+        
+      );
   }
 }

@@ -1,9 +1,9 @@
+import 'package:dv/menu/menu.dart';
+import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -17,6 +17,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
   String nickname = "nickname"; //유저 닉네임(입력받으면 바꿔야 함)
   int point = 0; //포인트 초기값 설정
 
+   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MenuProvider>().changeMenu(1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final imageSize = MediaQuery.of(context).size.width / 8;
@@ -28,6 +36,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
       appBar: AppBar(
         title: Text(languageProvider.getLanguage(message: "마이 페이지")),
       ),
+      floatingActionButton: FloatingMenuButton(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

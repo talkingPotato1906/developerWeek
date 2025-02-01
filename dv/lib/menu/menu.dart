@@ -1,6 +1,7 @@
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
+import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/mypage/my_page_screen.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
@@ -30,6 +31,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    final menuProvider = Provider.of<MenuProvider>(context);
 
     return Stack(
       children: [
@@ -52,7 +54,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
               // 메뉴 버튼 누르면 메뉴 목록 보여주기
               if (_isMenuOpen) _buildMenu(context),
               FloatingActionButton(
-                heroTag: "menu",
+                heroTag: UniqueKey().toString(),
                 onPressed: _toggleMenu,
                 child: Icon(_isMenuOpen ? Icons.close : Icons.menu),
               ),
@@ -68,6 +70,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
     final LanguageProvider languageProvider =
         Provider.of<LanguageProvider>(context);
     final loginProvider = Provider.of<LogInProvider>(context, listen: false);
+    final menuProvider = Provider.of<MenuProvider>(context);
+    final previousMenuIndex = menuProvider.getMenu();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -83,27 +87,36 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // 메뉴 아이템 생성
-          _buildMenuItem(Icons.home, languageProvider.getLanguage(message: "홈"),
-              () {
-            _toggleMenu();
-            if (mounted && context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyHomePage()),
-              );
-            }
-          }),
-          _buildMenuItem(
-              Icons.person, languageProvider.getLanguage(message: "마이 페이지"),
-              () {
-             _toggleMenu();
-            if (mounted && context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyPageScreen()),
-              );
-            }
-          }),
+          (menuProvider.getMenu() != 0)
+              ? _buildMenuItem(
+                  Icons.home, languageProvider.getLanguage(message: "홈"), () {
+                  _toggleMenu();
+                  if (mounted && context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                    ).then((_) {
+                      menuProvider.changeMenu(previousMenuIndex);
+                    });
+                  }
+                })
+              : SizedBox.shrink(),
+          (menuProvider.getMenu() != 1)
+              ? _buildMenuItem(
+                  Icons.person, languageProvider.getLanguage(message: "마이 페이지"),
+                  () {
+                  _toggleMenu();
+                  if (mounted && context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyPageScreen()),
+                    ).then((_) {
+                      menuProvider.changeMenu(previousMenuIndex);
+                    });
+                  }
+                })
+              : SizedBox.shrink(),
+              (menuProvider.getMenu() != 2) ?
           _buildMenuItem(
               Icons.settings, languageProvider.getLanguage(message: "설정"), () {
             _toggleMenu();
@@ -111,40 +124,46 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SettingScreen()),
-              );
+              ).then((_) {
+                      menuProvider.changeMenu(previousMenuIndex);
+                    });
             }
-          }),
+          }) : SizedBox.shrink(),
           _buildMenuItem(
               Icons.sell, languageProvider.getLanguage(message: "포인트 상점"), () {
             print("포인트 상점");
           }),
-          _buildMenuItem(
-              loginProvider.isLoggedIn ? Icons.logout : Icons.login,
-              loginProvider.isLoggedIn
-                  ? languageProvider.getLanguage(message: "로그아웃")
-                  : languageProvider.getLanguage(message: "로그인"), () {
-            _toggleMenu();
+          (menuProvider.getMenu() != 5)
+              ? _buildMenuItem(
+                  loginProvider.isLoggedIn ? Icons.logout : Icons.login,
+                  loginProvider.isLoggedIn
+                      ? languageProvider.getLanguage(message: "로그아웃")
+                      : languageProvider.getLanguage(message: "로그인"), () {
+                  _toggleMenu();
 
-            // ✅ 현재 상태가 true면 false로 변경 (로그아웃)
-            if (loginProvider.isLoggedIn) {
-              loginProvider.logout();
-              // ✅ 로그아웃 성공 알림 추가
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content:
-                      Text(languageProvider.getLanguage(message: "로그아웃 되었습니다")),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            }
-            //로그인 페이지로 이동
-            else if (mounted && context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            }
-          })
+                  // ✅ 현재 상태가 true면 false로 변경 (로그아웃)
+                  if (loginProvider.isLoggedIn) {
+                    loginProvider.logout();
+                    // ✅ 로그아웃 성공 알림 추가
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(languageProvider.getLanguage(
+                            message: "로그아웃 되었습니다")),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                  //로그인 페이지로 이동
+                  else if (mounted && context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    ).then((_) {
+                      menuProvider.changeMenu(previousMenuIndex);
+                    });
+                  }
+                })
+              : SizedBox.shrink()
         ],
       ),
     );
