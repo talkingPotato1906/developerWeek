@@ -1,7 +1,6 @@
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/login/login_success_page.dart';
 import 'package:dv/menu/menu.dart';
-import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -20,13 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuProvider>().changeMenu(5);
-    });
-  }
+
 
   void _login() {
     if (_formKey.currentState!.validate()) {

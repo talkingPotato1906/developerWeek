@@ -1,3 +1,5 @@
+import 'package:dv/gallery/image_provider.dart';
+import 'package:dv/gallery/swipe_page_view.dart';
 import 'package:dv/login/login_provider.dart'; // 로그인 상태 확인을 위한 import 추가
 import 'package:dv/login/login_required_page.dart'; // 로그인 필요 페이지 추가
 import 'package:dv/settings/language/language_provider.dart';
@@ -6,9 +8,6 @@ import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import 'image_provider.dart';
-import 'swipe_gallery_view.dart';
 
 class PhotoPage extends StatelessWidget {
   const PhotoPage({super.key});
@@ -432,7 +431,7 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SwipeGalleryView()), // ✅ 새로운 뷰로 이동
+                    builder: (context) => SwipePageView()), // ✅ 새로운 뷰로 이동
               );
             },
           ),

@@ -1,5 +1,4 @@
 import 'package:dv/menu/menu.dart';
-import 'package:dv/menu/menu_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/language/language_changer.dart';
@@ -18,13 +17,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen>{
-   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MenuProvider>().changeMenu(2);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
