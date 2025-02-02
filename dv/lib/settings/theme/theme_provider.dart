@@ -1,14 +1,14 @@
+//  테마 변환 Provider
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  int _selectedThemeIndex = 0; // 선택된 테마 인덱스
+  int _selectedThemeIndex = 0; // 기본값은 식물 테마
 
   int get selectedThemeIndex => _selectedThemeIndex;
 
   // 생성자
-
   ThemeProvider() {
     loadTheme();
   }
@@ -23,7 +23,6 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   // 테마 로드
-
   Future<void> loadTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _selectedThemeIndex = prefs.getInt("selectedThemeIndex") ?? 0;
@@ -42,7 +41,8 @@ class ThemeProvider extends ChangeNotifier {
           secondary: ColorPalette.palette[_selectedThemeIndex][1]
               .withValues(alpha: 128),
         ),
-        scaffoldBackgroundColor: ColorPalette.palette[_selectedThemeIndex][0],
+        scaffoldBackgroundColor: ColorPalette.palette[_selectedThemeIndex][0],  //  배경색
+        //  글자색
         textTheme: TextTheme(
           bodyLarge: TextStyle(color: textColor),
           bodyMedium: TextStyle(color: textColor),

@@ -1,3 +1,4 @@
+//  설정 화면
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_changer.dart';
 import 'package:dv/settings/language/language_provider.dart';
@@ -31,7 +32,7 @@ class _SettingScreenState extends State<SettingScreen> {
         appBar: AppBar(
           title: Text(languageProvider.getLanguage(message: "설정")), // 설정 제목
         ),
-        floatingActionButton: FloatingMenuButton(),
+        floatingActionButton: FloatingMenuButton(), // 메뉴 버튼
         body: Container(
             color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
             child: SingleChildScrollView(
