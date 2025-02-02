@@ -18,7 +18,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => LogInProvider()), //로그인파트 추가
-        ChangeNotifierProvider(create: (context) => ShopItemProvider(),)
+        ChangeNotifierProvider(
+          create: (context) => ShopItemProvider(),
+        )
       ],
       child: const MyApp(),
     ),
@@ -59,16 +61,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          SwipePageView(),
-      floatingActionButton:  // 화면 좌우이동 기능
+      body: SwipePageView(),
+      floatingActionButton: // 화면 좌우이동 기능
           FloatingMenuButton(),
-        
-      );
+    );
   }
 }
