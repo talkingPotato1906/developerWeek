@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                         color: ColorPalette
-                            .palette[themeProvider.selectedThemeIndex][3]),
+                            .palette[themeProvider.selectedThemeIndex][2]),
                   ),
                 ),
                 keyboardType: TextInputType.emailAddress,
