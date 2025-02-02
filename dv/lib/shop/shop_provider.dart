@@ -1,9 +1,10 @@
 //  user 포인트 상태와 item의 구매 여부를 제공하는 Provider
 import 'package:dv/shop/shop_items.dart'; // 상품 리스트
+import 'package:dv/sign_up/account_list.dart';
 import 'package:flutter/material.dart';
 
 class ShopItemProvider extends ChangeNotifier {
-  int _userPoints = 1000; // 초기 포인트 설정
+  int _userPoints = AccountList.userPoint["test@example.com"]!; // 초기 포인트 설정
   int get userPoints => _userPoints;
 
   final Map<String, List<dynamic>> _items = ShopItemList.items; // 맵 불러오기

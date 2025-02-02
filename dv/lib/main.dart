@@ -3,7 +3,7 @@ import 'package:dv/menu/menu.dart';
 import 'package:dv/nickname/nickname_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
-import 'package:dv/shop/shop_item_provider.dart';
+import 'package:dv/shop/shop_provider.dart';
 import 'package:dv/title/title_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
