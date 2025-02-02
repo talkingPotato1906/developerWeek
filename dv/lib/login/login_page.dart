@@ -4,6 +4,7 @@ import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -139,21 +140,48 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(height: 28),
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorPalette
-                        .palette[themeProvider.selectedThemeIndex][3],
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
-                child: Text(
-                  languageProvider.getLanguage(message: "로그인"),
-                  style: TextStyle(
-                    color: ColorPalette
-                        .palette[themeProvider.selectedThemeIndex][0],
-                    fontSize: 18,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorPalette
+                            .palette[themeProvider.selectedThemeIndex][3],
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
+                    child: Text(
+                      languageProvider.getLanguage(message: "로그인"),
+                      style: TextStyle(
+                        color: ColorPalette
+                            .palette[themeProvider.selectedThemeIndex][0],
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 30,),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUpScreen()),
+                    );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorPalette
+                            .palette[themeProvider.selectedThemeIndex][3],
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
+                    child: Text(
+                      languageProvider.getLanguage(message: "회원가입"),
+                      style: TextStyle(
+                        color: ColorPalette
+                            .palette[themeProvider.selectedThemeIndex][0],
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
