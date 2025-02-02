@@ -1,3 +1,4 @@
+//  설정에서 테마를 변환하기 위한 드롭박스
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -9,8 +10,9 @@ class ThemeChanger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final languageProvider = Provider.of<LanguageProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);  // 테마 적용
+    final languageProvider = Provider.of<LanguageProvider>(context);  // 언어 적용
+    //  각 언어별 테마 이름 리스트
     final List<List<String>> themeNames = [
       ["Plant", "Cutlery", "Liquor", "Gemstone"],
       ["식물", "식기", "주류", "원석"],
@@ -35,7 +37,7 @@ class ThemeChanger extends StatelessWidget {
             dropdownColor:
                 ColorPalette.palette[themeProvider.selectedThemeIndex][1],
             borderRadius: BorderRadius.circular(10),
-            value: themeProvider.selectedThemeIndex,
+            value: themeProvider.selectedThemeIndex,  //  현재 선택한 테마가 드롭다운에 보이도록
             items: List.generate(
               4,
               (index) {
@@ -46,6 +48,7 @@ class ThemeChanger extends StatelessWidget {
                     children: [
                       Text(themeNames[languageProvider.selectedLanguageIndex]
                           [index]),
+                      //  샘플 컬러 2개
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -74,11 +77,13 @@ class ThemeChanger extends StatelessWidget {
                 );
               },
             ),
+            //  선택한 테마 반영
             onChanged: (value) {
               if (value != null) {
                 context.read<ThemeProvider>().changeTheme(value);
               }
             },
+            //  선택한 테마가 드롭박스 창에서 보이도록
             selectedItemBuilder: (context) {
               return List.generate(
                 4,

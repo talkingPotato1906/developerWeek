@@ -1,3 +1,4 @@
+//  각 테마에 사용할 색상 팔레트
 import 'package:flutter/material.dart';
 
 class ColorPalette {
@@ -26,7 +27,7 @@ class ColorPalette {
       Color.fromARGB(255, 179, 160, 166),
     ],
 
-    // 원석 테마2
+    // 원석 테마에 사용할 색상 팔레트
     [
       Color(0xFFfbfbfb),
       Color.fromARGB(255, 202, 217, 223),
