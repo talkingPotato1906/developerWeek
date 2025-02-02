@@ -2,6 +2,8 @@ import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/sign_up/sign_up_rules.dart';
+import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -98,7 +100,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 28),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String signUpMessage = signUpRules(emailController.text,
+                            passwordController.text.toLowerCase())
+                        .keys.first;
+                        
+                    bool signUpSuccess = signUpRules(emailController.text,
+                        passwordController.text.toLowerCase())[signUpMessage]!;
+
+                    if (signUpSuccess) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SignUpSuccessScreen(
+                                email: emailController.text)),
+                      );
+                    } else {
+                      setState(
+                        () {
+                          emailController.clear();
+                          passwordController.clear();
+                        },
+                      );
+                      Future.delayed(Duration(milliseconds: 300), () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(languageProvider.getLanguage(
+                                message: signUpMessage)),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      });
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: ColorPalette
                           .palette[themeProvider.selectedThemeIndex][3],
@@ -121,4 +155,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-//업로드 테스트 주석
