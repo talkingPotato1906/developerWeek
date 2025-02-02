@@ -89,7 +89,8 @@ class ShowroomPage extends StatelessWidget {
                 ? selectedImages.isEmpty
                     ? Center(
                         child: Text(languageProvider.getLanguage(
-                            message: "갤러리가 비어있습니다")))
+                            message: "갤러리가 비어있습니다"),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),)
                     : Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GridView.builder(
@@ -118,7 +119,8 @@ class ShowroomPage extends StatelessWidget {
                       )
                 : Center(
                     child: Text(languageProvider.getLanguage(
-                        message: "로그인이 필요한 서비스입니다.")),
+                        message: "로그인이 필요한 서비스입니다."),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   ));
       },
     );
