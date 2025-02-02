@@ -13,8 +13,8 @@ class ColorPalette {
     // 식기 테마에 사용할 색상 팔레트
     [
       Color(0xFFfffdf0),
-      Color.fromARGB(255, 214, 219, 196),
-      Color.fromARGB(255, 187, 201, 174),
+      Color.fromARGB(255, 219, 219, 196),
+      Color.fromARGB(255, 198, 201, 174),
       Color.fromARGB(255, 68, 43, 29)
     ],
 

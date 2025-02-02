@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final languageProvider =
-        Provider.of<LanguageProvider>(context, listen: false);
+        Provider.of<LanguageProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     
 

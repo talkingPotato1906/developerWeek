@@ -109,17 +109,6 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
                   }
                 })
               ,
-              
-          _buildMenuItem(
-              Icons.settings, languageProvider.getLanguage(message: "설정"), () {
-            _toggleMenu();
-            if (mounted && context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingScreen()),
-              );
-            }
-          }),
           _buildMenuItem(
               Icons.sell, languageProvider.getLanguage(message: "포인트 상점"), () {
             _toggleMenu();
