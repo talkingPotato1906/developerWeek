@@ -1,4 +1,5 @@
 import 'package:dv/menu/menu.dart';
+import 'package:dv/nickname/nickname_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
@@ -14,9 +15,9 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
-  String nickname = "nickname"; // 유저 닉네임 (입력받으면 변경)
   int point = 0; // 포인트 초기값
   late LanguageProvider languageProvider;
+
 
   @override
   void didChangeDependencies() {
@@ -29,6 +30,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
   Widget build(BuildContext context) {
     final imageSize = MediaQuery.of(context).size.width / 8;
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final nickNameProvider = Provider.of<NicknameProvider>(context, listen: false);
+    
+    String nickname = nickNameProvider.getNickname();
 
     return Scaffold(
       appBar: AppBar(
