@@ -55,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
+                              .palette[themeProvider.selectedThemeIndex][2]),
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -86,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
+                              .palette[themeProvider.selectedThemeIndex][2]),
                     ),
                   ),
                   obscureText: true,
