@@ -1,3 +1,4 @@
+//  포인트 상점에서 판매할 상품 리스트
 class ShopItemList {
   static Map<String, List<dynamic>> items = {
     "dog": ["dog", 200, false], // 이미지 파일명, 가격, 구매 여부
