@@ -34,7 +34,9 @@ class _LoginSuccessPageState extends State<LoginSuccessPage> {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인 성공"))),
+      appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인 성공")),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

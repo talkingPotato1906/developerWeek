@@ -1,3 +1,5 @@
+import 'package:dv/login/login_page.dart';
+import 'package:dv/login/login_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -28,15 +30,27 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
+    // 애니메이션 실행 후 로그인 상태 확인
+    _controller.forward().then((_) => _navigateAfterAnimation());
+  }
+
+  Future<void> _navigateAfterAnimation() async {
+    final loginProvider = context.read<LogInProvider>();
+    await loginProvider.loadUserData(); // 로그인 데이터 불러오기
+
     Future.delayed(Duration(milliseconds: 500), () {
       if (mounted) {
-        _controller.forward().then((_) {
-          // 애니메이션이 끝나면 홈 화면으로 전환
+        if (loginProvider.isLoggedIn) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MyHomePage()), // main.dart의 홈 화면
+            MaterialPageRoute(builder: (context) => MyHomePage()), // 홈 화면 이동
           );
-        });
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()), // 로그인 페이지 이동
+          );
+        }
       }
     });
   }
@@ -66,12 +80,14 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
                 height: 200,
               ),
               SizedBox(height: 20),
-              Text(languageProvider.getLanguage(message: "앱 제목"),
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
-                  )),
+              Text(
+                languageProvider.getLanguage(message: "앱 제목"),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
+                ),
+              ),
             ],
           ),
         ),
@@ -79,4 +95,3 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
     );
   }
 }
-
