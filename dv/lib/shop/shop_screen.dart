@@ -1,3 +1,7 @@
+import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,9 +13,13 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shopProvider = Provider.of<ShopItemProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(title: Text("포인트 상점")),
+      floatingActionButton: FloatingMenuButton(),
       body: Column(
         children: [
           Padding(
@@ -56,7 +64,7 @@ class ShopScreen extends StatelessWidget {
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "${itemData[1]} 포인트",
+                              "${itemData[1]} pt",
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -65,16 +73,21 @@ class ShopScreen extends StatelessWidget {
                       // trailing (품절 표시)
                       isPurchased
                           ? Text(
-                              "품절",
-                              style: TextStyle(color: Colors.red, fontSize: 16),
+                              languageProvider.getLanguage(message: "품절"),
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             )
                           : GestureDetector(
                               onTap: () {
                                 _showPurchaseDialog(context, itemName,
-                                    itemData[0], itemData[1]);
+                                    itemData[0], itemData[1], languageProvider, themeProvider);
                               },
                               child: Icon(Icons.shopping_cart,
-                                  color: Colors.green, size: 24),
+                                  color: ColorPalette.palette[
+                                      themeProvider.selectedThemeIndex][3],
+                                  size: 24),
                             ),
                     ],
                   ),
@@ -88,14 +101,18 @@ class ShopScreen extends StatelessWidget {
   }
 
   void _showPurchaseDialog(
-      BuildContext context, String itemName, String imagePath, int price) {
+    
+      BuildContext context, String itemName, String imagePath, int price, LanguageProvider languageProvider, ThemeProvider themeProvider) {
     showDialog(
       context: context,
       builder: (context) {
         return Consumer<ShopItemProvider>(
           builder: (context, shopProvider, child) {
             return AlertDialog(
-              title: Text(itemName),
+              title: Text(itemName,
+                style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+              ),
+              backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -109,16 +126,29 @@ class ShopScreen extends StatelessWidget {
                 ],
               ),
               actions: [
-                TextButton(
+                ElevatedButton.icon(
+                  icon: Icon(Icons.cancel_outlined),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][1],
+                    iconColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]
+                  ),
                   onPressed: () => Navigator.pop(context),
-                  child: Text("취소"),
+                  label: Text(languageProvider.getLanguage(message: "취소"),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                  ),
                 ),
-                ElevatedButton(
+                ElevatedButton.icon(
+                  icon: Icon(Icons.shopping_bag),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][2],
+                    iconColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]
+                  ),
                   onPressed: () {
                     shopProvider.purchaseItem(itemName);
                     Navigator.pop(context);
                   },
-                  child: Text("구매"),
+                  label: Text(languageProvider.getLanguage(message: "구매"),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0])),
                 ),
               ],
             );
