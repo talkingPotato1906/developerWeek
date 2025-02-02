@@ -4,7 +4,7 @@ import 'package:dv/menu/menu.dart'; //  메뉴 버튼
 import 'package:dv/settings/language/language_provider.dart'; //  언어 적용
 import 'package:dv/settings/theme/color_palette.dart'; //  테마 적용
 import 'package:dv/settings/theme/theme_provider.dart'; //  테마 적용
-import 'package:dv/shop/shop_item_provider.dart'; //  상품 및 user 포인트 관리
+import 'package:dv/shop/shop_provider.dart'; //  상품 및 user 포인트 관리
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

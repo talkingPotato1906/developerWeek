@@ -4,6 +4,8 @@ import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/shop/shop_provider.dart';
+import 'package:dv/sign_up/account_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +17,6 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
-  int point = 0; // 포인트 초기값
   late LanguageProvider languageProvider;
 
 
@@ -31,8 +32,10 @@ class _MyPageScreenState extends State<MyPageScreen> {
     final imageSize = MediaQuery.of(context).size.width / 8;
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final nickNameProvider = Provider.of<NicknameProvider>(context, listen: false);
+    final shopProvider = Provider.of<ShopItemProvider>(context, listen: false);
     
     String nickname = nickNameProvider.getNickname();
+    int point = shopProvider.userPoints;
 
     return Scaffold(
       appBar: AppBar(
