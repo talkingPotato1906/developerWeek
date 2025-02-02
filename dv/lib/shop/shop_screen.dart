@@ -1,3 +1,4 @@
+import 'package:dv/login/login_provider.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
@@ -16,6 +17,7 @@ class ShopScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final languageProvider =
         Provider.of<LanguageProvider>(context, listen: false);
+    final loginProvider = Provider.of<LogInProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(title: Text("포인트 상점")),
@@ -24,10 +26,13 @@ class ShopScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
+            child: 
+            loginProvider.isLoggedIn ?
+            Text(
               "보유 포인트: ${shopProvider.userPoints}",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            ) :
+            SizedBox(),
           ),
           Expanded(
             child: ListView.builder(
@@ -58,18 +63,15 @@ class ShopScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              itemName,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
+                          
                             Text(
                               "${itemData[1]} pt",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                       ),
+                     loginProvider.isLoggedIn ?
                       // trailing (품절 표시)
                       isPurchased
                           ? Text(
@@ -88,7 +90,9 @@ class ShopScreen extends StatelessWidget {
                                   color: ColorPalette.palette[
                                       themeProvider.selectedThemeIndex][3],
                                   size: 24),
-                            ),
+                            )
+                            : SizedBox(),
+                      
                     ],
                   ),
                 );
@@ -125,6 +129,7 @@ class ShopScreen extends StatelessWidget {
                   Text("가격: $price 포인트"),
                 ],
               ),
+              
               actions: [
                 ElevatedButton.icon(
                   icon: Icon(Icons.cancel_outlined),

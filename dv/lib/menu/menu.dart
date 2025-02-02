@@ -1,6 +1,7 @@
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
+import 'package:dv/mypage/my_page_logout_screen.dart';
 import 'package:dv/mypage/my_page_screen.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
@@ -104,7 +105,9 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
                   if (mounted && context.mounted) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyPageScreen()),
+                      loginProvider.isLoggedIn ?
+                      MaterialPageRoute(builder: (context) => MyPageScreen())
+                      : MaterialPageRoute(builder: (context) => MyPageLogoutScreen(),)
                     );
                   }
                 })
