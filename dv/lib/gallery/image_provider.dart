@@ -34,14 +34,24 @@ class ImageProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  // ✅ 이미지 제목 및 내용 수정 기능 추가
   void updateImage(int index, String newTitle, String newContent) {
     if (index >= 0 && index < _images.length) {
-      _images[index] = {
+      // 기존 이미지를 수정
+      final updatedImage = {
         "image": _images[index]["image"], // 기존 이미지 유지
         "title": newTitle, // 새로운 제목
         "content": newContent, // 새로운 내용
       };
+
+      _images[index] = updatedImage;
+
+      // ✅ 갤러리에 추가된 이미지도 같이 업데이트
+      for (int i = 0; i < _selectedImages.length; i++) {
+        if (_selectedImages[i]["image"] == _images[index]["image"]) {
+          _selectedImages[i] = updatedImage;
+        }
+      }
+
       notifyListeners(); // UI 갱신
     }
   }
