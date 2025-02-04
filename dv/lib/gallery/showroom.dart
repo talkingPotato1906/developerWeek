@@ -74,6 +74,7 @@ class ShowroomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final loginProvider = Provider.of<LogInProvider>(context);
 
     return Consumer<ImageProviderClass>(
@@ -94,32 +95,44 @@ class ShowroomPage extends StatelessWidget {
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       )
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
+                    : Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Image.asset(themeProvider.getCutlery(),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          fit: BoxFit.cover,
                           ),
-                          itemCount: selectedImages.length,
-                          itemBuilder: (context, index) {
-                            final imageData = selectedImages[index];
-                            return GestureDetector(
-                              onTap: () =>
-                                  _showImageContent(context, imageData),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.memory(
-                                  imageData["image"],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
                         ),
-                      )
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8.0,
+                              mainAxisSpacing: 8.0,
+                            ),
+                            itemCount: selectedImages.length,
+                            itemBuilder: (context, index) {
+                              final imageData = selectedImages[index];
+                              return GestureDetector(
+                                onTap: () =>
+                                    _showImageContent(context, imageData),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.memory(
+                                    imageData["image"],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ]
+                    )
                 : Center(
                     child: Text(
                       languageProvider.getLanguage(message: "로그인이 필요한 서비스입니다."),

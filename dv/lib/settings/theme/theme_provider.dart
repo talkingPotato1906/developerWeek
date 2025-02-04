@@ -1,5 +1,6 @@
 //  테마 변환 Provider
 import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/shelves_list.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,5 +56,9 @@ class ThemeProvider extends ChangeNotifier {
           labelSmall: TextStyle(color: buttonColor),
         ),
         useMaterial3: true);
+  }
+
+  String getCutlery() {
+    return ShelvesList.shelvesList["식기"]![0];
   }
 }
