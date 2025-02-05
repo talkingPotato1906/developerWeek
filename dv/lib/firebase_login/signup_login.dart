@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/login/login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class AuthService {
+import 'package:provider/provider.dart';
+
+class AuthService with ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  
   // 회원가입
   Future<String?> register(String email, String password) async {
     try {
@@ -13,9 +18,18 @@ class AuthService {
         email: email,
         password: password,
       );
-      return userCredential.user?.uid;
+
+      String uid = userCredential.user!.uid;
+
+      await FirebaseFirestore.instance.collection("users").doc(uid).set({
+        "nickname": email,
+        "points": 0,
+        "posts": [],
+        "following": [],
+      });
+      return uid;
     } catch (e) {
-      return e.toString();
+      return "ERROR: ${e.toString()}";
     }
   }
 
@@ -28,11 +42,24 @@ class AuthService {
       );
       return userCredential.user?.uid;
     } catch (e) {
-      return e.toString();
+      return "ERROR: ${e.toString()}";
     }
   }
 
-  // FastAPI 보호된 API 요청
+  // 로그아웃
+  Future<void> logout(BuildContext context) async {
+    try {
+      await _auth.signOut();
+
+      final loginProvider = context.read<LogInProvider>();
+      loginProvider.logout();
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Logout Error: $e");
+    }
+  }
+
   Future<String> accessProtectedAPI() async {
     User? user = _auth.currentUser;
     if (user == null) return "No user logged in";
@@ -50,3 +77,5 @@ class AuthService {
     }
   }
 }
+  
+

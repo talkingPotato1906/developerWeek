@@ -49,7 +49,7 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => RegisterScreen()), // 로그인 페이지 이동
+            MaterialPageRoute(builder: (context) => LoginScreen()), // 로그인 페이지 이동
           );
         }
       }
