@@ -1,3 +1,4 @@
+import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/login/login_provider.dart'; //로그인 파트
@@ -49,7 +50,8 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => NicknameProvider(),
         ),
-        ChangeNotifierProvider(create: (context) => AuthService(),)
+        ChangeNotifierProvider(create: (context) => AuthService(),),
+        ChangeNotifierProvider(create: (context) => GetUserData(),)
       ],
       child: const MyApp(),
     ),
