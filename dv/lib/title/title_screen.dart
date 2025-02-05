@@ -1,3 +1,4 @@
+import 'package:dv/firebase_login/signup_login_screen.dart';
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
@@ -48,7 +49,7 @@ class ImageFadeInAnimationState extends State<ImageFadeInAnimation>
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()), // 로그인 페이지 이동
+            MaterialPageRoute(builder: (context) => RegisterScreen()), // 로그인 페이지 이동
           );
         }
       }
