@@ -226,23 +226,23 @@ class ShopScreen extends StatelessWidget {
                 ),
                 //  구매 버튼
                 ElevatedButton.icon(
-                  icon: Icon(Icons.shopping_bag_outlined),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorPalette
-                          .palette[themeProvider.selectedThemeIndex][2],
-                      iconColor: ColorPalette
-                          .palette[themeProvider.selectedThemeIndex][0]),
-                  onPressed: () {
-                    shopProvider
-                        .purchaseItem(itemName); //  해당 아이템 구매 상태로 변경 및 포인트 차감
-                    Navigator.pop(context); //  팝업창 닫기
-                  },
-                  label: Text(languageProvider.getLanguage(message: "구매"),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][0])),
-                ),
+                     icon: Icon(Icons.shopping_bag_outlined),
+                     style: ElevatedButton.styleFrom(
+                     backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][2],
+                     iconColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                     onPressed: () {
+                     bool isPurchased = shopProvider.purchaseItem(context, itemName); // 구매 시도
+
+                    if (isPurchased) {
+                     Navigator.pop(context); // 구매 성공 시에만 팝업창 닫기
+                     }
+                    },
+                  label: Text(
+                    languageProvider.getLanguage(message: "구매"),
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: ColorPalette.palette[themeProvider.selectedThemeIndex][0])),
+                 ),
               ],
             );
           },
