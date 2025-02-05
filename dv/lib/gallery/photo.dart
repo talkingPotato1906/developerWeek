@@ -24,8 +24,25 @@ class PhotoPage extends StatelessWidget {
   }
 }
 
-class PhotoPageContent extends StatelessWidget {
+class PhotoPageContent extends StatefulWidget {
   const PhotoPageContent({super.key});
+
+  @override
+  _PhotoPageContentState createState() => _PhotoPageContentState();
+}
+
+class _PhotoPageContentState extends State<PhotoPageContent> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<ImageProviderClass>(context, listen: false);
+      if (mounted) {
+        provider.fetchUserPosts();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,42 +55,53 @@ class PhotoPageContent extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-          ),
-          itemCount: provider.images.length,
-          itemBuilder: (context, index) {
-            bool isSelected =
-                provider.selectedImages.contains(provider.images[index]);
+        child: provider.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: provider.images.length,
+                itemBuilder: (context, index) {
+                  bool isSelected =
+                      provider.selectedImages.contains(provider.images[index]);
 
-            return GestureDetector(
-              onTap: () => showImageContent(context, index),
-              child: Stack(
-                children: [
-                  // ✅ 이미지 표시
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.memory(
-                      provider.images[index]["image"],
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
+                  return GestureDetector(
+                    onTap: () => showImageContent(context, index),
+                    child: Stack(
+                      children: [
+                        // ✅ 이미지 표시
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: provider.images[index]["imageUrl"] != ""
+                              ? Image.network(
+                                  provider.images[index]["imageUrl"],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                )
+                              : const Icon(Icons.image_not_supported),
+                        ),
+
+                        // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
+                        GalleryCheckOverlay(isSelected: isSelected),
+                      ],
                     ),
-                  ),
-
-                  // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
-                  GalleryCheckOverlay(isSelected: isSelected),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => pickImageAndComment(context),
+        onPressed: () async {
+          await pickImageAndComment(context);
+          final provider =
+              Provider.of<ImageProviderClass>(context, listen: false);
+          await provider.fetchUserPosts();
+        },
         child: const Icon(Icons.add),
       ),
     );

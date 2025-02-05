@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ImageProviderClass with ChangeNotifier {
@@ -6,6 +8,51 @@ class ImageProviderClass with ChangeNotifier {
 
   List<Map<String, dynamic>> get images => _images;
   List<Map<String, dynamic>> get selectedImages => _selectedImages;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  bool isLoading = false;
+
+  Future<void> fetchUserPosts() async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      String uid = _auth.currentUser!.uid;
+
+      DocumentSnapshot userDoc =
+          await _firestore.collection("users").doc(uid).get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        List<dynamic> postIds = userDoc["posts"] ?? [];
+
+        _images.clear();
+        for (String postId in postIds) {
+          DocumentSnapshot postDoc =
+              await _firestore.collection("posts").doc(postId).get();
+          if (postDoc.exists && postDoc.data() != null) {
+            Map<String, dynamic> postData =
+                postDoc.data() as Map<String, dynamic>;
+
+            _images.add({
+              "imageUrl": postData["imageUrl"],
+              "title": postData["title"],
+              "content": postData["content"],
+              "postId": postId,
+            });
+          }
+        }
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print("Firestore에서 posts 가져오기 실패");
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
 
   void addImage(Map<String, dynamic> imageData) {
     _images.add(imageData);
