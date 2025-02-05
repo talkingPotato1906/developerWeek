@@ -27,4 +27,17 @@ class GetUserData with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> updateNickname(String newNickname) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance.collection("users").doc(uid).update({"nickname": newNickname});
+
+      userData["nickname"] = newNickname;
+      notifyListeners();
+    } catch (e) {
+      print("닉네임 업데이트 실패: $e");
+    }
+  }
 }

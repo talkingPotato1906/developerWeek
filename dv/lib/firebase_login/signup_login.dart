@@ -25,7 +25,10 @@ class AuthService with ChangeNotifier{
         "nickname": email,
         "points": 0,
         "posts": [],
+        "gallery": [],
         "following": [],
+        "profile": [],
+        "trophy": [],
       });
       return uid;
     } catch (e) {

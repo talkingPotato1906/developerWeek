@@ -1,5 +1,6 @@
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/mypage/my_page_edit.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
 import 'package:dv/settings/theme/color_palette.dart';
@@ -40,6 +41,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
         String nickname = getUserData.userData["nickname"];
         int point = getUserData.userData["points"];
+        List<dynamic> profiles = getUserData.userData["profile"];
 
 
         return Scaffold(
@@ -62,7 +64,16 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         // 프로필 아이콘 및 버튼
                         Column(
                           children: [
-                            Icon(
+                            profiles.isNotEmpty ?
+                            ClipOval(
+                              child: Image.asset(
+                                profiles[0],
+                                width: imageSize,
+                                height: imageSize,
+                                fit: BoxFit.cover,
+                              )
+                            )
+                            : Icon(
                               Icons.account_circle,
                               size: imageSize,
                               color: ColorPalette
@@ -71,7 +82,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             ),
                             const SizedBox(height: 10),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showEditProfile(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: ColorPalette
                                     .palette[themeProvider.selectedThemeIndex][3],
