@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class ImageProviderClass with ChangeNotifier {
   final List<Map<String, dynamic>> _images = [];
@@ -13,20 +12,28 @@ class ImageProviderClass with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  bool isLoading = false;
+
   Future<void> fetchUserPosts() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       String uid = _auth.currentUser!.uid;
 
-      DocumentSnapshot userDoc = await _firestore.collection("users").doc(uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection("users").doc(uid).get();
 
       if (userDoc.exists && userDoc.data() != null) {
         List<dynamic> postIds = userDoc["posts"] ?? [];
 
         _images.clear();
         for (String postId in postIds) {
-          DocumentSnapshot postDoc = await _firestore.collection("posts").doc(postId).get();
+          DocumentSnapshot postDoc =
+              await _firestore.collection("posts").doc(postId).get();
           if (postDoc.exists && postDoc.data() != null) {
-            Map<String, dynamic> postData = postDoc.data() as Map<String, dynamic>;
+            Map<String, dynamic> postData =
+                postDoc.data() as Map<String, dynamic>;
 
             _images.add({
               "imageUrl": postData["imageUrl"],
@@ -42,6 +49,9 @@ class ImageProviderClass with ChangeNotifier {
     } catch (e) {
       print("Firestore에서 posts 가져오기 실패");
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 
   void addImage(Map<String, dynamic> imageData) {

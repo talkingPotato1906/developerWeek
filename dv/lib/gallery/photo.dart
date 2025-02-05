@@ -36,8 +36,12 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
   void initState() {
     super.initState();
 
-    final provider = Provider.of<ImageProviderClass>(context, listen: false);
-    provider.fetchUserPosts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<ImageProviderClass>(context, listen: false);
+      if (mounted) {
+        provider.fetchUserPosts();
+      }
+    });
   }
 
   @override
@@ -51,44 +55,53 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-          ),
-          itemCount: provider.images.length,
-          itemBuilder: (context, index) {
-            bool isSelected =
-                provider.selectedImages.contains(provider.images[index]);
+        child: provider.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: provider.images.length,
+                itemBuilder: (context, index) {
+                  bool isSelected =
+                      provider.selectedImages.contains(provider.images[index]);
 
-            return GestureDetector(
-              onTap: () => showImageContent(context, index),
-              child: Stack(
-                children: [
-                  // ✅ 이미지 표시
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: provider.images[index]["imageUrl"] != ""
-                        ? Image.network(
-                            provider.images[index]["imageUrl"],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )
-                        : const Icon(Icons.image_not_supported),
-                  ),
+                  return GestureDetector(
+                    onTap: () => showImageContent(context, index),
+                    child: Stack(
+                      children: [
+                        // ✅ 이미지 표시
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: provider.images[index]["imageUrl"] != ""
+                              ? Image.network(
+                                  provider.images[index]["imageUrl"],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                )
+                              : const Icon(Icons.image_not_supported),
+                        ),
 
-                  // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
-                  GalleryCheckOverlay(isSelected: isSelected),
-                ],
+                        // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
+                        GalleryCheckOverlay(isSelected: isSelected),
+                      ],
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => pickImageAndComment(context),
+        onPressed: () async {
+          await pickImageAndComment(context);
+          final provider =
+              Provider.of<ImageProviderClass>(context, listen: false);
+          await provider.fetchUserPosts();
+        },
         child: const Icon(Icons.add),
       ),
     );
