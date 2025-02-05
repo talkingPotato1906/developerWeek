@@ -1,3 +1,4 @@
+import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/login/login_provider.dart'; //로그인 파트
 import 'package:dv/menu/menu.dart';
 import 'package:dv/nickname/nickname_provider.dart';
@@ -15,6 +16,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FollowProvider()), // 팔로잉목록파트
         ChangeNotifierProvider(create: (context) => ImageProviderClass()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
@@ -22,7 +24,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => ShopItemProvider(),
         ),
-        ChangeNotifierProvider(create: (context) => NicknameProvider(),)
+        ChangeNotifierProvider(
+          create: (context) => NicknameProvider(),
+        )
       ],
       child: const MyApp(),
     ),
