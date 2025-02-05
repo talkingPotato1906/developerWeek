@@ -72,7 +72,13 @@ class PostService {
         "createdAt": FieldValue.serverTimestamp(),
         "reactions": 0,
       });
-      print("게시글 업로드 성공");
+
+      DocumentReference userRef = _firestore.collection("users").doc(uid);
+
+      await userRef.update({
+        "posts": FieldValue.arrayUnion([postId])
+      });
+      
     } catch (e) {
       print("게시글 업로드 오류: $e");
     }
