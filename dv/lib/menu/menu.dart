@@ -1,3 +1,4 @@
+import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
@@ -129,7 +130,8 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
 
             // ✅ 현재 상태가 true면 false로 변경 (로그아웃)
             if (loginProvider.isLoggedIn) {
-              loginProvider.logout();
+              final authService = Provider.of<AuthService>(context, listen: false);
+              authService.logout(context);
               // ✅ 로그아웃 성공 알림 추가
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

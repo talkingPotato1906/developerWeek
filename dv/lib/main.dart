@@ -1,4 +1,4 @@
-
+import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/login/login_provider.dart'; //로그인 파트
 import 'package:dv/menu/menu.dart';
@@ -15,7 +15,7 @@ import 'gallery/image_provider.dart'; // image_provider.dart
 import 'gallery/swipe_page_view.dart'; // 새로 만든 swipe_page_view.dart
 
 const firebaseConfig = {
-  "apiKey" : "AIzaSyDoTbJ2OukNUp_lz0l3uBwjyG6ESdrna6c",
+  "apiKey": "AIzaSyDoTbJ2OukNUp_lz0l3uBwjyG6ESdrna6c",
   "authDomain": "talkingpotato-e4901.firebaseapp.com",
   "projectId": "talkingpotato-e4901",
   "storageBucket": "talkingpotato-e4901.firebasestorage.app",
@@ -27,15 +27,14 @@ const firebaseConfig = {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(apiKey: firebaseConfig["apiKey"]!,
-    appId: firebaseConfig["appId"]!,
-    messagingSenderId: firebaseConfig["messagingSenderId"]!,
-    projectId: firebaseConfig["projectId"]!,
-    authDomain: firebaseConfig["authDomain"]!,
-    storageBucket: firebaseConfig["storageBucket"]!,
-    measurementId: firebaseConfig["measurementId"]!
-    )
-  );
+      options: FirebaseOptions(
+          apiKey: firebaseConfig["apiKey"]!,
+          appId: firebaseConfig["appId"]!,
+          messagingSenderId: firebaseConfig["messagingSenderId"]!,
+          projectId: firebaseConfig["projectId"]!,
+          authDomain: firebaseConfig["authDomain"]!,
+          storageBucket: firebaseConfig["storageBucket"]!,
+          measurementId: firebaseConfig["measurementId"]!));
   runApp(
     MultiProvider(
       providers: [
@@ -49,11 +48,13 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => NicknameProvider(),
-        )
+        ),
+        ChangeNotifierProvider(create: (context) => AuthService(),)
       ],
       child: const MyApp(),
     ),
   );
+  debugPrint("Firebase Initialized");
 }
 
 class MyApp extends StatelessWidget {

@@ -1,14 +1,10 @@
+import 'package:dv/firebase_login/signup_login.dart';
+import 'package:dv/login/login_provider.dart';
 import 'package:dv/login/login_success_page.dart';
 import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
 
 class MyApp extends StatelessWidget {
   @override
@@ -22,42 +18,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// 🔹 Firebase Authentication Service
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // 회원가입
-  Future<String?> register(String email, String password) async {
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user?.uid;
-    } catch (e) {
-      return e.toString();
-    }
-  }
-
-  // 로그인
-  Future<String?> login(String email, String password) async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user?.uid;
-    } catch (e) {
-      return e.toString();
-    }
-  }
-
-  // 로그아웃
-  Future<void> logout() async {
-    await _auth.signOut();
-  }
-}
-
 // 🔹 로그인 화면
 class LoginScreen extends StatefulWidget {
   @override
@@ -65,6 +25,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
@@ -73,9 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    final loginProvider = Provider.of<LogInProvider>(context, listen: false);
 
     String? result = await authService.login(email, password);
-    if (result != null && result.contains("uid")) {
+    if (result != null && !result.contains("ERROR")) {
+      loginProvider.login(email);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginSuccessPage(email: email,)),
@@ -107,11 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
             if (errorMessage.isNotEmpty)
               Text(errorMessage, style: TextStyle(color: Colors.red)),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: login,
-              child: Text("로그인"),
-            ),
-            TextButton(
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: login,
+                  child: Text("로그인"),
+                ),
+                ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -120,6 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text("회원가입"),
             ),
+              ],
+            ),
+            
           ],
         ),
       ),
@@ -144,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String password = passwordController.text.trim();
 
     String? result = await authService.register(email, password);
-    if (result != null && result.contains("uid")) {
+    if (result != null && !result.contains("ERROR")) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignUpSuccessScreen(email: email)),
