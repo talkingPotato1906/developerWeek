@@ -103,8 +103,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () {
                     String signUpMessage = signUpRules(emailController.text,
                             passwordController.text.toLowerCase())
-                        .keys.first;
-                        
+                        .keys
+                        .first;
+
                     bool signUpSuccess = signUpRules(emailController.text,
                         passwordController.text.toLowerCase())[signUpMessage]!;
 
