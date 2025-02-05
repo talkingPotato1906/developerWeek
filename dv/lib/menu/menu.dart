@@ -1,3 +1,4 @@
+import 'package:dv/category/category_screen.dart';
 import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/main.dart';
@@ -110,6 +111,20 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
                         ));
             }
           }),
+          _buildMenuItem(
+              Icons.category, languageProvider.getLanguage(message: "카테고리"),
+              () {
+            _toggleMenu();
+            if (mounted && context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CategoryScreen(initialCategory: "식물")),
+              );
+            }
+          }),
+
           _buildMenuItem(
               Icons.sell, languageProvider.getLanguage(message: "포인트 상점"), () {
             _toggleMenu();
