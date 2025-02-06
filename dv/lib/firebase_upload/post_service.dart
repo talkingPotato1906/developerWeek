@@ -49,40 +49,43 @@ class PostService {
   }
 
   Future<void> uploadPost({
-    required String title,
-    required String content,
-    required dynamic imageFile,
-  }) async {
-    try {
-      String uid = _auth.currentUser!.uid;
-      String postId = uid + DateTime.now().millisecondsSinceEpoch.toString();
-      String? imageUrl;
+  required String title,
+  required String content,
+  required dynamic imageFile,
+  required String category, // ✅ 카테고리 추가
+}) async {
+  try {
+    String uid = _auth.currentUser!.uid;
+    String postId = uid + DateTime.now().millisecondsSinceEpoch.toString();
+    String? imageUrl;
 
-      if (imageFile != null && imageFile is! String) {
-        imageUrl = await uploadImage(imageFile);
-      } else {
-        imageUrl = imageFile;
-      }
-
-      await _firestore.collection("posts").doc(postId).set({
-        "title": title,
-        "content": content,
-        "imageUrl": imageUrl ?? "",
-        "uid": uid,
-        "createdAt": FieldValue.serverTimestamp(),
-        "reactions": 0,
-      });
-
-      DocumentReference userRef = _firestore.collection("users").doc(uid);
-
-      await userRef.update({
-        "posts": FieldValue.arrayUnion([postId])
-      });
-      
-    } catch (e) {
-      print("게시글 업로드 오류: $e");
+    if (imageFile != null && imageFile is! String) {
+      imageUrl = await uploadImage(imageFile);
+    } else {
+      imageUrl = imageFile;
     }
+
+    await _firestore.collection("posts").doc(postId).set({
+      "title": title,
+      "content": content,
+      "imageUrl": imageUrl ?? "",
+      "uid": uid,
+      "category": category, // ✅ 카테고리 저장
+      "createdAt": FieldValue.serverTimestamp(),
+      "reactions": 0,
+    });
+
+    DocumentReference userRef = _firestore.collection("users").doc(uid);
+
+    await userRef.update({
+      "posts": FieldValue.arrayUnion([postId])
+    });
+    
+  } catch (e) {
+    print("게시글 업로드 오류: $e");
   }
+}
+
 
 
 }

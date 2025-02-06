@@ -12,6 +12,7 @@ Future<void> pickImageAndComment(
   Uint8List? existingImage, // ✅ 기존 이미지를 유지하는 변수 추가
   String? existingTitle,
   String? existingContent,
+  String? existingCategory,
   String? existingImageUrl, // ✅ Firestore에 저장된 기존 이미지 URL
 }) async {
   print("pickImageAndComment 실행!");
@@ -43,84 +44,118 @@ Future<void> pickImageAndComment(
   TextEditingController contentController =
       TextEditingController(text: existingContent ?? "");
 
+  // ✅ 기본 카테고리 설정
+  String selectedCategory = existingCategory ?? "일반"; 
+
   final Map<String, String>? result = await showDialog<Map<String, String>>(
     context: context,
     builder: (context) {
       print("다이얼로그 열림!");
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.4,
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.memory(
-                    imageBytes,
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                  ),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    labelText: "제목",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0), // ✅ 둥근 테두리 적용
+      return StatefulBuilder( // ✅ 다이얼로그 내부에서 상태 변경을 가능하게 함
+        builder: (context, setState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: MediaQuery.of(context).size.height * 0.7, // ✅ 높이 증가
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.memory(
+                        imageBytes,
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0), // 아래쪽 여백 추가
-                    child: TextField(
-                      controller: contentController,
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: titleController,
                       decoration: InputDecoration(
-                        labelText: "내용",
+                        labelText: "제목",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0), 
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: TextField(
+                          controller: contentController,
+                          decoration: InputDecoration(
+                            labelText: "내용",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          textAlignVertical: TextAlignVertical.top,
+                          maxLines: null,
+                          expands: true,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    // ✅ 카테고리 선택 Dropdown 추가
+                    DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      decoration: InputDecoration(
+                        labelText: "카테고리 선택",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      textAlignVertical: TextAlignVertical.top, // ✅ 텍스트를 위쪽 정렬
-                      maxLines: null,
-                      expands: true,
+                      items: ["일반", "공지", "질문", "정보", "자유"].map((String category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() { // ✅ 변경 시 UI 업데이트
+                            selectedCategory = newValue;
+                          });
+                        }
+                      },
                     ),
-                  ),
-                ),
-                SizedBox(height: 10), // 내용 입력칸과 확인 버튼 사이의 거리 조정
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      print("다이얼로그 확인 버튼 클릭!");
-                      Navigator.of(context).pop({
-                        "title": titleController.text,
-                        "content": contentController.text,
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+
+                    SizedBox(height: 10), 
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print("다이얼로그 확인 버튼 클릭!");
+                          Navigator.of(context).pop({
+                            "title": titleController.text,
+                            "content": contentController.text,
+                            "category": selectedCategory, // ✅ 카테고리 값 추가
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                        child:
+                            const Text("확인", style: TextStyle(color: Colors.white)),
+                      ),
                     ),
-                    child:
-                        const Text("확인", style: TextStyle(color: Colors.white)),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
     },
   );
@@ -141,7 +176,8 @@ Future<void> pickImageAndComment(
     await postService.uploadPost(
       title: result["title"]!,
       content: result["content"]!,
-      imageFile: imageUrl ?? "", // ✅ 기존 이미지가 있으면 Firestore에 업로드하지 않음
+      imageFile: imageUrl ?? "", 
+      category: result["category"]!, // ✅ 카테고리 포함하여 업로드
     );
     print("uploadPost 함수 호출!");
 
@@ -149,10 +185,11 @@ Future<void> pickImageAndComment(
       "image": imageBytes,
       "title": result["title"]!.isNotEmpty
           ? result["title"]!
-          : "제목 없음", // ✅ 제목이 없으면 기본값 설정
+          : "제목 없음",
       "content": result["content"]!.isNotEmpty
           ? result["content"]!
-          : "내용 없음", // ✅ 내용이 없으면 기본값 설정
+          : "내용 없음",
+      "category": result["category"]!, // ✅ 카테고리 추가
     });
   }
 }
