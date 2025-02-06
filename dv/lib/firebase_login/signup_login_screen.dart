@@ -5,8 +5,9 @@ import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,12 +21,13 @@ class MyApp extends StatelessWidget {
 
 // 🔹 로그인 화면
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
@@ -41,7 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
       loginProvider.login(email);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginSuccessPage(email: email,)),
+        MaterialPageRoute(
+          builder: (context) => LoginSuccessPage(email: email),
+        ),
       );
     } else {
       setState(() => errorMessage = result ?? "로그인 실패");
@@ -51,44 +55,86 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("로그인")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: "이메일"),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: "비밀번호"),
-              obscureText: true,
-            ),
-            SizedBox(height: 10),
-            if (errorMessage.isNotEmpty)
-              Text(errorMessage, style: TextStyle(color: Colors.red)),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: login,
-                  child: Text("로그인"),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 🔹 왼쪽에 일러스트 이미지 추가
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Image.asset("assets/login/green.png",
+                      fit: BoxFit.contain),
                 ),
-                ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
-                );
-              },
-              child: Text("회원가입"),
-            ),
-              ],
-            ),
-            
-          ],
+              ),
+
+              // 🔹 오른쪽 로그인 폼
+              Expanded(
+                flex: 1,
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Welcome!",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 20),
+                        TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            labelText: "이메일",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            labelText: "비밀번호",
+                            border: OutlineInputBorder(),
+                          ),
+                          obscureText: true,
+                        ),
+                        SizedBox(height: 10),
+                        if (errorMessage.isNotEmpty)
+                          Text(errorMessage,
+                              style: TextStyle(color: Colors.red)),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: login,
+                              child: Text("로그인"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RegisterScreen()),
+                                );
+                              },
+                              child: Text("회원가입"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -97,6 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
 // 🔹 회원가입 화면
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -115,7 +163,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (result != null && !result.contains("ERROR")) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SignUpSuccessScreen(email: email)),
+        MaterialPageRoute(
+            builder: (context) => SignUpSuccessScreen(email: email)),
       );
     } else {
       setState(() => errorMessage = result ?? "회원가입 실패");
