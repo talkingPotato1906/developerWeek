@@ -71,7 +71,7 @@ class PostService {
       "imageUrl": imageUrl ?? "",
       "uid": uid,
       "category": category, // ✅ 카테고리 저장
-      "createdAt": FieldValue.serverTimestamp(),
+      "createdAt": Timestamp.now(),
       "reactions": 0,
     });
 

@@ -196,7 +196,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(post["title"]),
-                                  Text(post["createdAt"])
+                                  Text(post["createdAt"].toString())
                                 ],),);
                             },)
                         ),
