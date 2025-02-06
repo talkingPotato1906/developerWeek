@@ -20,7 +20,7 @@ class PhotoPage extends StatelessWidget {
       return const LoginRequiredPage();
     }
 
-    return PhotoPageContent();
+    return const PhotoPageContent();
   }
 }
 
@@ -56,9 +56,7 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: provider.isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? const Center(child: CircularProgressIndicator())
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -67,19 +65,24 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
                 ),
                 itemCount: provider.images.length,
                 itemBuilder: (context, index) {
-                  bool isSelected =
-                      provider.selectedImages.contains(provider.images[index]);
+                  final imageData = provider.images[index];
+                  final String postId = imageData["postId"] ?? ""; // ✅ Firestore 문서 ID 사용
+                  bool isSelected = provider.selectedImages.contains(imageData);
 
                   return GestureDetector(
-                    onTap: () => showImageContent(context, index),
+                    onTap: () {
+                      if (postId.isNotEmpty) {
+                        showImageContent(context, postId); // ✅ postId 기반으로 불러오기
+                      }
+                    },
                     child: Stack(
                       children: [
-                        // ✅ 이미지 표시
+                        // ✅ Firestore에서 불러온 이미지 표시
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: provider.images[index]["imageUrl"] != ""
+                          child: imageData["imageUrl"] != ""
                               ? Image.network(
-                                  provider.images[index]["imageUrl"],
+                                  imageData["imageUrl"],
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
