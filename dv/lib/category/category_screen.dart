@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -14,42 +15,44 @@ class _CategoryScreenState extends State<CategoryScreen> {
   TextEditingController searchController =
       TextEditingController(); // 검색어 입력을 위한 컨트롤러
   String searchQuery = ""; // 검색어 저장
+  List<Map<String, dynamic>> posts = [];
 
   @override
   void initState() {
     super.initState();
     selectedCategory = widget.initialCategory; // 기본 선택 카테고리 설정
+    fetchPosts();
   }
 
   // 카테고리 목록
-  final List<String> categories = ["식물", "식기", "운석", "주류"];
+  final List<String> categories = ["식물", "식기", "원석", "주류", "책", "피규어"];
 
   // 더미 게시글 데이터
-  final Map<String, List<Map<String, String>>> posts = {
-    "식물": [
-      {"title": "재밌는 식물 이야기", "author": "닉네임", "date": "2025-02-05"},
-      {"title": "이 꽃은 어디서 왔을까?", "author": "작성자A", "date": "2025-02-04"},
-    ],
-    "식기": [
-      {"title": "특이한 접시 모음", "author": "닉네임", "date": "2025-02-03"},
-      {"title": "식기 사용법", "author": "작성자B", "date": "2025-02-02"},
-    ],
-    "운석": [
-      {"title": "우주에서 온 돌", "author": "닉네임", "date": "2025-01-31"},
-      {"title": "운석의 기원", "author": "작성자C", "date": "2025-01-29"},
-    ],
-    "주류": [
-      {"title": "세계의 맥주 이야기", "author": "닉네임", "date": "2025-01-25"},
-      {"title": "위스키와 와인의 차이", "author": "작성자D", "date": "2025-01-22"},
-    ],
-  };
+  Future<void> fetchPosts() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .where("category", isEqualTo: selectedCategory)
+        .orderBy("createdAt", descending: true)
+        .get();
+
+        setState(() {
+          posts = querySnapshot.docs.map((doc) {
+            return {
+              "title": doc["title"],
+              "uid": doc["uid"],
+              "createdAt": doc["createdAt"],
+              "imageUrl": doc["imageUrl"],
+              "content": doc["content"],
+              "category": doc["category"],
+              "reactions": doc["reactions"]
+            };
+          }).toList();
+        });
+  }
 
   // 검색어를 기준으로 필터링된 게시글 목록 반환
-  List<Map<String, String>> getFilteredPosts() {
-    return posts[selectedCategory]!
-        .where((post) =>
-            post["title"]!.toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+  List<Map<String, dynamic>> getFilteredPosts() {
+    return posts.where((post) => post["title"].toString().toLowerCase().contains(searchQuery.toLowerCase()),).toList();
   }
 
   @override
@@ -86,6 +89,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         searchQuery = ""; // 카테고리를 변경할 때 검색어 초기화
                         searchController.clear();
                       });
+                      fetchPosts();
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -181,23 +185,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                         // 게시글 리스트 (검색 필터링 적용)
                         Expanded(
-                          child: ListView.builder(
+                          child: posts.isEmpty
+                          ? Center(child: CircularProgressIndicator())
+                          : ListView.builder(
                             itemCount: getFilteredPosts().length,
                             itemBuilder: (context, index) {
                               var post = getFilteredPosts()[index];
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(post["title"]!),
-                                    Text(post["date"] ?? ""),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                              return Padding(padding: EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(post["title"]),
+                                  Text(post["createdAt"])
+                                ],),);
+                            },)
                         ),
 
                         // 페이지네이션

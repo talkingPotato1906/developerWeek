@@ -45,7 +45,7 @@ Future<void> pickImageAndComment(
       TextEditingController(text: existingContent ?? "");
 
   // ✅ 기본 카테고리 설정
-  String selectedCategory = existingCategory ?? "일반"; 
+  String selectedCategory = existingCategory ?? "식물"; 
 
   final Map<String, String>? result = await showDialog<Map<String, String>>(
     context: context,
@@ -114,7 +114,7 @@ Future<void> pickImageAndComment(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      items: ["일반", "공지", "질문", "정보", "자유"].map((String category) {
+                      items: ["식물", "식기", "주류", "원석", "책", "피규어"].map((String category) {
                         return DropdownMenuItem<String>(
                           value: category,
                           child: Text(category),
