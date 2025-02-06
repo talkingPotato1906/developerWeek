@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/category/category_post_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String initialCategory; // 기본 선택된 카테고리
@@ -27,7 +29,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   // 카테고리 목록
   final List<String> categories = ["식물", "식기", "원석", "주류", "책", "피규어"];
 
-  // 더미 게시글 데이터
+  // 데이터 불러오기
   Future<void> fetchPosts() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('posts')
@@ -35,24 +37,38 @@ class _CategoryScreenState extends State<CategoryScreen> {
         .orderBy("createdAt", descending: true)
         .get();
 
-        setState(() {
-          posts = querySnapshot.docs.map((doc) {
-            return {
-              "title": doc["title"],
-              "uid": doc["uid"],
-              "createdAt": doc["createdAt"],
-              "imageUrl": doc["imageUrl"],
-              "content": doc["content"],
-              "category": doc["category"],
-              "reactions": doc["reactions"]
-            };
-          }).toList();
-        });
+    setState(() {
+      posts = querySnapshot.docs.map((doc) {
+        return {
+          "id": doc.id,
+          "title": doc["title"],
+          "uid": doc["uid"],
+          "createdAt": doc["createdAt"],
+          "imageUrl": doc["imageUrl"],
+          "content": doc["content"],
+          "category": doc["category"],
+          "reactions": doc["reactions"]
+        };
+      }).toList();
+    });
   }
 
   // 검색어를 기준으로 필터링된 게시글 목록 반환
   List<Map<String, dynamic>> getFilteredPosts() {
-    return posts.where((post) => post["title"].toString().toLowerCase().contains(searchQuery.toLowerCase()),).toList();
+    return posts
+        .where(
+          (post) => post["title"]
+              .toString()
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase()),
+        )
+        .toList();
+  }
+
+  //  날짜 포맷 함수
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat("yyyy-MM-dd HH:mm").format(dateTime);
   }
 
   @override
@@ -185,21 +201,45 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                         // 게시글 리스트 (검색 필터링 적용)
                         Expanded(
-                          child: posts.isEmpty
-                          ? Center(child: CircularProgressIndicator())
-                          : ListView.builder(
-                            itemCount: getFilteredPosts().length,
-                            itemBuilder: (context, index) {
-                              var post = getFilteredPosts()[index];
-                              return Padding(padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(post["title"]),
-                                  Text(post["createdAt"].toString())
-                                ],),);
-                            },)
-                        ),
+                            child: posts.isEmpty
+                                ? Center(child: CircularProgressIndicator())
+                                : ListView.builder(
+                                    itemCount: getFilteredPosts().length,
+                                    itemBuilder: (context, index) {
+                                      var post = getFilteredPosts()[index];
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                // Navigator.push로 화면 이동
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CategoryPostScreen(
+                                                      postId:
+                                                          post["id"], // 문서 ID
+                                                      title: post[
+                                                          "title"], // 게시글 제목
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child:
+                                                  Text(post["title"],
+                                                  style: TextStyle(color: Colors.white),), // 제목 표시
+                                            ),
+                                            Text(formatTimestamp(post["createdAt"]))
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )),
 
                         // 페이지네이션
                         Row(

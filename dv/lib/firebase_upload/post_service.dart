@@ -73,6 +73,7 @@ class PostService {
       "category": category, // ✅ 카테고리 저장
       "createdAt": Timestamp.now(),
       "reactions": 0,
+      "reacted": [],
     });
 
     DocumentReference userRef = _firestore.collection("users").doc(uid);
