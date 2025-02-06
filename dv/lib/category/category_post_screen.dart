@@ -25,6 +25,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
   void initState() {
     super.initState();
     fetchPostData();
+    checkIfLiked();
   }
 
   //  데이터 불러오기
@@ -126,6 +127,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
         print("✅ Post reactions updated: $currentReactions + 1");
         print("✅ User points updated: $currentPoints + 50");
       } else {
+        _isLiked = true;
         print("User already reacted to this post.");
       }
     });
