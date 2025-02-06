@@ -1,19 +1,33 @@
 import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/login/login_success_page.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_images.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(), // 테마 프로바이더 등록
+      child: const MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase Auth',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: themeProvider.getTheme(), // 선택된 테마 적용
       home: LoginScreen(),
     );
   }
@@ -54,27 +68,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = ColorPalette.palette[themeProvider.selectedThemeIndex];
+
     return Scaffold(
+      backgroundColor: themeColors[0], // 배경색 변경
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 🔹 왼쪽에 일러스트 이미지 추가
-              Expanded(
+              // 🔹 테마별 이미지 위젯 사용 (새 파일에서 불러옴)
+              const Expanded(
                 flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Image.asset("assets/login/green.png",
-                      fit: BoxFit.contain),
-                ),
+                child: ThemedImageWidget(),
               ),
 
-              // 🔹 오른쪽 로그인 폼
+              // 🔹 로그인 폼
               Expanded(
                 flex: 1,
                 child: Card(
+                  color: themeColors[1], // 카드 배경색 적용
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -86,7 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text("Welcome!",
                             style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold)),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: themeColors[3])),
                         SizedBox(height: 20),
                         TextField(
                           controller: emailController,
@@ -113,10 +130,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeColors[2], // 버튼 색상 변경
+                              ),
                               onPressed: login,
-                              child: Text("로그인"),
+                              child: Text("로그인",
+                                  style: TextStyle(color: themeColors[3])),
                             ),
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeColors[2], // 버튼 색상 변경
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -124,7 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       builder: (context) => RegisterScreen()),
                                 );
                               },
-                              child: Text("회원가입"),
+                              child: Text("회원가입",
+                                  style: TextStyle(color: themeColors[3])),
                             ),
                           ],
                         ),
@@ -141,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// 🔹 회원가입 화면
+// 🔹 회원가입 화면 (여기에 추가)
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -173,8 +198,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = ColorPalette.palette[themeProvider.selectedThemeIndex];
+
     return Scaffold(
-      appBar: AppBar(title: Text("회원가입")),
+      backgroundColor: themeColors[0], // 배경색 적용
+      appBar: AppBar(
+        title: Text("회원가입", style: TextStyle(color: themeColors[3])),
+        backgroundColor: themeColors[1],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -194,8 +226,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Text(errorMessage, style: TextStyle(color: Colors.red)),
             SizedBox(height: 10),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: themeColors[2], // 버튼 색상 변경
+              ),
               onPressed: register,
-              child: Text("회원가입"),
+              child: Text("회원가입", style: TextStyle(color: themeColors[3])),
             ),
           ],
         ),
