@@ -7,6 +7,7 @@ import 'package:dv/nickname/nickname_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/shop/shop_provider.dart';
+import 'package:dv/shop/user_points_provider.dart';
 import 'package:dv/title/title_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -45,13 +46,19 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => LogInProvider()), //로그인파트 추가
         ChangeNotifierProvider(
+            create: (context) => UserPointsProvider()), // ✅ 포인트 관리 Provider 등록
+        ChangeNotifierProvider(
           create: (context) => ShopItemProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => NicknameProvider(),
         ),
-        ChangeNotifierProvider(create: (context) => AuthService(),),
-        ChangeNotifierProvider(create: (context) => GetUserData(),)
+        ChangeNotifierProvider(
+          create: (context) => AuthService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GetUserData(),
+        )
       ],
       child: const MyApp(),
     ),
