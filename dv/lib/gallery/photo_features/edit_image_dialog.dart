@@ -84,7 +84,8 @@ void showEditImageDialog(BuildContext context, String postId) {
                       alignment: Alignment.bottomRight,
                       child: ElevatedButton(
                         onPressed: () async {
-                          await _updatePost(postId, titleController.text, contentController.text);
+                          await _updatePost(postId, titleController.text,
+                              contentController.text);
 
                           // ✅ 다이얼로그 닫기
                           Navigator.of(context, rootNavigator: true).pop();
@@ -96,9 +97,11 @@ void showEditImageDialog(BuildContext context, String postId) {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
                         ),
-                        child: const Text("수정 완료", style: TextStyle(color: Colors.white)),
+                        child: const Text("수정 완료",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],
@@ -113,7 +116,8 @@ void showEditImageDialog(BuildContext context, String postId) {
 }
 
 // ✅ Firestore에서 게시글 데이터 업데이트
-Future<void> _updatePost(String postId, String newTitle, String newContent) async {
+Future<void> _updatePost(
+    String postId, String newTitle, String newContent) async {
   try {
     await FirebaseFirestore.instance.collection("posts").doc(postId).update({
       "title": newTitle,

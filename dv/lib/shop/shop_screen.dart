@@ -5,11 +5,26 @@ import 'package:dv/settings/language/language_provider.dart'; //  언어 적용
 import 'package:dv/settings/theme/color_palette.dart'; //  테마 적용
 import 'package:dv/settings/theme/theme_provider.dart'; //  테마 적용
 import 'package:dv/shop/shop_provider.dart'; //  상품 및 user 포인트 관리
+import 'package:dv/shop/user_points_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ShopScreen extends StatelessWidget {
+class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
+
+  @override
+  _ShopScreenState createState() => _ShopScreenState();
+}
+
+class _ShopScreenState extends State<ShopScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 🔹 `initState()`에서 Firestore 데이터 불러오기
+    Future.microtask(() {
+      Provider.of<UserPointsProvider>(context, listen: false).fetchUserPoints();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,39 +42,57 @@ class ShopScreen extends StatelessWidget {
       floatingActionButton: FloatingMenuButton(), //  메뉴 버튼
       body: Column(
         children: [
-        
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: loginProvider.isLoggedIn
-                ?
-                //  로그인 상태일 때 보유 포인트 표시
-                Container(
-                    width: double.infinity,
-                    height: 100,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
-                    child: Row(
-  mainAxisSize: MainAxisSize.min, // 최소 크기로 조정
-  children: [
-    Icon(Icons.confirmation_num_outlined, size: 24, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]), // 코인 아이콘
-    SizedBox(width: 8), // 아이콘과 텍스트 간격
-    Text(
-      "보유 포인트: ${shopProvider.userPoints}",
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
-      ),
-    ),
-  ],
-),
-
+                ? Consumer<UserPointsProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.isLoading) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              CircularProgressIndicator(), // 🔹 로딩 표시
+                              SizedBox(height: 10),
+                              Text("포인트 데이터를 불러오는 중입니다...")
+                            ],
+                          ),
+                        );
+                      }
+                      return Container(
+                        width: double.infinity,
+                        height: 100,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: ColorPalette
+                              .palette[themeProvider.selectedThemeIndex][3],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.confirmation_num_outlined,
+                              size: 24,
+                              color: ColorPalette
+                                  .palette[themeProvider.selectedThemeIndex][0],
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "보유 포인트: ${provider.points}", // ✅ 데이터 표시
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: ColorPalette.palette[
+                                    themeProvider.selectedThemeIndex][0],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   )
-                : SizedBox(), // 로그아웃 상태일 때 아무것도 표시하지 않음
+                : SizedBox(),
           ),
           Expanded(
             child: ListView.builder(
@@ -75,41 +108,45 @@ class ShopScreen extends StatelessWidget {
                   width: double.infinity,
                   child: Container(
                     decoration: BoxDecoration(
-                    color: ColorPalette.palette[themeProvider.selectedThemeIndex][1], // 아이템 전체 배경색
-                    border: Border.all(
-                    color: ColorPalette.palette[themeProvider.selectedThemeIndex][0], // 테두리 색상
-                     width: 2, // 테두리 두께
-                  ),
-               borderRadius: BorderRadius.circular(12), // 모서리 둥글게
-                ),
-                //padding: EdgeInsets.all(12), // 내부 패딩 추가
-               margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      color:
+                          ColorPalette.palette[themeProvider.selectedThemeIndex]
+                              [1], // 아이템 전체 배경색
+                      border: Border.all(
+                        color: ColorPalette
+                                .palette[themeProvider.selectedThemeIndex]
+                            [0], // 테두리 색상
+                        width: 2, // 테두리 두께
+                      ),
+                      borderRadius: BorderRadius.circular(12), // 모서리 둥글게
+                    ),
+                    //padding: EdgeInsets.all(12), // 내부 패딩 추가
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // 이미지 (leading)
-                              Expanded(
-                        child: ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return LinearGradient(
-                              begin: Alignment(0.2, 0.0),
-                              end: Alignment(0.9,0.0),
-                              colors: [Colors.white, Colors.transparent],
-                            ).createShader(bounds);
-                          },
-                          blendMode: BlendMode.dstIn,
-                          child: Container(
-                            width: 200,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("profile/$itemName.png"),
-                                fit: BoxFit.cover,
+                        Expanded(
+                          child: ShaderMask(
+                            shaderCallback: (Rect bounds) {
+                              return LinearGradient(
+                                begin: Alignment(0.2, 0.0),
+                                end: Alignment(0.9, 0.0),
+                                colors: [Colors.white, Colors.transparent],
+                              ).createShader(bounds);
+                            },
+                            blendMode: BlendMode.dstIn,
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("profile/$itemName.png"),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                          ),// 이미지를 꽉 차게 조정
-                               ),
-                             ),
+                            ), // 이미지를 꽉 차게 조정
+                          ),
+                        ),
                         const SizedBox(width: 50), // 이미지와 텍스트 간격
                         // 텍스트 (title, subtitle)
                         Expanded(
@@ -118,20 +155,20 @@ class ShopScreen extends StatelessWidget {
                             children: [
                               Container(
                                 width: double.infinity,
-                               height: 50,
-                               alignment: Alignment.centerRight,
-                               margin: EdgeInsets.all(10),
-                               decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: ColorPalette
-                                .palette[themeProvider.selectedThemeIndex][1]),
-                              child: Text(
-                                "${itemData[1]} pt", //  가격 표시
-                                style: TextStyle(
-                                    fontSize: 40, fontWeight: FontWeight.bold),
+                                height: 50,
+                                alignment: Alignment.centerRight,
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: ColorPalette.palette[
+                                        themeProvider.selectedThemeIndex][1]),
+                                child: Text(
+                                  "${itemData[1]} pt", //  가격 표시
+                                  style: TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              ),
-                              
                             ],
                           ),
                         ),
@@ -158,7 +195,8 @@ class ShopScreen extends StatelessWidget {
                                     },
                                     child: Icon(Icons.shopping_cart,
                                         color: ColorPalette.palette[
-                                            themeProvider.selectedThemeIndex][3],
+                                            themeProvider
+                                                .selectedThemeIndex][3],
                                         size: 30),
                                   )
                             //  로그아웃 상태인 경우 아이콘 및 품절 표시 하지 않음
@@ -195,15 +233,16 @@ class ShopScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: ClipOval( // 이미지를 동그랗게 자름
+                    width: 200,
+                    height: 200,
+                    child: ClipOval(
+                      // 이미지를 동그랗게 자름
                       child: Image.asset(
-                      "profile/$itemName.png", // 이미지 주소
-                      fit: BoxFit.cover, // 이미지를 꽉 차게 조정
+                        "profile/$itemName.png", // 이미지 주소
+                        fit: BoxFit.cover, // 이미지를 꽉 차게 조정
                       ),
-                     ),
-                   ), //  가격 표시
+                    ),
+                  ), //  가격 표시
                 ],
               ),
               actions: [
@@ -233,11 +272,12 @@ class ShopScreen extends StatelessWidget {
                       iconColor: ColorPalette
                           .palette[themeProvider.selectedThemeIndex][0]),
                   onPressed: () {
-                    bool isPurchased = shopProvider.purchaseItem(context, itemName); // 구매 시도
+                    bool isPurchased = shopProvider.purchaseItem(
+                        context, itemName) as bool; // 구매 시도
 
                     if (isPurchased) {
-                     Navigator.pop(context); // 구매 성공 시에만 팝업창 닫기
-                     }
+                      Navigator.pop(context); // 구매 성공 시에만 팝업창 닫기
+                    }
                   },
                   label: Text(languageProvider.getLanguage(message: "구매"),
                       style: TextStyle(
