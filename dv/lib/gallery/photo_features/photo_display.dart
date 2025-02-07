@@ -32,6 +32,7 @@ void showImageContent(BuildContext context, String postId) {
           String content = postData["content"] ?? "내용 없음";
           String category = postData["category"] ?? "일반";
           String imageUrl = postData["imageUrl"] ?? "";
+          int reactions = postData["reactions"] ?? 0;
 
           return Dialog(
             backgroundColor: Colors.white,
@@ -56,12 +57,16 @@ void showImageContent(BuildContext context, String postId) {
                                 ? Image.network(
                                     imageUrl,
                                     fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    height: MediaQuery.of(context).size.height * 0.4,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
                                   )
                                 : Container(
-                                    width: MediaQuery.of(context).size.width * 0.4,
-                                    height: MediaQuery.of(context).size.height * 0.4,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
                                     color: Colors.grey[300],
                                     child: const Center(child: Text("이미지 없음")),
                                   ),
@@ -76,7 +81,8 @@ void showImageContent(BuildContext context, String postId) {
                                 Text(
                                   title,
                                   style: const TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.bold),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 4),
                                 Container(
@@ -109,42 +115,63 @@ void showImageContent(BuildContext context, String postId) {
 
                     // ✅ 삭제 및 닫기 버튼
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // 삭제 버튼
-                        ElevatedButton(
-                          onPressed: () async {
-                            await firestore.collection("posts").doc(postId).delete();
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.favorite,
+                              color: Colors.red,
                             ),
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
-                          ),
-                          child: const Text("삭제",
-                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                            SizedBox(width: 10,),
+                            Text(reactions.toString()),
+                          ],
                         ),
-                        const SizedBox(width: 8),
 
-                        // 닫기 버튼
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                        // 삭제 버튼
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await firestore
+                                    .collection("posts")
+                                    .doc(postId)
+                                    .delete();
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                backgroundColor: Colors.red,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 12),
+                              ),
+                              child: const Text("삭제",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white)),
                             ),
-                            backgroundColor: Colors.grey,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
-                          ),
-                          child: const Text("닫기",
-                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                            const SizedBox(width: 8),
+
+                            // 닫기 버튼
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                backgroundColor: Colors.grey,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 12),
+                              ),
+                              child: const Text("닫기",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white)),
+                            ),
+                          ],
                         ),
                       ],
                     ),
