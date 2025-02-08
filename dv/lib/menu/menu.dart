@@ -10,6 +10,7 @@ import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/shop/shop_screen.dart';
+import 'package:dv/shop/user_points_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -148,6 +149,7 @@ class _FloatingMenuButtonState extends State<FloatingMenuButton> {
             if (loginProvider.isLoggedIn) {
               final authService = Provider.of<AuthService>(context, listen: false);
               authService.logout(context);
+
               // ✅ 로그아웃 성공 알림 추가
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
