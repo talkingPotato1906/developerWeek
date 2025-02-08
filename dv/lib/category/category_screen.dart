@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
+import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String initialCategory; // 기본 선택된 카테고리
@@ -18,16 +20,29 @@ class _CategoryScreenState extends State<CategoryScreen> {
       TextEditingController(); // 검색어 입력을 위한 컨트롤러
   String searchQuery = ""; // 검색어 저장
   List<Map<String, dynamic>> posts = [];
+  Map<String, dynamic> userData = {};
+  bool isLoading = true;
+ 
 
   @override
   void initState() {
     super.initState();
     selectedCategory = widget.initialCategory; // 기본 선택 카테고리 설정
-    fetchPosts();
+    fetchData();
   }
 
   // 카테고리 목록
   final List<String> categories = ["식물", "식기", "원석", "주류", "책", "피규어"];
+
+  Future<void> fetchData() async {
+    await fetchPosts();
+    await fetchUser();
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   // 데이터 불러오기
   Future<void> fetchPosts() async {
@@ -53,6 +68,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
+  Future<void> fetchUser() async {
+    final getUserData = Provider.of<GetUserData>(context, listen: false);
+    
+    if (mounted) {
+    setState(() {
+      userData = Map<String, dynamic>.from(getUserData.userData);
+    });
+    }
+  }
+
   // 검색어를 기준으로 필터링된 게시글 목록 반환
   List<Map<String, dynamic>> getFilteredPosts() {
     return posts
@@ -73,7 +98,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     
+     List<dynamic> profiles = List<dynamic>.from(userData["profile"] ?? []);
+     int profileIndex = userData["profileIdx"] ?? 0;
+     String nickname = userData["nickname"] ?? "";
+
+    return isLoading?
+    Scaffold(
+      body: Center(child: CircularProgressIndicator())
+    )
+
+    : Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -91,9 +126,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(radius: 30, child: Icon(Icons.person)),
+                CircleAvatar(radius: 30,
+                child: ClipOval(
+                  child: 
+                  profiles.isEmpty ?
+                  Icon(Icons.person):
+                  Image.network(profiles[profileIndex]),
+                )),
                 SizedBox(height: 10),
-                Text("nickname", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(nickname, style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Text("▼ 카테고리", style: TextStyle(fontWeight: FontWeight.bold)),
                 // 카테고리 버튼 리스트

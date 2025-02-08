@@ -64,22 +64,15 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         // 프로필 아이콘 및 버튼
                         Column(
                           children: [
-                            profiles.isNotEmpty ?
                             ClipOval(
                               child: Image.asset(
-                                profiles[0],
+                                profiles[getUserData.userData["profileIdx"]],
                                 width: imageSize,
                                 height: imageSize,
                                 fit: BoxFit.cover,
                               )
-                            )
-                            : Icon(
-                              Icons.account_circle,
-                              size: imageSize,
-                              color: ColorPalette
-                                  .palette[themeProvider.selectedThemeIndex][3]
-                                  .withAlpha(128),
                             ),
+                            
                             const SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () {
