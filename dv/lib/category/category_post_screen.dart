@@ -20,6 +20,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, dynamic>? postData;
   Map<String, dynamic>? userData;
+  bool isLoading = true;
   bool _isLiked = false;
 
   @override
@@ -38,19 +39,25 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
           .get();
 
       if (postSnapshot.exists) {
-        Map<String, dynamic> post = postSnapshot.data() as Map<String, dynamic>;
-
+        setState(() {
+          postData = postSnapshot.data() as Map<String, dynamic>;
+        });
+        
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection("users")
-            .doc(post["uid"])
+            .doc(postData!["uid"])
             .get();
 
         if (userSnapshot.exists) {
           setState(() {
-            postData = post;
             userData = userSnapshot.data() as Map<String, dynamic>;
+            isLoading = false;
           });
         }
+      } else {
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print("Error fetching data: $e");
@@ -159,7 +166,9 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: postData == null || userData == null
+      body: isLoading
+      ? Center(child: CircularProgressIndicator(),)
+      : postData == null || userData == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: EdgeInsets.all(16),
