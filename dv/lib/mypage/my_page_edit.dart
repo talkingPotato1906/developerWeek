@@ -16,9 +16,7 @@ void showEditProfile(BuildContext context) {  //  profile DB 구축되면 int in
       return AlertDialog(
         content: Row(children: [
           CircleAvatar(radius: 30,
-          child: profiles.isEmpty
-          ? Icon(Icons.person)
-          : Image.asset(profiles[0]),
+          child: Image.asset(profiles[getUserData.userData["profileIdx"]]),
           ),
           const SizedBox(width: 16,),
           Expanded(child: GestureDetector(

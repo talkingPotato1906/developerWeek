@@ -87,29 +87,31 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
               : Column(
                   children: [
                     //  프로필
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: user["profile"].isNotEmpty
-                              ? NetworkImage(user["profile"] is List<dynamic>
-                                  ? user["profile"][0]
-                                  : user["profile"])
-                              : null,
-                          child: user["profile"].isEmpty
-                              ? Icon(
-                                  Icons.person,
-                                  size: 30,
-                                )
-                              : null,
-                        ),
-                        Text(
-                          user["nickname"],
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: user["profile"].isNotEmpty
+                                ? NetworkImage(user["profile"][user["profileIdx"]]
+                                    )
+                                : null,
+                            child: user["profile"].isEmpty
+                                ? Icon(
+                                    Icons.person,
+                                    size: 30,
+                                  )
+                                : null,
+                          ),
+                          Text(
+                            user["nickname"],
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: Padding(
