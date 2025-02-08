@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
+import 'package:dv/menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -78,6 +79,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
             icon: Icon(Icons.arrow_back)),
         title: Text(user["nickname"] ?? "..."),
       ),
+      floatingActionButton: FloatingMenuButton(),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
