@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/menu/menu.dart';
 import 'package:dv/others_gallery/others_gallery_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +167,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      floatingActionButton: FloatingMenuButton(),
       body: isLoading
       ? Center(child: CircularProgressIndicator(),)
       : postData == null || userData == null

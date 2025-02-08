@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/firebase_login/get_user_data.dart';
+import 'package:dv/menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -116,6 +117,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         title: Text(selectedCategory),
       ),
+      floatingActionButton: FloatingMenuButton(),
       body: Row(
         children: [
           // 왼쪽 사이드바 (카테고리 버튼)
