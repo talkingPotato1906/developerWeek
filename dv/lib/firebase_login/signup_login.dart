@@ -1,20 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dv/login/login_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/login/login_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-class AuthService with ChangeNotifier{
+class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  
   // 회원가입
   Future<String?> register(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -30,6 +30,12 @@ class AuthService with ChangeNotifier{
         "profile": [],
         "trophy": [],
       });
+      await FirebaseFirestore.instance.collection("users").doc(uid).set({
+        "nickname": email,
+        "points": 100, // 초기 포인트
+        "purchasedItems": [], // 🔹 구매한 아이템 목록 초기화
+      });
+
       return uid;
     } catch (e) {
       return "ERROR: ${e.toString()}";
@@ -80,5 +86,3 @@ class AuthService with ChangeNotifier{
     }
   }
 }
-  
-
