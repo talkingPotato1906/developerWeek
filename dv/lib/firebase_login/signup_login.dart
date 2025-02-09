@@ -27,10 +27,12 @@ class AuthService with ChangeNotifier{
         "posts": [],
         "gallery": [],
         "following": [],
-        "profile": ["assets/profile/default.png"],
+        "profile": "assets/profile/default.png",
         "trophy": ["새싹"],
+        "purchasedItem": ["assets/profile/default.png"],
         "profileIdx": 0,
-        "trophyIdx": 0
+        "trophyIdx": 0,
+        "category": 0,
       });
       return uid;
     } catch (e) {
