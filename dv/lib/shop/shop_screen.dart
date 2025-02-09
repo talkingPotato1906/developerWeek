@@ -155,54 +155,59 @@ class _ShopScreenState extends State<ShopScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // 🔹 가격 표시 컨테이너
                               Container(
                                 width: double.infinity,
                                 height: 50,
-                                alignment: Alignment.centerRight,
+                                alignment: Alignment.center,
                                 margin: EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: ColorPalette.palette[
-                                        themeProvider.selectedThemeIndex][1]),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: ColorPalette.palette[
+                                      themeProvider.selectedThemeIndex][1],
+                                ),
                                 child: Text(
                                   "${itemData[1]} pt", //  가격 표시
                                   style: TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        loginProvider.isLoggedIn // 로그인 상태일 때 구매 아이콘 및 품절 여부 표시
+                        loginProvider.isLoggedIn
                             ? isPurchased
-                                // 구매 된 경우 품절 표시
+                                // 🔹 구매 완료된 경우
                                 ? Text(
-                                    languageProvider.getLanguage(message: "품절"),
+                                    "품절", // 🔹 언어 프로바이더 제거 및 직접 텍스트 표시
                                     style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                      color: Colors.grey,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   )
-                                //  구매 안 된 경우 구매 아이콘 표시
+                                // 🔹 구매 가능한 경우
                                 : GestureDetector(
                                     onTap: () {
                                       _showPurchaseDialog(
-                                          context,
-                                          itemName,
-                                          itemData[0],
-                                          itemData[1],
-                                          languageProvider,
-                                          themeProvider);
+                                        context,
+                                        itemName,
+                                        itemData[0],
+                                        itemData[1],
+                                        languageProvider,
+                                        themeProvider,
+                                      );
                                     },
-                                    child: Icon(Icons.shopping_cart,
-                                        color: ColorPalette.palette[
-                                            themeProvider
-                                                .selectedThemeIndex][3],
-                                        size: 30),
+                                    child: Icon(
+                                      Icons.shopping_cart,
+                                      color: ColorPalette.palette[
+                                          themeProvider.selectedThemeIndex][3],
+                                      size: 30,
+                                    ),
                                   )
-                            //  로그아웃 상태인 경우 아이콘 및 품절 표시 하지 않음
-                            : SizedBox(),
+                            : SizedBox(), // 🔹 로그아웃 상태일 경우 아무것도 표시하지 않음
                       ],
                     ),
                   ),
