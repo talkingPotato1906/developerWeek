@@ -42,6 +42,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
       int point = getUserData.userData["points"];
       List<dynamic> profiles = getUserData.userData["profile"];
 
+
       return Scaffold(
         appBar: AppBar(
           title: Text(languageProvider.getLanguage(message: "마이 페이지")),
@@ -84,6 +85,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               : Icon(
                                   Icons.account_circle,
                                   size: imageSize,
+
                                   color: ColorPalette
                                       .palette[themeProvider.selectedThemeIndex]
                                           [3]

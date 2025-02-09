@@ -53,6 +53,7 @@ void showEditProfile(BuildContext context) {
 
   bool isEditing = false;
 
+
   showDialog(
     context: context,
     builder: (context) {
@@ -62,6 +63,7 @@ void showEditProfile(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             children: [
               // 🔹 프로필 이미지 영역
+
               GestureDetector(
                 onTap: () async {
                   await updateProfileImage(context); // 🔹 이미지 업로드 함수 호출
