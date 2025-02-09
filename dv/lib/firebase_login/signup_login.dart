@@ -27,8 +27,10 @@ class AuthService with ChangeNotifier {
         "posts": [],
         "gallery": [],
         "following": [],
-        "profile": [],
-        "trophy": [],
+        "profile": ["assets/profile/default.png"],
+        "trophy": ["새싹"],
+        "profileIdx": 0,
+        "trophyIdx": 0
       });
       await FirebaseFirestore.instance.collection("users").doc(uid).set({
         "nickname": email,

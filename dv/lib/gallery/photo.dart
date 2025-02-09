@@ -70,9 +70,14 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
                   bool isSelected = provider.selectedImages.contains(imageData);
 
                   return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (postId.isNotEmpty) {
-                        showImageContent(context, postId); // ✅ postId 기반으로 불러오기
+                        bool? deleted = await showImageContent(context, postId); // ✅ postId 기반으로 불러오기
+                        if (deleted == true) {
+                          setState(() {
+                            provider.fetchUserPosts();
+                          });
+                        }
                       }
                     },
                     child: Stack(

@@ -5,6 +5,7 @@ import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_changer.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:dv/settings/update_password/update_password.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,18 +36,20 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
         floatingActionButton: FloatingMenuButton(), // 메뉴 버튼
         body: Container(
-          color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ThemeChanger(), // 테마 변경 위젯
-                LanguageChanger(), // 언어 변경 위젯
-                const SizedBox(height: 16), // 간격 추가
+
+            color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ThemeChanger(), //  테마 변경 위젯
+                  LanguageChanger(), // 언어 변경 위젯
+                  UpdatePasswordScreen(),
+                  const SizedBox(height: 16), // 간격 추가
                 DeleteAccountButton(), // 🔹 회원탈퇴 버튼 추가
-              ],
-            ),
-          ),
-        ),
+                ],
+              ),
+            )),
+
       ),
     );
   }

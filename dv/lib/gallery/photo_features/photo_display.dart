@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-void showImageContent(BuildContext context, String postId) {
+Future<bool?> showImageContent(BuildContext context, String postId) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  showDialog(
+  return showDialog<bool>(
     context: context,
     builder: (context) {
       return FutureBuilder<DocumentSnapshot>(
@@ -19,14 +19,26 @@ void showImageContent(BuildContext context, String postId) {
               content: const Text("데이터를 불러오는 중 오류가 발생했습니다."),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(context).pop(false), // 🔹 false 반환
                   child: const Text("확인"),
                 ),
               ],
             );
           }
 
-          // ✅ Firestore에서 데이터 가져오기
+          if (!snapshot.hasData || snapshot.data == null) {
+            return AlertDialog(
+              title: const Text("오류"),
+              content: const Text("게시글 데이터를 찾을 수 없습니다."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false), // 🔹 false 반환
+                  child: const Text("확인"),
+                ),
+              ],
+            );
+          }
+
           var postData = snapshot.data!.data() as Map<String, dynamic>;
           String title = postData["title"] ?? "제목 없음";
           String content = postData["content"] ?? "내용 없음";
@@ -50,7 +62,6 @@ void showImageContent(BuildContext context, String postId) {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // ✅ 왼쪽: 이미지
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
                             child: imageUrl.isNotEmpty
@@ -72,8 +83,6 @@ void showImageContent(BuildContext context, String postId) {
                                   ),
                           ),
                           const SizedBox(width: 16),
-
-                          // ✅ 오른쪽: 제목 & 내용 & 카테고리
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,8 +121,6 @@ void showImageContent(BuildContext context, String postId) {
                         ],
                       ),
                     ),
-
-                    // ✅ 삭제 및 닫기 버튼
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -123,12 +130,10 @@ void showImageContent(BuildContext context, String postId) {
                               Icons.favorite,
                               color: Colors.red,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10),
                             Text(reactions.toString()),
                           ],
                         ),
-
-                        // 삭제 버튼
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -138,7 +143,7 @@ void showImageContent(BuildContext context, String postId) {
                                     .collection("posts")
                                     .doc(postId)
                                     .delete();
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(true); // ✅ 삭제 성공 시 true 반환
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -153,11 +158,9 @@ void showImageContent(BuildContext context, String postId) {
                                       fontSize: 16, color: Colors.white)),
                             ),
                             const SizedBox(width: 8),
-
-                            // 닫기 버튼
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(false); // ✅ 닫기 시 false 반환
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -183,5 +186,6 @@ void showImageContent(BuildContext context, String postId) {
         },
       );
     },
-  );
+  ) ?? false; // 🔹 기본값 false 반환
 }
+

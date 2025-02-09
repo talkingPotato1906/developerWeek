@@ -72,4 +72,19 @@ class GetUserData with ChangeNotifier {
       print("닉네임 업데이트 실패: $e");
     }
   }
+
+  // 프로필 업데이트 기능
+  Future<void> updateProfile(int newProfileIndex) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+      if (uid.isEmpty) return;
+
+      await FirebaseFirestore.instance.collection("users").doc(uid).update({"profileIdx": newProfileIndex});
+
+      userData["profileIdx"] = newProfileIndex;
+      notifyListeners();
+    } catch (e) {
+      print("프로필 인덱스 업데이트 실패: $e");
+    }
+  }
 }

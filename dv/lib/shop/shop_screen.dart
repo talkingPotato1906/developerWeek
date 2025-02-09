@@ -44,55 +44,57 @@ class _ShopScreenState extends State<ShopScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: loginProvider.isLoggedIn
-                ? Consumer<UserPointsProvider>(
-                    builder: (context, provider, child) {
-                      if (provider.isLoading) {
-                        return Center(
-                          child: Column(
-                            children: [
-                              CircularProgressIndicator(), // 🔹 로딩 표시
-                              SizedBox(height: 10),
-                              Text("포인트 데이터를 불러오는 중입니다...")
-                            ],
-                          ),
-                        );
-                      }
-                      return Container(
-                        width: double.infinity,
-                        height: 100,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.confirmation_num_outlined,
-                              size: 24,
-                              color: ColorPalette
-                                  .palette[themeProvider.selectedThemeIndex][0],
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "보유 포인트: ${provider.points}", // ✅ 데이터 표시
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: ColorPalette.palette[
-                                    themeProvider.selectedThemeIndex][0],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  )
-                : SizedBox(),
+            child: Consumer<LogInProvider>(
+             builder: (context, loginProvider, child) {
+             return Column(
+               children: [
+                 if (loginProvider.isLoggedIn)
+                 Consumer<UserPointsProvider>(
+                 builder: (context, provider, child) {
+                 if (provider.isLoading) {
+                  return Center(
+                    child: Column(
+                     children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10),
+                      Text("포인트 데이터를 불러오는 중입니다..."),
+                    ],
+                  ),
+                );
+              }
+              return Container(
+                width: double.infinity,
+                height: 100,
+                alignment: Alignment.center,
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.confirmation_num_outlined,
+                        size: 24, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                    SizedBox(width: 8),
+                    Text(
+                      "보유 포인트: ${provider.points}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+      ],
+    );
+  },
+),
+
           ),
           Expanded(
             child: ListView.builder(
