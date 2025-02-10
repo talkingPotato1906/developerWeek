@@ -149,7 +149,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             ), // 이미지를 꽉 차게 조정
                           ),
                         ),
-                        const SizedBox(width: 50), // 이미지와 텍스트 간격
+                        const SizedBox(width: 70), // 이미지와 텍스트 간격
                         // 텍스트 (title, subtitle)
                         Expanded(
                           child: Column(
@@ -177,6 +177,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             ],
                           ),
                         ),
+                        SizedBox(width: 10,),
                         loginProvider.isLoggedIn
                             ? isPurchased
                                 // 🔹 구매 완료된 경우
@@ -208,6 +209,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                   )
                             : SizedBox(), // 🔹 로그아웃 상태일 경우 아무것도 표시하지 않음
+                      SizedBox(width: 10,)
                       ],
                     ),
                   ),

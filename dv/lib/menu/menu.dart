@@ -9,7 +9,6 @@ import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/shop/shop_screen.dart';
-import 'package:dv/shop/user_points_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -186,6 +186,6 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
         },
       );
     },
-  ) ?? false; // 🔹 기본값 false 반환
+  );
 }
 

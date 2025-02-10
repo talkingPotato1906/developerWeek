@@ -1,6 +1,5 @@
 import 'package:dv/main.dart';
 import 'package:dv/settings/language/language_provider.dart';
-import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

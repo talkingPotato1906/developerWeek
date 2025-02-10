@@ -1,5 +1,4 @@
 import 'package:dv/firebase_login/signup_login_screen.dart';
-import 'package:dv/login/login_page.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
