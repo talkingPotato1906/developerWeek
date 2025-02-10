@@ -1,5 +1,6 @@
 //Firebase와 연동하여 비밀번호 확인 및 사용자 데이터를 삭제
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/firebase_login/signup_login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,25 @@ Future<void> deleteUser(BuildContext context, String password) async {
 
     await user.reauthenticateWithCredential(credential);
 
+   
+
     // 🔹 Firestore 데이터 삭제
     await FirebaseFirestore.instance.collection("users").doc(user.uid).delete();
 
     // 🔹 Firebase Storage 데이터 삭제 (예: 프로필 사진)
-    final storageRef = FirebaseStorage.instance.ref();
-    await storageRef.child("profile_images/${user.uid}/").delete();
+    final storageRef = FirebaseStorage.instance.ref().child("profile_images/${user.uid}/");
+    ListResult files = await storageRef.listAll();
+    for (var file in files.items) {
+      await file.delete();
+    }
 
     // 🔹 사용자 계정 삭제
     await user.delete();
+
+     // Authentication 강제 삭제
+    await FirebaseAuth.instance.signOut();
+
+  
 
     // 성공 메시지
     ScaffoldMessenger.of(context).showSnackBar(
@@ -37,7 +48,9 @@ Future<void> deleteUser(BuildContext context, String password) async {
     );
 
     // 회원탈퇴 후 화면 이동 (예: 로그인 화면)
-    Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.pushReplacement(context,
+      MaterialPageRoute(builder: (context) => LoginScreen(),)
+    );
   } catch (e) {
     print("🔥 회원탈퇴 실패: $e");
   }
