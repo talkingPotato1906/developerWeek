@@ -27,18 +27,14 @@ class AuthService with ChangeNotifier {
         "posts": [],
         "gallery": [],
         "following": [],
-        "profile": "assets/profile/default.png",
+        "profile": ["assets/profile/default.png"],
         "trophy": ["새싹"],
         "purchasedItem": ["assets/profile/default.png"],
         "profileIdx": 0,
         "trophyIdx": 0,
         "category": 0,
       });
-      await FirebaseFirestore.instance.collection("users").doc(uid).set({
-        "nickname": email,
-        "points": 100, // 초기 포인트
-        "purchasedItems": [], // 🔹 구매한 아이템 목록 초기화
-      });
+      
 
       return uid;
     } catch (e) {
