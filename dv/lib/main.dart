@@ -58,7 +58,8 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => GetUserData(),
-        )
+        ),
+        ChangeNotifierProvider(create: (context) => FollowProvider(),)
       ],
       child: const MyApp(),
     ),

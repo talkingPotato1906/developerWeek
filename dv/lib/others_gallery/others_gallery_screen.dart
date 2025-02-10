@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
+import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class OthersGalleryScreen extends StatefulWidget {
   final String othersUid;
@@ -16,6 +19,7 @@ class OthersGalleryScreen extends StatefulWidget {
 class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
   List<Map<String, dynamic>> posts = [];
   Map<String, dynamic> user = {};
+  List<dynamic> following = [];
   bool isLoading = true;
 
   @override
@@ -27,6 +31,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
   Future<void> fetchData() async {
     await fetchUser();
     await fetchPosts();
+    await fetchCurrentUserFollowing();
     setState(() {
       isLoading = false;
     });
@@ -65,6 +70,24 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
     });
   }
 
+  Future<void> fetchCurrentUserFollowing() async {
+    String currentUid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUid)
+        .get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> currentUserData =
+          documentSnapshot.data() as Map<String, dynamic>;
+      setState(
+        () {
+          following = List<dynamic>.from(currentUserData["following"] ?? []);
+        },
+      );
+    }
+  }
+
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return DateFormat("yyyy-MM-dd HH:mm").format(dateTime);
@@ -72,6 +95,8 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final followProvider = Provider.of<FollowProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -90,28 +115,57 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                   children: [
                     //  프로필
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(24.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundImage: user["profile"].isNotEmpty
-                                ? NetworkImage(user["profile"][user["profileIdx"]]
-                                    )
-                                : null,
-                            child: user["profile"].isEmpty
-                                ? Icon(
-                                    Icons.person,
-                                    size: 30,
-                                  )
-                                : null,
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage: user["profile"].isNotEmpty
+                                    ? NetworkImage(
+                                        user["profile"][user["profileIdx"]])
+                                    : null,
+                                child: user["profile"].isEmpty
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 30,
+                                      )
+                                    : null,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                user["nickname"],
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Text(
-                            user["nickname"],
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
+                          widget.othersUid !=
+                                  FirebaseAuth.instance.currentUser!.uid
+                              ? SizedBox()
+                              : ElevatedButton(
+                                  onPressed: () async {
+                                    if (!following.contains(posts[0]["uid"])) {
+                                      await followProvider
+                                          .follow(posts[0]["uid"]);
+                                    } else {
+                                      await followProvider
+                                          .unfollow(posts[0]["uid"]);
+                                    }
+
+                                    // 🔹 최신 팔로우 목록을 가져오고 UI 업데이트
+                                    await fetchCurrentUserFollowing();
+                                    setState(() {}); // UI 강제 업데이트
+                                  },
+                                  child: Text(
+                                      following.contains(posts[0]["uid"])
+                                          ? "언팔로우"
+                                          : "팔로우"),
+                                )
                         ],
                       ),
                     ),
@@ -141,44 +195,46 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                               ),
                             ),
                             Divider(),
-                            Expanded(child: posts.isEmpty
-                                ? Center(child: CircularProgressIndicator())
-                                : ListView.builder(
-                                    itemCount: posts.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      var post = posts[index];
-                                      return Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryPostScreen(
-                                                              postId:
-                                                                  post["id"],
-                                                              title: post[
-                                                                  "title"]),
-                                                    ));
-                                              },
-                                              child: Text(post["title"],
-                                                  style: TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                            Text(formatTimestamp(
-                                                post["createdAt"]))
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),),
+                            Expanded(
+                              child: posts.isEmpty
+                                  ? Center(child: CircularProgressIndicator())
+                                  : ListView.builder(
+                                      itemCount: posts.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        var post = posts[index];
+                                        return Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CategoryPostScreen(
+                                                                postId:
+                                                                    post["id"],
+                                                                title: post[
+                                                                    "title"]),
+                                                      ));
+                                                },
+                                                child: Text(post["title"],
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                              Text(formatTimestamp(
+                                                  post["createdAt"]))
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

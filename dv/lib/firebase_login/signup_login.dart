@@ -43,7 +43,7 @@ class AuthService with ChangeNotifier {
   }
 
   // 로그인
-  Future<String?> login(String email, String password) async {
+  Future<String?> login(String email, String password, BuildContext context) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -51,9 +51,10 @@ class AuthService with ChangeNotifier {
       );
       return userCredential.user?.uid;
     } catch (e) {
-      return "ERROR: ${e.toString()}";
-    }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일 또는 비밀번호가 틀렸습니다.")));
+      return null;
   }
+}
 
   // 로그아웃
   Future<void> logout(BuildContext context) async {
