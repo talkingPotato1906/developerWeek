@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/firebase_login/get_user_data.dart';
+import 'package:dv/mypage/choose_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,6 @@ void showEditProfile(BuildContext context) {
 
   bool isEditing = false;
 
-
   showDialog(
     context: context,
     builder: (context) {
@@ -63,34 +63,32 @@ void showEditProfile(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             children: [
               // 🔹 프로필 이미지 영역
-
               GestureDetector(
-                onTap: () async {
-                  await updateProfileImage(context); // 🔹 이미지 업로드 함수 호출
-                  setState(() {}); // 다이얼로그 다시 그리기
+                onTap: () {
+                  // 🔹 구매한 프로필 선택 다이얼로그 호출
+                  showProfileSelection(context); // choose_profile.dart의 함수 호출
                 },
                 child: Stack(
-                  alignment: Alignment.center, // 아이콘을 중앙에 배치
+                  alignment: Alignment.center,
                   children: [
                     // 🔹 프로필 사진
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: profiles.isEmpty
-                          ? AssetImage("assets/default.png") // 기본 이미지
-                          : NetworkImage(profiles[0])
-                              as ImageProvider, // Firestore에서 가져온 이미지 URL
+                          ? AssetImage("assets/default.png")
+                          : NetworkImage(profiles[0]) as ImageProvider,
                     ),
-                    // 🔹 반투명 연필 아이콘
+                    // 🔹 연필 아이콘 오버레이
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4), // 반투명한 검은색 오버레이
+                        color: Colors.black.withOpacity(0.4),
                         shape: BoxShape.circle,
                       ),
-                      width: 100, // 오버레이 크기
+                      width: 100,
                       height: 100,
                       child: Icon(
-                        Icons.edit, // 연필 아이콘
-                        color: Colors.white.withOpacity(0.8), // 연한 흰색 아이콘
+                        Icons.edit,
+                        color: Colors.white.withOpacity(0.8),
                         size: 30,
                       ),
                     ),
@@ -119,7 +117,7 @@ void showEditProfile(BuildContext context) {
                               ),
                               onFieldSubmitted: (value) {
                                 if (value.isNotEmpty && value != nickname) {
-                                  getUserData.updateNickname(value); // 닉네임 업데이트
+                                  getUserData.updateNickname(value);
                                 }
                                 setState(() {
                                   isEditing = false;
