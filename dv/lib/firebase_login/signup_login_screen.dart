@@ -8,30 +8,7 @@ import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(), // 테마 프로바이더 등록
-      child: const MyApp(),
-    ),
-  );
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Firebase Auth',
-      theme: themeProvider.getTheme(), // 선택된 테마 적용
-      home: LoginScreen(),
-    );
-  }
-}
 
 // 🔹 로그인 화면
 class LoginScreen extends StatefulWidget {
@@ -52,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = passwordController.text.trim();
     final loginProvider = Provider.of<LogInProvider>(context, listen: false);
 
-    String? result = await authService.login(email, password);
+    String? result = await authService.login(email, password, context);
     if (result != null && !result.contains("ERROR")) {
       loginProvider.login(email);
       Navigator.pushReplacement(
@@ -61,8 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (context) => LoginSuccessPage(email: email),
         ),
       );
-    } else {
-      setState(() => errorMessage = result ?? "로그인 실패");
     }
   }
 
