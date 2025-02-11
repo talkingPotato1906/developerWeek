@@ -3,6 +3,7 @@ import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/login/login_provider.dart'; //로그인 파트
 import 'package:dv/menu/menu.dart';
+import 'package:dv/mypage/favorite_category/category_provider.dart';
 import 'package:dv/nickname/nickname_provider.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -59,8 +60,10 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => GetUserData(),
         ),
-        ChangeNotifierProvider(create: (context) => FollowProvider(),)
+        ChangeNotifierProvider(create: (context) => FollowProvider(),),
+        ChangeNotifierProvider(create: (context) => CategoryProvider(),)
       ],
+      
       child: const MyApp(),
     ),
   );
