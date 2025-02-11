@@ -52,19 +52,26 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
             .doc(postData!["uid"])
             .get();
 
-        if (userSnapshot.exists) {
-          setState(() {
-            userData = userSnapshot.data() as Map<String, dynamic>;
-            isLoading = false;
-          });
-        }
+        setState(() {
+          userData = userSnapshot.exists
+              ? userSnapshot.data() as Map<String, dynamic>
+              : null;
+          isLoading = false; // ✅ 여기를 추가하여 탈퇴한 유저도 UI 업데이트가 되도록 처리
+        });
       } else {
         setState(() {
+          postData = null;
+          userData = null;
           isLoading = false;
         });
       }
     } catch (e) {
-      print("Error fetching data: $e");
+      print("🔥 Error fetching data: $e");
+      setState(() {
+        postData = null;
+        userData = null;
+        isLoading = false;
+      });
     }
   }
 
@@ -187,6 +194,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
   @override
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context, listen: false);
+    bool isDeletedUser = userData == null; // 탈퇴한 유저 여부 판단
 
     return Scaffold(
       appBar: AppBar(
@@ -194,121 +202,120 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
       ),
       floatingActionButton: FloatingMenuButton(),
       body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : postData == null || userData == null
-              ? Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
+          : postData == null
+              ? Center(child: Text("존재하지 않는 게시글입니다."))
               : SingleChildScrollView(
                   padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //  작성자 프로필, 닉네임
+                      // 👤 작성자 정보 (탈퇴한 유저 처리)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
                               CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: userData!["profile"]
-                                          .isNotEmpty
-                                      ? NetworkImage(
-                                          userData!["profile"] is List<dynamic>
-                                              ? userData!["profile"][0]
-                                              : userData!["profile"])
-                                      : null,
-                                  child: userData!["profile"].isEmpty
-                                      ? Icon(
-                                          Icons.person,
-                                          size: 30,
-                                        )
-                                      : null),
-                              SizedBox(
-                                width: 10,
+                                radius: 30,
+                                backgroundImage: !isDeletedUser &&
+                                        userData!.containsKey("profile") &&
+                                        userData!["profile"].isNotEmpty
+                                    ? NetworkImage(userData!["profile"])
+                                    : null,
+                                child: isDeletedUser ||
+                                        !userData!.containsKey("profile") ||
+                                        userData!["profile"].isEmpty
+                                    ? Icon(Icons.person, size: 30)
+                                    : null,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OthersGalleryScreen(
-                                                othersUid: postData!["uid"]),
-                                      ));
-                                },
-                                child: Text(
-                                  userData!["nickname"],
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
+                              SizedBox(width: 10),
+                              isDeletedUser
+                                  ? Text(
+                                      "탈퇴한 유저",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OthersGalleryScreen(
+                                                      othersUid:
+                                                          postData!["uid"]),
+                                            ));
+                                      },
+                                      child: Text(
+                                        userData!["nickname"],
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                             ],
                           ),
-                          _auth.currentUser!.uid == postData!["uid"]
-                              ? SizedBox()
-                              : ElevatedButton(
-                                  onPressed: () async {
-                                    if (!following.contains(postData!["uid"])) {
-                                      await followProvider
-                                          .follow(postData!["uid"]);
-                                    } else {
-                                      await followProvider
-                                          .unfollow(postData!["uid"]);
-                                    }
+                          if (!isDeletedUser &&
+                              _auth.currentUser!.uid != postData!["uid"])
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (!following.contains(postData!["uid"])) {
+                                  await followProvider.follow(postData!["uid"]);
+                                } else {
+                                  await followProvider
+                                      .unfollow(postData!["uid"]);
+                                }
 
-                                    // 🔹 최신 팔로우 목록을 가져오고 UI 업데이트
-                                    await fetchCurrentUserFollowing();
-                                    setState(() {}); // UI 강제 업데이트
-                                  },
-                                  child: Text(
-                                      following.contains(postData!["uid"])
-                                          ? "언팔로우"
-                                          : "팔로우"),
-                                )
+                                await fetchCurrentUserFollowing();
+                                setState(() {});
+                              },
+                              child: Text(following.contains(postData!["uid"])
+                                  ? "언팔로우"
+                                  : "팔로우"),
+                            ),
                         ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      //  게시글
+                      SizedBox(height: 20),
+                      // 📝 게시글 내용
                       Text(
                         postData!["title"],
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                      Text(formatTimestamp(postData!["createdAt"]),
-                          style: TextStyle(fontSize: 12)),
-                      SizedBox(
-                        height: 10,
+                      Text(
+                        postData!.containsKey("createdAt") &&
+                                postData!["createdAt"] != null
+                            ? formatTimestamp(postData!["createdAt"])
+                            : "작성 날짜 없음",
+                        style: TextStyle(fontSize: 12),
                       ),
-                      postData!["imageUrl"] != null
+                      SizedBox(height: 10),
+                      postData!.containsKey("imageUrl") &&
+                              postData!["imageUrl"] != null
                           ? Image.network(postData!["imageUrl"],
                               fit: BoxFit.contain, width: double.infinity)
                           : Container(),
-
                       SizedBox(height: 20),
-                      Text(postData!["content"],
-                          style: TextStyle(fontSize: 16)),
-                      SizedBox(
-                        height: 20,
+                      Text(
+                        postData!.containsKey("content")
+                            ? postData!["content"]
+                            : "내용 없음",
+                        style: TextStyle(fontSize: 16),
                       ),
+                      SizedBox(height: 20),
+                      // ❤️ 좋아요 버튼
                       Row(
                         children: [
                           GestureDetector(
                             onTap: _handleLike,
                             child: Icon(
                               Icons.favorite,
-                              color: _isLiked
-                                  ? Colors.red
-                                  : Colors.grey, // 누르면 빨간색
+                              color: _isLiked ? Colors.red : Colors.grey,
                             ),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          SizedBox(width: 5),
                           Text(postData!['reactions'].toString(),
                               style: TextStyle(fontSize: 16)),
                         ],
