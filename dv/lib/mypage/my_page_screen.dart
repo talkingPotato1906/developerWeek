@@ -1,5 +1,6 @@
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/mypage/favorite_category/favorite_category.dart';
 import 'package:dv/mypage/my_page_edit.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/setting_screen.dart';
@@ -179,89 +180,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
                   const SizedBox(height: 20), // 버튼과 박스 사이 간격
                   //새로운 박스 추가 
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: ColorPalette.palette[themeProvider.selectedThemeIndex][1],
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isExpanded=!isExpanded;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 28,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "즐겨찾기 목록",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: ColorPalette.palette[themeProvider.selectedThemeIndex][2],
-                              ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              isExpanded ? Icons.expand_less : Icons.expand_more,
-                              color: Colors.grey,
-                            ),
-                            ],
-                          ),
-                        ),
-
-                        if(isExpanded)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("식물"),
-                                  Divider(color: Colors.grey),
-                                  Text("식기"),
-                                  Divider(color: Colors.grey),
-                                  Text("원석"),
-                                  Divider(color: Colors.grey),
-                                  Text("책"),
-                                  Divider(color: Colors.grey),
-                                  Text("피규어"),
-                                ],
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-
-
-
-
-
-                  //////
-
+                  FavoriteCategory()
                 ],
               ),
             ),
