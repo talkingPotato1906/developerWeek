@@ -1,20 +1,24 @@
 //갤러리 UI 구성
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../image_provider.dart';
 import 'showroom_grid_item.dart';
 
+
+
 Widget showroomBody(BuildContext context) {
   final provider = Provider.of<ImageProviderClass>(context);
+  final languageProvider=Provider.of<LanguageProvider>(context);
   final selectedImages = provider.selectedImages;
 
   if (selectedImages.isEmpty) {
     return Center(
       child: Text(
-        "갤러리가 비어있습니다",
+        languageProvider.getLanguage(message: "갤러리가 비어있습니다"),
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
+      )
     );
   }
 

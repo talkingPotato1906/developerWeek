@@ -38,7 +38,7 @@ class _ShopScreenState extends State<ShopScreen> {
         Provider.of<LogInProvider>(context, listen: false); // 로그인 상태 감지
 
     return Scaffold(
-      appBar: AppBar(title: Text("포인트 상점")),
+      appBar: AppBar(title: Text(languageProvider.getLanguage(message: "포인트 상점"),)),
       floatingActionButton: FloatingMenuButton(), //  메뉴 버튼
       body: Column(
         children: [
@@ -78,7 +78,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         size: 24, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
                     SizedBox(width: 8),
                     Text(
-                      "보유 포인트: ${provider.points}",
+                      "${languageProvider.getLanguage(message: "보유 포인트")}: ${provider.points}",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
