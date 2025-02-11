@@ -19,7 +19,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
               content: const Text("데이터를 불러오는 중 오류가 발생했습니다."),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false), // 🔹 false 반환
+                  onPressed: () =>
+                      Navigator.of(context).pop(false), // 🔹 false 반환
                   child: const Text("확인"),
                 ),
               ],
@@ -32,7 +33,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
               content: const Text("게시글 데이터를 찾을 수 없습니다."),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false), // 🔹 false 반환
+                  onPressed: () =>
+                      Navigator.of(context).pop(false), // 🔹 false 반환
                   child: const Text("확인"),
                 ),
               ],
@@ -143,7 +145,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                     .collection("posts")
                                     .doc(postId)
                                     .delete();
-                                Navigator.of(context).pop(true); // ✅ 삭제 성공 시 true 반환
+                                Navigator.of(context)
+                                    .pop(true); // ✅ 삭제 성공 시 true 반환
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -160,7 +163,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                             const SizedBox(width: 8),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).pop(false); // ✅ 닫기 시 false 반환
+                                Navigator.of(context)
+                                    .pop(false); // ✅ 닫기 시 false 반환
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -188,4 +192,3 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
     },
   );
 }
-
