@@ -20,8 +20,10 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   void initState() {
     super.initState();
-    // 🔹 `initState()`에서 Firestore 데이터 불러오기
     Future.microtask(() {
+      // 🔹 아이템 초기화
+      Provider.of<ShopItemProvider>(context, listen: false).initialize();
+      // 🔹 유저 포인트 초기화
       Provider.of<UserPointsProvider>(context, listen: false).fetchUserPoints();
     });
   }
@@ -38,63 +40,69 @@ class _ShopScreenState extends State<ShopScreen> {
         Provider.of<LogInProvider>(context, listen: false); // 로그인 상태 감지
 
     return Scaffold(
-      appBar: AppBar(title: Text(languageProvider.getLanguage(message: "포인트 상점"),)),
+      appBar: AppBar(
+          title: Text(
+        languageProvider.getLanguage(message: "포인트 상점"),
+      )),
       floatingActionButton: FloatingMenuButton(), //  메뉴 버튼
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Consumer<LogInProvider>(
-             builder: (context, loginProvider, child) {
-             return Column(
-               children: [
-                 if (loginProvider.isLoggedIn)
-                 Consumer<UserPointsProvider>(
-                 builder: (context, provider, child) {
-                 if (provider.isLoading) {
-                  return Center(
-                    child: Column(
-                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 10),
-                      Text("포인트 데이터를 불러오는 중입니다..."),
-                    ],
-                  ),
-                );
-              }
-              return Container(
-                width: double.infinity,
-                height: 100,
-                alignment: Alignment.center,
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              builder: (context, loginProvider, child) {
+                return Column(
                   children: [
-                    Icon(Icons.confirmation_num_outlined,
-                        size: 24, color: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
-                    SizedBox(width: 8),
-                    Text(
-                      "${languageProvider.getLanguage(message: "보유 포인트")}: ${provider.points}",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
-                      ),
-                    ),
+                    if (loginProvider.isLoggedIn)
+                      Consumer<UserPointsProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoading) {
+                            return Center(
+                              child: Column(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(height: 10),
+                                  Text("포인트 데이터를 불러오는 중입니다..."),
+                                ],
+                              ),
+                            );
+                          }
+                          return Container(
+                            width: double.infinity,
+                            height: 100,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: ColorPalette
+                                  .palette[themeProvider.selectedThemeIndex][3],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.confirmation_num_outlined,
+                                    size: 24,
+                                    color: ColorPalette.palette[
+                                        themeProvider.selectedThemeIndex][0]),
+                                SizedBox(width: 8),
+                                Text(
+                                  "${languageProvider.getLanguage(message: "보유 포인트")}: ${provider.points}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorPalette.palette[
+                                        themeProvider.selectedThemeIndex][0],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
                   ],
-                ),
-              );
-            },
-          )
-      ],
-    );
-  },
-),
-
+                );
+              },
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -121,7 +129,6 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                       borderRadius: BorderRadius.circular(12), // 모서리 둥글게
                     ),
-                    //padding: EdgeInsets.all(12), // 내부 패딩 추가
                     margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,10 +153,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                            ), // 이미지를 꽉 차게 조정
+                            ),
                           ),
                         ),
                         const SizedBox(width: 70), // 이미지와 텍스트 간격
+
                         // 텍스트 (title, subtitle)
                         Expanded(
                           child: Column(
@@ -177,7 +185,9 @@ class _ShopScreenState extends State<ShopScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 10),
+
+                        // 구매 상태에 따른 UI 표시
                         loginProvider.isLoggedIn
                             ? isPurchased
                                 // 🔹 구매 완료된 경우
@@ -209,7 +219,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                   )
                             : SizedBox(), // 🔹 로그아웃 상태일 경우 아무것도 표시하지 않음
-                      SizedBox(width: 10,)
+                        SizedBox(width: 10),
                       ],
                     ),
                   ),
