@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +100,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider=Provider.of<LanguageProvider>(context);
      
      List<dynamic> profiles = List<dynamic>.from(userData["profile"] ?? []);
      int profileIndex = userData["profileIdx"] ?? 0;
@@ -115,7 +117,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(selectedCategory),
+        title: Text(languageProvider.getLanguage(message: selectedCategory),)//Text(selectedCategory),
       ),
       floatingActionButton: FloatingMenuButton(),
       body: Row(
@@ -138,7 +140,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 SizedBox(height: 10),
                 Text(nickname, style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
-                Text("▼ 카테고리", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                   languageProvider.getLanguage(message: "▼ 카테고리"),
+                  style: TextStyle(fontWeight: FontWeight.bold)
+                  ),
                 // 카테고리 버튼 리스트
                 ...categories.map((category) {
                   return GestureDetector(
@@ -162,7 +167,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          category,
+                          languageProvider.getLanguage(message: category),
                           style: TextStyle(
                             color: selectedCategory == category
                                 ? Colors.white
@@ -173,7 +178,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ),
                   );
-                }),
+                }).toList(),
               ],
             ),
           ),
@@ -191,7 +196,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         child: TextField(
                           controller: searchController,
                           decoration: InputDecoration(
-                            hintText: "검색...",
+                            hintText: languageProvider.getLanguage(message: "검색"),
                             border: OutlineInputBorder(),
                             suffixIcon: IconButton(
                               icon: Icon(Icons.clear),
@@ -226,12 +231,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("제목",
+                              Text(
+                                languageProvider.getLanguage(message: "제목"),
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
                               Row(
                                 children: [
-                                  Text("날짜",
+                                  Text(
+                                    languageProvider.getLanguage(message: "날짜"),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
                                   Icon(Icons.arrow_drop_down),
