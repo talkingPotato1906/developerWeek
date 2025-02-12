@@ -28,13 +28,12 @@ class AuthService with ChangeNotifier {
         "gallery": [],
         "following": [],
         "profile": ["assets/profile/default.png"],
-        "trophy": ["새싹"],
+        "trophy": ["assets/trophy/sprout.png"],
         "purchasedItem": ["assets/profile/default.png"],
         "profileIdx": 0,
         "trophyIdx": 0,
         "category": 0,
       });
-      
 
       return uid;
     } catch (e) {
@@ -43,7 +42,8 @@ class AuthService with ChangeNotifier {
   }
 
   // 로그인
-  Future<String?> login(String email, String password, BuildContext context) async {
+  Future<String?> login(
+      String email, String password, BuildContext context) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -51,10 +51,11 @@ class AuthService with ChangeNotifier {
       );
       return userCredential.user?.uid;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("이메일 또는 비밀번호가 틀렸습니다.")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("이메일 또는 비밀번호가 틀렸습니다.")));
       return null;
+    }
   }
-}
 
   // 로그아웃
   Future<void> logout(BuildContext context) async {
