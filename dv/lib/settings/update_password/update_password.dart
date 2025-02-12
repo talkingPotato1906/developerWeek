@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:dv/settings/language/language_provider.dart';
+import 'package:provider/provider.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
   @override
@@ -37,6 +39,8 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider=Provider.of<LanguageProvider>(context);
+
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -44,12 +48,12 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
         children: [
           TextField(
             controller: _newPasswordController,
-            decoration: InputDecoration(labelText: "새 비밀번호"),
+            decoration: InputDecoration(labelText: languageProvider.getLanguage(message: "새 비밀번호")),
             obscureText: true,
           ),
           TextField(
             controller: _confirmPasswordController,
-            decoration: InputDecoration(labelText: "비밀번호 확인"),
+            decoration: InputDecoration(labelText: languageProvider.getLanguage(message: "비밀번호 확인")),
             obscureText: true,
           ),
           const SizedBox(height: 20,),
@@ -60,12 +64,12 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
             String confirmPassword = _confirmPasswordController.text.trim();
             if (newPassword != confirmPassword) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("비밀번호가 일치하지 않습니다.")),
+                SnackBar(content: Text( languageProvider.getLanguage(message: "비밀번호가 일치하지 않습니다."))),
               );
               return;
             }
             updatePassword(newPassword);
-          }, child: Text("비밀번호 변경"))
+          }, child: Text(languageProvider.getLanguage(message: "비밀번호 변경")))
         ],
       )
     );

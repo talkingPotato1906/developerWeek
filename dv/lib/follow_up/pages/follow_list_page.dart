@@ -4,11 +4,15 @@ import 'package:provider/provider.dart';
 import '../providers/follow_provider.dart';
 import '../widgets/follow_list_item.dart';
 
+import 'package:dv/settings/language/language_provider.dart';
+
+
 class FollowListPage extends StatelessWidget {
   const FollowListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider=Provider.of<LanguageProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -17,7 +21,7 @@ class FollowListPage extends StatelessWidget {
           // ✅ Consumer로 감싸기
           builder: (context, provider, child) {
             if (provider.following.isEmpty) {
-              return Text("팔로우한 사람이 없습니다.");
+              return Text(languageProvider.getLanguage(message: "팔로우한 사람이 없습니다."),);
             }
       
             return Column(

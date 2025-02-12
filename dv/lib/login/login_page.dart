@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인"))),
+
       floatingActionButton: FloatingMenuButton(),
       body: Padding(
       padding: EdgeInsets.all(16.0),
@@ -75,6 +76,7 @@ class _LoginPageState extends State<LoginPage> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30),
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -139,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
+
               SizedBox(height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -160,6 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(width: 30,),
+                  
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacement(

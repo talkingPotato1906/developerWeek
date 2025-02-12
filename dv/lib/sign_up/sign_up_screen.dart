@@ -18,6 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final languageProvider =
@@ -27,6 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar:
           AppBar(title: Text(languageProvider.getLanguage(message: "회원가입"))),
+
       floatingActionButton: FloatingMenuButton(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -34,6 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.only(left: 30, right: 30),
+
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -43,19 +46,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     labelText: languageProvider.getLanguage(message: "이메일"),
                     labelStyle: TextStyle(
                         color: themeProvider
-                            .getTheme()
-                            .textTheme
-                            .bodyMedium
-                            ?.color),
-                    enabledBorder: UnderlineInputBorder(
+                        .getTheme()
+                        .textTheme
+                        .bodyMedium?.color
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
                           color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
+                              .palette[themeProvider.selectedThemeIndex][3],
+                              width: 1.5
+                              ),
                     ),
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
                           color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][2]),
+                              .palette[themeProvider.selectedThemeIndex][2],
+                              width: 2.0
+                              ),
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -98,6 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
+                
                 SizedBox(height: 28),
                 ElevatedButton(
                   onPressed: () {
@@ -139,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
                   child: Text(
-                    languageProvider.getLanguage(message: "회원가입"),
+                    languageProvider.getLanguage(message: "회원 가입"),
                     style: TextStyle(
                       color: ColorPalette
                           .palette[themeProvider.selectedThemeIndex][0],
