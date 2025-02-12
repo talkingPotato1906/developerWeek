@@ -29,7 +29,7 @@ class AuthService with ChangeNotifier {
         "following": [],
         "profile": ["assets/profile/default.png"],
         "trophy": ["assets/trophy/sprout.png"],
-        "purchasedItem": ["assets/profile/default.png"],
+        "purchasedItems": [],
         "profileIdx": 0,
         "trophyIdx": 0,
         "category": 0,
