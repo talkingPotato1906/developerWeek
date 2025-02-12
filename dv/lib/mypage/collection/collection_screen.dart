@@ -12,6 +12,8 @@ class CollectionScreen extends StatefulWidget {
 class _CollectionScreenState extends State<CollectionScreen> {
   List<String> trophies = [];
   List<String> profiles = [];
+  List<String> purchasedItems = []; // purchasedItems 변수 추가
+
   bool isLoading = true;
 
   @override
@@ -33,6 +35,8 @@ class _CollectionScreenState extends State<CollectionScreen> {
         setState(() {
           trophies = List<String>.from(data['trophy'] ?? []);
           profiles = List<String>.from(data['profile'] ?? []);
+          purchasedItems = List<String>.from(
+              data['purchasedItems'] ?? []); // purchasedItems 필드 추가
           isLoading = false;
         });
       }
@@ -59,7 +63,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, // 한 줄에 4개 표시 (칸 크기 조정)
+                  crossAxisCount: 8, // 한 줄에 4개 표시 (칸 크기 조정)
                   crossAxisSpacing: 4, // 칸 사이 간격 줄이기
                   mainAxisSpacing: 4, // 상하 간격 줄이기
                   childAspectRatio: 1, // 정사각형 칸 비율 유지
@@ -92,30 +96,52 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 },
               )
             : Center(child: Text("No trophies yet")),
+        // 구분선 추가
+        Divider(),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Profiles",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
-        profiles.isNotEmpty
+        purchasedItems.isNotEmpty
             ? GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
+                  crossAxisCount: 8, // 한 줄에 표시할 이미지 개수
+                  crossAxisSpacing: 3,
                   mainAxisSpacing: 8,
                 ),
-                itemCount: profiles.length,
+                itemCount: purchasedItems.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(profiles[index]),
-                    ),
+                  final itemName = purchasedItems[index];
+                  final imagePath =
+                      "assets/profile/$itemName.png"; // 로컬 이미지 경로 생성
+
+                  // 화면 크기 계산
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  final imageSize = (screenWidth / 8) - 30; // 이미지 크기 계산 (간격 포함)
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: imageSize, // 동적 너비
+                        height: imageSize, // 동적 높이
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(imagePath),
+                          backgroundColor:
+                              Colors.grey.shade200, // 에러 시 기본 배경색 설정
+                          onBackgroundImageError: (exception, stackTrace) {
+                            print('Error loading image: $imagePath');
+                          },
+                        ),
+                      ),
+                    ],
                   );
                 },
               )
-            : Center(child: Text("No profiles yet")),
+            : Center(child: Text("No purchased items yet")),
       ],
     );
   }
