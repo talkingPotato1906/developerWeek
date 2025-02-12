@@ -3,6 +3,7 @@ import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -295,7 +296,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton(onPressed: () {}, child: Text("1")),
+                            TextButton(onPressed: () {}, child: Text("1", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
                             TextButton(onPressed: () {}, child: Text("2")),
                             TextButton(onPressed: () {}, child: Text("3")),
                             TextButton(onPressed: () {}, child: Text("4")),

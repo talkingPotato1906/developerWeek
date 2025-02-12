@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/others_gallery/others_gallery_screen.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -194,6 +196,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
   @override
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     bool isDeletedUser = userData == null; // 탈퇴한 유저 여부 판단
 
     return Scaffold(
@@ -255,7 +258,8 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                                         userData!["nickname"],
                                         style: TextStyle(
                                             fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),
                                       ),
                                     ),
                             ],

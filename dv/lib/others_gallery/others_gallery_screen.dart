@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -96,6 +98,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
   @override
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -194,7 +197,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                                 ],
                               ),
                             ),
-                            Divider(),
+                            Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                             Expanded(
                               child: posts.isEmpty
                                   ? Center(child: CircularProgressIndicator())
@@ -225,10 +228,11 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                                                 },
                                                 child: Text(post["title"],
                                                     style: TextStyle(
-                                                        color: Colors.white)),
+                                                        color: ColorPalette.palette[themeProvider.selectedThemeIndex][3])),
                                               ),
                                               Text(formatTimestamp(
-                                                  post["createdAt"]))
+                                                  post["createdAt"]),
+                                                  style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)
                                             ],
                                           ),
                                         );
@@ -238,12 +242,12 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                TextButton(onPressed: () {}, child: Text("1")),
-                                TextButton(onPressed: () {}, child: Text("2")),
-                                TextButton(onPressed: () {}, child: Text("3")),
-                                TextButton(onPressed: () {}, child: Text("4")),
-                                TextButton(onPressed: () {}, child: Text("5")),
-                                TextButton(onPressed: () {}, child: Text("다음")),
+                                TextButton(onPressed: () {}, child: Text("1", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text("2", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text("3", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text("4", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text("5", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text("다음", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
                               ],
                             )
                           ],
