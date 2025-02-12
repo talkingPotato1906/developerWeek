@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ShowroomPage extends StatelessWidget {
@@ -7,6 +8,7 @@ class ShowroomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text("갤러리 전시"),
@@ -16,6 +18,7 @@ class ShowroomPage extends StatelessWidget {
         future: FirebaseFirestore.instance
             .collection("posts")
             .where("is_added_to_gallery", isEqualTo: true)
+            .where("uid", isEqualTo: currentUserUid)
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
