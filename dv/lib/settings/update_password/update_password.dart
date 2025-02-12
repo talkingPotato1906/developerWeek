@@ -1,16 +1,22 @@
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:provider/provider.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
+  const UpdatePasswordScreen({super.key});
+
   @override
   _UpdatePasswordScreenState createState() => _UpdatePasswordScreenState();
 }
 
 class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isLoading = false;
 
   Future<void> updatePassword(String newPassword) async {
@@ -22,14 +28,12 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await user.updatePassword(newPassword);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("비밀번호가 성공적으로 변경되었습니다."))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("비밀번호가 성공적으로 변경되었습니다.")));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("오류 발생"))
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("오류 발생")));
     } finally {
       setState(() {
         _isLoading = false;
@@ -39,6 +43,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final languageProvider=Provider.of<LanguageProvider>(context);
 
     return Padding(
@@ -73,5 +78,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
         ],
       )
     );
+
   }
 }

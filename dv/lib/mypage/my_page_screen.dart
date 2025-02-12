@@ -182,12 +182,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
                   const SizedBox(height: 20), // 버튼과 박스 사이 간격
                   //새로운 박스 추가 
-                  Divider(),
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   FavoriteCategory(),
-                  Divider(),
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   SizedBox(height: 300,
                   child: FollowListPage()),
-                  Divider(),
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   CollectionScreen()
                 ],
               ),

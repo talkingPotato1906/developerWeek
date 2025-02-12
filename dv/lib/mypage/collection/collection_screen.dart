@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key});
@@ -50,6 +53,8 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -97,7 +102,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
               )
             : Center(child: Text("No trophies yet")),
         // 구분선 추가
-        Divider(),
+        Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text("Profiles",
