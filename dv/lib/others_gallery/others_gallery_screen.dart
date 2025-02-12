@@ -144,7 +144,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                               ),
                             ],
                           ),
-                          widget.othersUid !=
+                          widget.othersUid ==
                                   FirebaseAuth.instance.currentUser!.uid
                               ? SizedBox()
                               : ElevatedButton(
