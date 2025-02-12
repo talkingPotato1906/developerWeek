@@ -1,6 +1,7 @@
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/follow_up/pages/follow_list_page.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/mypage/collection/collection_screen.dart';
 import 'package:dv/mypage/favorite_category/favorite_category.dart';
 import 'package:dv/mypage/my_page_edit.dart';
 import 'package:dv/settings/language/language_provider.dart';
@@ -187,7 +188,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   SizedBox(height: 300,
                   child: FollowListPage()),
                   Divider(),
-                  
+                  CollectionScreen()
                 ],
               ),
             ),
