@@ -3,6 +3,8 @@ import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/firebase_login/get_user_data.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/settings/language/language_provider.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -101,6 +103,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final languageProvider=Provider.of<LanguageProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
      
      List<dynamic> profiles = List<dynamic>.from(userData["profile"] ?? []);
      int profileIndex = userData["profileIdx"] ?? 0;
@@ -126,7 +129,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Container(
             width: 150,
             padding: EdgeInsets.all(12),
-            color: Colors.grey[200],
+            color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -138,11 +141,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Image.network(profiles[profileIndex]),
                 )),
                 SizedBox(height: 10),
-                Text(nickname, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(nickname, style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][1])),
                 SizedBox(height: 20),
                 Text(
                    languageProvider.getLanguage(message: "▼ 카테고리"),
-                  style: TextStyle(fontWeight: FontWeight.bold)
+                  style: TextStyle(fontWeight: FontWeight.bold, color: ColorPalette.palette[themeProvider.selectedThemeIndex][1])
                   ),
                 // 카테고리 버튼 리스트
                 ...categories.map((category) {
@@ -160,8 +163,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       margin: EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
                         color: selectedCategory == category
-                            ? Colors.blue
-                            : Colors.white,
+                            ? ColorPalette.palette[themeProvider.selectedThemeIndex][1]
+                            : ColorPalette.palette[themeProvider.selectedThemeIndex][4],
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.black26),
                       ),
@@ -170,8 +173,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           languageProvider.getLanguage(message: category),
                           style: TextStyle(
                             color: selectedCategory == category
-                                ? Colors.white
-                                : Colors.black,
+                                ? ColorPalette.palette[themeProvider.selectedThemeIndex][4]
+                                : ColorPalette.palette[themeProvider.selectedThemeIndex][1],
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -197,9 +200,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           controller: searchController,
                           decoration: InputDecoration(
                             hintText: languageProvider.getLanguage(message: "검색"),
-                            border: OutlineInputBorder(),
+                            hintStyle: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: ColorPalette.palette[themeProvider.selectedThemeIndex][4]
+                              )
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: ColorPalette.palette[themeProvider.selectedThemeIndex][2]
+                              )
+                            ),
+
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.clear),
+                              icon: Icon(Icons.clear, color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],),
                               onPressed: () {
                                 setState(() {
                                   searchQuery = "";
@@ -213,9 +227,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               searchQuery = query;
                             });
                           },
+                          style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][2]),
                         ),
                       ),
-                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
+                      IconButton(icon: Icon(Icons.search, color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],), onPressed: () {}),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -226,8 +241,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       children: [
                         // 헤더
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          color: Colors.grey[300],
+                          padding: EdgeInsets.all(13),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                         ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -241,13 +257,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     languageProvider.getLanguage(message: "날짜"),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
-                                  Icon(Icons.arrow_drop_down),
+                                  SizedBox(width: 45,),
+                                  Icon(Icons.arrow_drop_down, color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],),
                                 ],
                               ),
                             ],
                           ),
                         ),
-                        Divider(),
+                        Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
 
                         // 게시글 리스트 (검색 필터링 적용)
                         Expanded(
@@ -282,9 +299,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               },
                                               child:
                                                   Text(post["title"],
-                                                  style: TextStyle(color: Colors.white),), // 제목 표시
+                                                  style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3],), // 제목 표시
+                                            ),
                                             ),
                                             Text(formatTimestamp(post["createdAt"]))
+                                            
                                           ],
                                         ),
                                       );
