@@ -1,4 +1,5 @@
 import 'package:dv/firebase_login/get_user_data.dart';
+import 'package:dv/follow_up/pages/follow_list_page.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/mypage/favorite_category/favorite_category.dart';
 import 'package:dv/mypage/my_page_edit.dart';
@@ -180,7 +181,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
                   const SizedBox(height: 20), // 버튼과 박스 사이 간격
                   //새로운 박스 추가 
-                  FavoriteCategory()
+                  Divider(),
+                  FavoriteCategory(),
+                  Divider(),
+                  SizedBox(height: 300,
+                  child: FollowListPage())
                 ],
               ),
             ),

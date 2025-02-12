@@ -220,8 +220,11 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                                 radius: 30,
                                 backgroundImage: !isDeletedUser &&
                                         userData!.containsKey("profile") &&
+                                        userData!["profile"] is List &&
                                         userData!["profile"].isNotEmpty
-                                    ? NetworkImage(userData!["profile"])
+                                    ? NetworkImage(userData!["profile"][
+                                        (userData!["profileIdx"] ?? 0).clamp(0,
+                                            userData!["profile"].length - 1)])
                                     : null,
                                 child: isDeletedUser ||
                                         !userData!.containsKey("profile") ||
