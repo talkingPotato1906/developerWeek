@@ -34,10 +34,11 @@ class FollowProvider with ChangeNotifier {
               userSnapshot.data() as Map<String, dynamic>;
           followingList.add({
             "name": userData["nickname"] ?? "Unknown",
-            "profileImage": userData["profile"] != null &&
-                    (userData["profile"] as List).isNotEmpty
-                ? userData["profile"][userData["profileIdx"] ?? 0]
-                : "https://example.com/default_profile.jpg",
+            "profileImage":
+                (userData["profile"] is List && userData["profile"].isNotEmpty)
+                    ? userData["profile"][(userData["profileIdx"] ?? 0)
+                        .clamp(0, userData["profile"].length - 1)]
+                    : "https://example.com/default_profile.jpg",
             "uid": uid,
           });
         }
