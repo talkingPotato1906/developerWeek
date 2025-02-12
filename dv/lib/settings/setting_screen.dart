@@ -42,8 +42,11 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Column(
                 children: [
                   ThemeChanger(), //  테마 변경 위젯
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   LanguageChanger(), // 언어 변경 위젯
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   UpdatePasswordScreen(),
+                  Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
                   const SizedBox(height: 16), // 간격 추가
                 DeleteAccountButton(), // 🔹 회원탈퇴 버튼 추가
                 ],
