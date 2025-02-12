@@ -185,7 +185,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   FavoriteCategory(),
                   Divider(),
                   SizedBox(height: 300,
-                  child: FollowListPage())
+                  child: FollowListPage()),
+                  Divider(),
+                  
                 ],
               ),
             ),
