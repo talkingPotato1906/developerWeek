@@ -8,8 +8,6 @@ import 'package:dv/sign_up/sign_up_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 // 🔹 로그인 화면
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -189,11 +187,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             TextField(
               controller: emailController,
-              decoration: InputDecoration(labelText: "이메일"),
+              decoration: InputDecoration(
+                labelText: "이메일",
+                labelStyle: TextStyle(
+                  color: ColorPalette.palette[themeProvider.selectedThemeIndex]
+                      [3],
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color:
+                          ColorPalette.palette[themeProvider.selectedThemeIndex]
+                              [3]), // 기본 상태
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: ColorPalette
+                          .palette[themeProvider.selectedThemeIndex][3]),
+                ),
+              ),
             ),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: "비밀번호"),
+              decoration: InputDecoration(
+                labelText: "비밀번호",
+                labelStyle: TextStyle(
+                  color: ColorPalette.palette[themeProvider.selectedThemeIndex]
+                      [3],
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color:
+                          ColorPalette.palette[themeProvider.selectedThemeIndex]
+                              [3]), // 기본 상태
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: ColorPalette
+                          .palette[themeProvider.selectedThemeIndex][3]),
+                ),
+              ),
               obscureText: true,
             ),
             SizedBox(height: 10),
