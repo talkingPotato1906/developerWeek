@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FollowProvider with ChangeNotifier {
-  List<Map<String, String>> _following = [];
+  List<String> _following = [];
 
-  List<Map<String, String>> get following => _following;
+  List<String> get following => _following;
 
   FollowProvider() {
     _fetchFollowing();
@@ -20,31 +20,7 @@ class FollowProvider with ChangeNotifier {
         .get();
 
     if (userDoc.exists) {
-      List<String> followingUids =
-          List<String>.from(userDoc["following"] ?? []);
-
-      List<Map<String, String>> followingList = [];
-
-      for (String uid in followingUids) {
-        DocumentSnapshot userSnapshot =
-            await FirebaseFirestore.instance.collection("users").doc(uid).get();
-
-        if (userSnapshot.exists) {
-          Map<String, dynamic> userData =
-              userSnapshot.data() as Map<String, dynamic>;
-          followingList.add({
-            "name": userData["nickname"] ?? "Unknown",
-            "profileImage":
-                (userData["profile"] is List && userData["profile"].isNotEmpty)
-                    ? userData["profile"][(userData["profileIdx"] ?? 0)
-                        .clamp(0, userData["profile"].length - 1)]
-                    : "https://example.com/default_profile.jpg",
-            "uid": uid,
-          });
-        }
-      }
-
-      _following = followingList;
+      _following = List<String>.from(userDoc["following"] ?? []);
       notifyListeners();
     }
   }
@@ -60,23 +36,8 @@ class FollowProvider with ChangeNotifier {
       "following": FieldValue.arrayUnion([uid])
     });
 
-    // 팔로우한 유저의 정보 가져오기
-    DocumentSnapshot userSnapshot =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
-
-    if (userSnapshot.exists) {
-      Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
-      _following.add({
-        "name": userData["nickname"] ?? "Unknown",
-        "profileImage": userData["profile"] != null &&
-                (userData["profile"] as List).isNotEmpty
-            ? userData["profile"][userData["profileIdx"] ?? 0]
-            : "https://example.com/default_profile.jpg",
-        "uid": uid,
-      });
-      notifyListeners();
-    }
+    _following.add(uid);
+    notifyListeners();
   }
 
   // 언팔로우 기능 (Firestore 업데이트)
@@ -90,7 +51,7 @@ class FollowProvider with ChangeNotifier {
       "following": FieldValue.arrayRemove([uid])
     });
 
-    _following.removeWhere((user) => user["uid"] == uid);
+    _following.remove(uid);
     notifyListeners();
   }
 }

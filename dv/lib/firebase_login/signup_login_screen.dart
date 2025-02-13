@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final themeColors = ColorPalette.palette[themeProvider.selectedThemeIndex];
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: themeColors[0], // 배경색 변경
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextField(
                           controller: emailController,
                           decoration: InputDecoration(
-                            labelText: "이메일",
+                            labelText: languageProvider.getLanguage(message: "이메일"),
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
-                            labelText: "비밀번호",
+                            labelText: languageProvider.getLanguage(message: "비밀번호"),
                             border: OutlineInputBorder(),
                           ),
                           obscureText: true,
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 backgroundColor: themeColors[2], // 버튼 색상 변경
                               ),
                               onPressed: login,
-                              child: Text("로그인",
+                              child: Text(languageProvider.getLanguage(message: "로그인"),
                                   style: TextStyle(color: themeColors[3])),
                             ),
                             ElevatedButton(
@@ -122,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       builder: (context) => RegisterScreen()),
                                 );
                               },
-                              child: Text("회원가입",
+                              child: Text(languageProvider.getLanguage(message: "회원가입"),
                                   style: TextStyle(color: themeColors[3])),
                             ),
                           ],

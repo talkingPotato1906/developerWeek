@@ -58,7 +58,7 @@ class _FollowListItemState extends State<FollowListItem> {
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context);
 
-    final isFollowing = followProvider.following.any((user) => user["uid"] == widget.uid);
+    final isFollowing = followProvider.following.any((user) => user == widget.uid);
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
 

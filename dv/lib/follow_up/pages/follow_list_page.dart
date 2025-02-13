@@ -38,12 +38,12 @@ class FollowListPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final user = provider.following[index];
 
-                    if (user.isEmpty || !user.containsKey("uid")) {
+                    if (user.isEmpty) {
                       return SizedBox.shrink();
                     }
 
                     return FollowListItem(
-                      uid: user["uid"]!,
+                      uid: user,
                       color: Colors.red,
                     );
                   },

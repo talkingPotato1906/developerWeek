@@ -35,6 +35,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
     super.initState();
     fetchPostData();
     checkIfLiked();
+    fetchCurrentUserFollowing();
   }
 
   //  데이터 불러오기
