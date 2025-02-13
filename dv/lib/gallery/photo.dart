@@ -59,20 +59,22 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
             ? const Center(child: CircularProgressIndicator())
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                  crossAxisCount: 4,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0,
                 ),
                 itemCount: provider.images.length,
                 itemBuilder: (context, index) {
                   final imageData = provider.images[index];
-                  final String postId = imageData["postId"] ?? ""; // ✅ Firestore 문서 ID 사용
+                  final String postId =
+                      imageData["postId"] ?? ""; // ✅ Firestore 문서 ID 사용
                   bool isSelected = provider.selectedImages.contains(imageData);
 
                   return GestureDetector(
                     onTap: () async {
                       if (postId.isNotEmpty) {
-                        bool? deleted = await showImageContent(context, postId); // ✅ postId 기반으로 불러오기
+                        bool? deleted = await showImageContent(
+                            context, postId); // ✅ postId 기반으로 불러오기
                         if (deleted == true) {
                           setState(() {
                             provider.fetchUserPosts();
@@ -80,24 +82,61 @@ class _PhotoPageContentState extends State<PhotoPageContent> {
                         }
                       }
                     },
-                    child: Stack(
-                      children: [
-                        // ✅ Firestore에서 불러온 이미지 표시
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: imageData["imageUrl"] != ""
-                              ? Image.network(
-                                  imageData["imageUrl"],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                )
-                              : const Icon(Icons.image_not_supported),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0), // 둥근 네모 박스
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white, // 배경색 추가
+                          borderRadius: BorderRadius.circular(16.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 6,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
+                        child: Stack(
+                          children: [
+                            // ✅ Firestore에서 불러온 이미지 표시 (크기 조정)
+                            Align(
+                              alignment: Alignment.center,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        width: 1.0), // 검은색 테두리 추가
+                                  ),
+                                  child: imageData["imageUrl"] != ""
+                                      ? Image.network(
+                                          imageData["imageUrl"],
+                                          fit: BoxFit.contain,
+                                          width: double.infinity,
+                                          height: 300.0, // 주 이미지 크기 축소
+                                        )
+                                      : const Icon(Icons.image_not_supported),
+                                ),
+                              ),
+                            ),
 
-                        // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
-                        GalleryCheckOverlay(isSelected: isSelected),
-                      ],
+                            // ✅ 갤러리에 추가된 경우 체크 아이콘 표시
+                            GalleryCheckOverlay(isSelected: isSelected),
+
+                            // 추가된 bottom.png 이미지를 맨 아래에 표시
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Image.asset(
+                                'assets/bottom.png',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 40.0, // bottom.png 크기 유지
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
