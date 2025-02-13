@@ -34,70 +34,102 @@ class ShowroomPage extends StatelessWidget {
 
           final posts = snapshot.data!.docs;
 
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
-            ),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              final post = posts[index].data() as Map<String, dynamic>;
-              final imageUrl = post["imageUrl"] ?? "";
-              final title = post["title"] ?? "제목 없음";
-              final postId = posts[index].id; // 🔥 Firestore 문서 ID 가져오기
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = (constraints.maxWidth / 300).floor();
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount < 1 ? 1 : crossAxisCount,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index].data() as Map<String, dynamic>;
+                  final imageUrl = post["imageUrl"] ?? "";
+                  final title = post["title"] ?? "제목 없음";
+                  final postId = posts[index].id; // 🔥 Firestore 문서 ID 가져오기
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CategoryPostScreen(
-                        postId: postId, // 문서 ID 전달
-                        title: title, // 제목 전달
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryPostScreen(
+                            postId: postId, // 문서 ID 전달
+                            title: title, // 제목 전달
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(10.0)),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // 박스 배경색 추가
+                                  Container(
+                                    color: Colors.blueGrey[50], // 원하는 색상으로 변경
+                                  ),
+                                  AspectRatio(
+                                    aspectRatio: 1,
+                                    child: FractionallySizedBox(
+                                      widthFactor: 0.85,
+                                      heightFactor: 0.85,
+                                      child: imageUrl.isNotEmpty
+                                          ? Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Container(
+                                              color: Colors.grey[300],
+                                              child: const Center(
+                                                child: Text("이미지 없음"),
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                  AspectRatio(
+                                    aspectRatio: 1,
+                                    child: FractionallySizedBox(
+                                      widthFactor: 0.85,
+                                      heightFactor: 0.85,
+                                      child: Image.asset(
+                                        'showcase.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10.0)),
-                          child: imageUrl.isNotEmpty
-                              ? Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  color: Colors.grey[300],
-                                  child: const Center(
-                                    child: Text("이미지 없음"),
-                                  ),
-                                ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               );
             },
           );

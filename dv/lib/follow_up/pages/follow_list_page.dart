@@ -23,25 +23,29 @@ class FollowListPage extends StatelessWidget {
             if (provider.following.isEmpty) {
               return Text(languageProvider.getLanguage(message: "팔로우한 사람이 없습니다."),);
             }
-      
+
             return Column(
               children: [
-                
-                Text("팔로잉",),
-                SizedBox(height: 10,),
+                Text(
+                  "팔로잉",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: ScrollPhysics(),
                   itemCount: provider.following.length,
                   itemBuilder: (context, index) {
                     final user = provider.following[index];
-                      
+
                     if (user.isEmpty || !user.containsKey("uid")) {
                       return SizedBox.shrink();
                     }
-                      
+
                     return FollowListItem(
                       uid: user["uid"]!,
+                      color: Colors.red,
                     );
                   },
                 ),
