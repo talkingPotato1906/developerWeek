@@ -3,9 +3,11 @@ import 'dart:typed_data';
 
 import 'package:dv/firebase_upload/post_service.dart';
 import 'package:dv/gallery/image_provider.dart'; // ✅ ImageProviderClass 가져오기
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
+import 'package:flutter/foundation.dart'; // ✅ 웹과 모바일 환경 구분용
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // ✅ Provider 추가
-import 'package:flutter/foundation.dart'; // ✅ 웹과 모바일 환경 구분용
 
 Future<void> pickImageAndComment(
   BuildContext context, {
@@ -45,18 +47,21 @@ Future<void> pickImageAndComment(
       TextEditingController(text: existingContent ?? "");
 
   // ✅ 기본 카테고리 설정
-  String selectedCategory = existingCategory ?? "식물"; 
-
+  String selectedCategory = existingCategory ?? "식물";
+  final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
   final Map<String, String>? result = await showDialog<Map<String, String>>(
     context: context,
     builder: (context) {
       print("다이얼로그 열림!");
-      return StatefulBuilder( // ✅ 다이얼로그 내부에서 상태 변경을 가능하게 함
+      return StatefulBuilder(
+        // ✅ 다이얼로그 내부에서 상태 변경을 가능하게 함
         builder: (context, setState) {
           return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
+            backgroundColor:
+                ColorPalette.palette[themeProvider.selectedThemeIndex][0],
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height * 0.7, // ✅ 높이 증가
@@ -80,9 +85,15 @@ Future<void> pickImageAndComment(
                       controller: titleController,
                       decoration: InputDecoration(
                         labelText: "제목",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0), 
-                        ),
+                        labelStyle: TextStyle(
+                            color: ColorPalette
+                                .palette[themeProvider.selectedThemeIndex][4]),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide(
+                                color: ColorPalette.palette[
+                                    themeProvider.selectedThemeIndex][2],
+                                width: 1.5)),
                       ),
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
@@ -93,9 +104,15 @@ Future<void> pickImageAndComment(
                           controller: contentController,
                           decoration: InputDecoration(
                             labelText: "내용",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
+                            labelStyle: TextStyle(
+                                color: ColorPalette.palette[
+                                    themeProvider.selectedThemeIndex][4]),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide(
+                                    color: ColorPalette.palette[
+                                        themeProvider.selectedThemeIndex][2],
+                                    width: 1.5)),
                           ),
                           textAlignVertical: TextAlignVertical.top,
                           maxLines: null,
@@ -108,13 +125,22 @@ Future<void> pickImageAndComment(
                     // ✅ 카테고리 선택 Dropdown 추가
                     DropdownButtonFormField<String>(
                       value: selectedCategory,
+                      dropdownColor: ColorPalette.palette[
+                                        themeProvider.selectedThemeIndex][0],
                       decoration: InputDecoration(
                         labelText: "카테고리 선택",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
+                        labelStyle: TextStyle(
+                            color: ColorPalette
+                                .palette[themeProvider.selectedThemeIndex][4]),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide(
+                                color: ColorPalette.palette[
+                                    themeProvider.selectedThemeIndex][2],
+                                width: 1.5)),
                       ),
-                      items: ["식물", "식기", "주류", "원석", "책", "피규어"].map((String category) {
+                      items: ["식물", "식기", "주류", "원석", "책", "피규어"]
+                          .map((String category) {
                         return DropdownMenuItem<String>(
                           value: category,
                           child: Text(category),
@@ -122,14 +148,15 @@ Future<void> pickImageAndComment(
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          setState(() { // ✅ 변경 시 UI 업데이트
+                          setState(() {
+                            // ✅ 변경 시 UI 업데이트
                             selectedCategory = newValue;
                           });
                         }
                       },
                     ),
 
-                    SizedBox(height: 10), 
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: ElevatedButton(
@@ -142,12 +169,13 @@ Future<void> pickImageAndComment(
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          backgroundColor: ColorPalette
+                              .palette[themeProvider.selectedThemeIndex][2],
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
                         ),
-                        child:
-                            const Text("확인", style: TextStyle(color: Colors.white)),
+                        child: const Text("확인",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],
@@ -176,19 +204,15 @@ Future<void> pickImageAndComment(
     await postService.uploadPost(
       title: result["title"]!,
       content: result["content"]!,
-      imageFile: imageUrl ?? "", 
+      imageFile: imageUrl ?? "",
       category: result["category"]!, // ✅ 카테고리 포함하여 업로드
     );
     print("uploadPost 함수 호출!");
 
     imageProvider.addImage({
       "image": imageBytes,
-      "title": result["title"]!.isNotEmpty
-          ? result["title"]!
-          : "제목 없음",
-      "content": result["content"]!.isNotEmpty
-          ? result["content"]!
-          : "내용 없음",
+      "title": result["title"]!.isNotEmpty ? result["title"]! : "제목 없음",
+      "content": result["content"]!.isNotEmpty ? result["content"]! : "내용 없음",
       "category": result["category"]!, // ✅ 카테고리 추가
     });
   }
