@@ -19,21 +19,23 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       TextEditingController();
   bool _isLoading = false;
 
-  Future<void> updatePassword(String newPassword) async {
+  Future<void> updatePassword(String newPassword, BuildContext context) async {
     setState(() {
       _isLoading = true;
     });
+
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await user.updatePassword(newPassword);
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("비밀번호가 성공적으로 변경되었습니다.")));
+            .showSnackBar(SnackBar(content: Text(languageProvider.getLanguage(message: "비밀번호가 성공적으로 변경되었습니다."))));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("오류 발생")));
+          .showSnackBar(SnackBar(content: Text(languageProvider.getLanguage(message: "오류"))));
     } finally {
       setState(() {
         _isLoading = false;
@@ -44,12 +46,13 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final languageProvider=Provider.of<LanguageProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextField(
             controller: _newPasswordController,
@@ -64,7 +67,12 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
           const SizedBox(height: 20,),
           _isLoading
           ? Center(child: CircularProgressIndicator(),)
-          : ElevatedButton(onPressed: () {
+          : ElevatedButton(
+            style: ButtonStyle(
+              foregroundColor: WidgetStateProperty.all(ColorPalette.palette[themeProvider.selectedThemeIndex][3]),
+              backgroundColor: WidgetStateProperty.all(ColorPalette.palette[themeProvider.selectedThemeIndex][2])
+            ),
+            onPressed: () {
             String newPassword = _newPasswordController.text.trim();
             String confirmPassword = _confirmPasswordController.text.trim();
             if (newPassword != confirmPassword) {
@@ -73,7 +81,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               );
               return;
             }
-            updatePassword(newPassword);
+            updatePassword(newPassword, context);
           }, child: Text(languageProvider.getLanguage(message: "비밀번호 변경")))
         ],
       )
