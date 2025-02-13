@@ -63,8 +63,10 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(languageProvider.getLanguage(message: "로그인"))),
+
       floatingActionButton: FloatingMenuButton(),
       body: Padding(
+
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -93,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: ColorPalette
                               .palette[themeProvider.selectedThemeIndex][2]),
                     ),
+
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -134,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
+
                 SizedBox(height: 28),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -177,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                               .palette[themeProvider.selectedThemeIndex][0],
                           fontSize: 18,
                         ),
+
                       ),
                     ),
                   ],

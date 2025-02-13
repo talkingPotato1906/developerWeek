@@ -19,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+
   // FocusNode를 변수로 저장하여 상태 유지
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
@@ -32,6 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar:
           AppBar(title: Text(languageProvider.getLanguage(message: "회원가입"))),
+
       floatingActionButton: FloatingMenuButton(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -39,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.only(left: 30, right: 30),
+
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -49,19 +52,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     labelText: languageProvider.getLanguage(message: "이메일"),
                     labelStyle: TextStyle(
-                      color: Color(0xFFefe3c2),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
+
+                        color: themeProvider
+                        .getTheme()
+                        .textTheme
+                        .bodyMedium?.color
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: Color(0xFFefe3c2), // 기본 테두리 색상 (테스트용)
-                        width: 2.0,
-                      ),
+                          color: ColorPalette
+                              .palette[themeProvider.selectedThemeIndex][3],
+                              width: 1.5
+                              ),
+
                     ),
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
+
+                          color: ColorPalette
+                              .palette[themeProvider.selectedThemeIndex][2],
+                              width: 2.0
+                              ),
+
                         color: Color(0xFFefe3c2), // 포커스 시 테두리 색상
                         width: 2.0,
                       ),
+
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -98,6 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   obscureText: true,
                 ),
+                
                 SizedBox(height: 28),
                 ElevatedButton(
                   onPressed: () {
@@ -137,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
                   child: Text(
-                    languageProvider.getLanguage(message: "회원가입"),
+                    languageProvider.getLanguage(message: "회원 가입"),
                     style: TextStyle(
                       color: ColorPalette
                           .palette[themeProvider.selectedThemeIndex][0],
