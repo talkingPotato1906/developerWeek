@@ -16,7 +16,7 @@ Widget showroomBody(BuildContext context) {
   if (selectedImages.isEmpty) {
     return Center(
       child: Text(
-        languageProvider.getLanguage(message: "갤러리가 비어있습니다"),
+        languageProvider.getLanguage(message: languageProvider.getLanguage(message: "전시할 게시물이 없습니다.")),
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       )
     );

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dv/firebase_upload/post_service.dart';
 import 'package:dv/gallery/image_provider.dart'; // ✅ ImageProviderClass 가져오기
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/foundation.dart'; // ✅ 웹과 모바일 환경 구분용
@@ -49,6 +50,7 @@ Future<void> pickImageAndComment(
   // ✅ 기본 카테고리 설정
   String selectedCategory = existingCategory ?? "식물";
   final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+  final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
   final Map<String, String>? result = await showDialog<Map<String, String>>(
     context: context,
     builder: (context) {
@@ -84,7 +86,7 @@ Future<void> pickImageAndComment(
                     TextField(
                       controller: titleController,
                       decoration: InputDecoration(
-                        labelText: "제목",
+                        labelText: languageProvider.getLanguage(message: "제목"),
                         labelStyle: TextStyle(
                             color: ColorPalette
                                 .palette[themeProvider.selectedThemeIndex][4]),
@@ -103,7 +105,7 @@ Future<void> pickImageAndComment(
                         child: TextField(
                           controller: contentController,
                           decoration: InputDecoration(
-                            labelText: "내용",
+                            labelText: languageProvider.getLanguage(message: "내용"),
                             labelStyle: TextStyle(
                                 color: ColorPalette.palette[
                                     themeProvider.selectedThemeIndex][4]),
@@ -128,7 +130,7 @@ Future<void> pickImageAndComment(
                       dropdownColor: ColorPalette.palette[
                                         themeProvider.selectedThemeIndex][0],
                       decoration: InputDecoration(
-                        labelText: "카테고리 선택",
+                        labelText: languageProvider.getLanguage(message: "카테고리 선택"),
                         labelStyle: TextStyle(
                             color: ColorPalette
                                 .palette[themeProvider.selectedThemeIndex][4]),
@@ -174,7 +176,7 @@ Future<void> pickImageAndComment(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
                         ),
-                        child: const Text("확인",
+                        child: Text(languageProvider.getLanguage(message: "확인"),
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

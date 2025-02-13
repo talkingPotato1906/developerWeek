@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
+import 'package:dv/settings/language/language_changer.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ShowroomPage extends StatelessWidget {
   const ShowroomPage({super.key});
@@ -9,9 +12,10 @@ class ShowroomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("갤러리 전시"),
+        title: Text(languageProvider.getLanguage(message: "갤러리")),
       ),
       body: FutureBuilder<QuerySnapshot>(
         // Firestore 쿼리: is_added_to_gallery가 true인 데이터만 가져오기
@@ -25,11 +29,11 @@ class ShowroomPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return const Center(child: Text("데이터를 가져오는 중 오류가 발생했습니다."));
+            return Center(child: Text(languageProvider.getLanguage(message: "게시글을 불러오는 도중 오류가 발생했습니다.")));
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("전시할 게시물이 없습니다."));
+            return Center(child: Text(languageProvider.getLanguage(message: "전시할 게시물이 없습니다.")));
           }
 
           final posts = snapshot.data!.docs;
@@ -47,7 +51,7 @@ class ShowroomPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final post = posts[index].data() as Map<String, dynamic>;
                   final imageUrl = post["imageUrl"] ?? "";
-                  final title = post["title"] ?? "제목 없음";
+                  final title = post["title"] ?? languageProvider.getLanguage(message: "제목 없음");
                   final postId = posts[index].id; // 🔥 Firestore 문서 ID 가져오기
 
                   return GestureDetector(
@@ -92,8 +96,8 @@ class ShowroomPage extends StatelessWidget {
                                             )
                                           : Container(
                                               color: Colors.grey[300],
-                                              child: const Center(
-                                                child: Text("이미지 없음"),
+                                              child: Center(
+                                                child: Text(languageProvider.getLanguage(message: "이미지 없음")),
                                               ),
                                             ),
                                     ),

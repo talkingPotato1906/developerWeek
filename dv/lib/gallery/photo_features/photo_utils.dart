@@ -14,13 +14,13 @@ void showMaxSelectionWarning(BuildContext context) {
     builder: (context) {
       return AlertDialog(
         backgroundColor: themeProvider.getTheme().colorScheme.surface,
-        title: Text(languageProvider.getLanguage(message: "갤러리 선택 제한")),
+        title: Text(languageProvider.getLanguage(message: languageProvider.getLanguage(message: "갤러리 선택 제한"))),
         content: Text(
-            languageProvider.getLanguage(message: "최대 9개의 전시품만 선택할 수 있습니다.")),
+            languageProvider.getLanguage(message: languageProvider.getLanguage(message: "최대 9개의 전시품만 선택할 수 있습니다."))),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text("확인"),
+            child: Text(languageProvider.getLanguage(message: "확인")),
           ),
         ],
       );

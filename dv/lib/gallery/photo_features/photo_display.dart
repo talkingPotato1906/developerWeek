@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_changer.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -22,17 +23,18 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
           return FutureBuilder<DocumentSnapshot>(
             future: fetchPost(),
             builder: (context, snapshot) {
+              final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
                 return AlertDialog(
-                  title: const Text("오류"),
-                  content: const Text("데이터를 불러오는 중 오류가 발생했습니다."),
+                  title: Text(languageProvider.getLanguage(message: "오류")),
+                  content: Text(languageProvider.getLanguage(message: "게시글을 불러오는 도중 오류가 발생했습니다.")),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text("확인"),
+                      child: Text(languageProvider.getLanguage(message: "확인")),
                     ),
                   ],
                 );
@@ -40,21 +42,21 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
 
               if (!snapshot.hasData || snapshot.data == null) {
                 return AlertDialog(
-                  title: const Text("오류"),
-                  content: const Text("게시글 데이터를 찾을 수 없습니다."),
+                  title: Text(languageProvider.getLanguage(message: "오류")),
+                  content: Text(languageProvider.getLanguage(message: "게시글을 불러오는 도중 오류가 발생했습니다.")),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text("확인"),
+                      child: Text(languageProvider.getLanguage(message: "확인")),
                     ),
                   ],
                 );
               }
 
               var postData = snapshot.data!.data() as Map<String, dynamic>;
-              String title = postData["title"] ?? "제목 없음";
-              String content = postData["content"] ?? "내용 없음";
-              String category = postData["category"] ?? "일반";
+              String title = postData["title"] ?? languageProvider.getLanguage(message: "제목 없음");
+              String content = postData["content"] ?? languageProvider.getLanguage(message: "내용 없음");
+              String category = postData["category"] ?? languageProvider.getLanguage(message: "일반");
               String imageUrl = postData["imageUrl"] ?? "";
               int reactions = postData["reactions"] ?? 0;
               bool isAddedToGallery = postData['is_added_to_gallery'] ?? false;
@@ -105,8 +107,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                                     .width *
                                                 0.4,
                                             color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],
-                                            child: const Center(
-                                                child: Text("이미지 없음")),
+                                            child: Center(
+                                                child: Text(languageProvider.getLanguage(message: "이미지 없음"))),
                                           ),
                                   ),
                                   // 카테고리
@@ -121,7 +123,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
-                                        "카테고리: $category",
+                                        category,
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                     ),
@@ -226,7 +228,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                           },
                                         ),
                                         Text(
-                                          "갤러리에 추가",
+                                          languageProvider.getLanguage(message: "갤러리에 추가"),
                                           style: TextStyle(fontSize: 14),
                                           selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
                                         ),
@@ -249,7 +251,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 12),
                                         ),
-                                        child: Text("삭제",selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
+                                        child: Text(languageProvider.getLanguage(message: "삭제"),selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
                                       ),
                                       const SizedBox(width: 8),
                                       ElevatedButton(
@@ -261,7 +263,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 12),
                                         ),
-                                        child: Text("닫기",selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
+                                        child: Text(languageProvider.getLanguage(message: "닫기"),selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
                                       ),
                                     ],
                                   ),

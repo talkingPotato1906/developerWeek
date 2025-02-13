@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/gallery/photo_features/photo_display.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void showEditImageDialog(BuildContext context, String postId) {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -11,17 +13,18 @@ void showEditImageDialog(BuildContext context, String postId) {
       return FutureBuilder<DocumentSnapshot>(
         future: firestore.collection("posts").doc(postId).get(),
         builder: (context, snapshot) {
+          final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return AlertDialog(
-              title: const Text("오류"),
-              content: const Text("게시글을 불러오는 중 오류가 발생했습니다."),
+              title: Text(languageProvider.getLanguage(message: "오류")),
+              content: Text(languageProvider.getLanguage(message: "게시글을 불러오는 도중 오류가 발생했습니다.")),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("확인"),
+                  child: Text(languageProvider.getLanguage(message: "확인")),
                 ),
               ],
             );
@@ -30,9 +33,9 @@ void showEditImageDialog(BuildContext context, String postId) {
           // ✅ Firestore에서 데이터 가져오기
           var postData = snapshot.data!.data() as Map<String, dynamic>;
           TextEditingController titleController =
-              TextEditingController(text: postData["title"] ?? "제목 없음");
+              TextEditingController(text: postData["title"] ?? languageProvider.getLanguage(message: "제목 없음"));
           TextEditingController contentController =
-              TextEditingController(text: postData["content"] ?? "내용 없음");
+              TextEditingController(text: postData["content"] ?? languageProvider.getLanguage(message: "내용 없음"));
 
           return Dialog(
             shape: RoundedRectangleBorder(
@@ -51,7 +54,7 @@ void showEditImageDialog(BuildContext context, String postId) {
                     TextField(
                       controller: titleController,
                       decoration: InputDecoration(
-                        labelText: "제목",
+                        labelText: languageProvider.getLanguage(message: "제목"),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -66,7 +69,7 @@ void showEditImageDialog(BuildContext context, String postId) {
                         child: TextField(
                           controller: contentController,
                           decoration: InputDecoration(
-                            labelText: "내용",
+                            labelText: languageProvider.getLanguage(message: "내용"),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -100,7 +103,7 @@ void showEditImageDialog(BuildContext context, String postId) {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
                         ),
-                        child: const Text("수정 완료",
+                        child: Text(languageProvider.getLanguage(message: "수정 완료"),
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),
