@@ -277,7 +277,7 @@ class LanguageList {
       "该帖子不存在。"
     ],
     "탈퇴한 유저": [
-      "Deleted user"
+      "Deleted user",
       "탈퇴한 유저",
       "退会したユーザー",
       "已注销用户"
