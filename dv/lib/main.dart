@@ -60,10 +60,13 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => GetUserData(),
         ),
-        ChangeNotifierProvider(create: (context) => FollowProvider(),),
-        ChangeNotifierProvider(create: (context) => CategoryProvider(),)
+        ChangeNotifierProvider(
+          create: (context) => FollowProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(),
+        )
       ],
-      
       child: const MyApp(),
     ),
   );

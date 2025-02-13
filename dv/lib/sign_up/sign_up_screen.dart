@@ -18,6 +18,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // FocusNode를 변수로 저장하여 상태 유지
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     final languageProvider =
@@ -37,25 +42,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // 이메일 입력창
                 TextFormField(
                   controller: emailController,
+                  focusNode: emailFocusNode, // FocusNode 적용
                   decoration: InputDecoration(
                     labelText: languageProvider.getLanguage(message: "이메일"),
                     labelStyle: TextStyle(
-                        color: themeProvider
-                            .getTheme()
-                            .textTheme
-                            .bodyMedium
-                            ?.color),
+                      color: Color(0xFFefe3c2),
+                    ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
+                        color: Color(0xFFefe3c2), // 기본 테두리 색상 (테스트용)
+                        width: 2.0,
+                      ),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][2]),
+                        color: Color(0xFFefe3c2), // 포커스 시 테두리 색상
+                        width: 2.0,
+                      ),
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -67,44 +73,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                // 비밀번호 입력창
                 TextFormField(
                   controller: passwordController,
+                  focusNode: passwordFocusNode, // FocusNode 적용
                   decoration: InputDecoration(
                     labelText: languageProvider.getLanguage(message: "비밀번호"),
                     labelStyle: TextStyle(
-                        color: themeProvider
-                            .getTheme()
-                            .textTheme
-                            .bodyMedium
-                            ?.color),
+                      color:
+                          themeProvider.getTheme().textTheme.bodyMedium?.color,
+                    ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][3]),
+                        color: Color(0xFFefe3c2), // 기본 테두리 색상 (테스트용)
+                        width: 2.0,
+                      ),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                          color: ColorPalette
-                              .palette[themeProvider.selectedThemeIndex][2]),
+                        color: Color(0xFFefe3c2), // 포커스 시 테두리 색상
+                        width: 2.0,
+                      ),
                     ),
                   ),
                   obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return languageProvider.getLanguage(
-                          message: "비밀번호를 입력하세요");
-                    }
-                    return null;
-                  },
                 ),
                 SizedBox(height: 28),
                 ElevatedButton(
                   onPressed: () {
                     String signUpMessage = signUpRules(emailController.text,
                             passwordController.text.toLowerCase())
-                        .keys.first;
-                        
+                        .keys
+                        .first;
                     bool signUpSuccess = signUpRules(emailController.text,
                         passwordController.text.toLowerCase())[signUpMessage]!;
 
@@ -116,12 +116,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 email: emailController.text)),
                       );
                     } else {
-                      setState(
-                        () {
-                          emailController.clear();
-                          passwordController.clear();
-                        },
-                      );
+                      setState(() {
+                        emailController.clear();
+                        passwordController.clear();
+                      });
                       Future.delayed(Duration(milliseconds: 300), () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
