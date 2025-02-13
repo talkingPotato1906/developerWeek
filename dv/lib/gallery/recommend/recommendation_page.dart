@@ -1,3 +1,4 @@
+import 'package:dv/gallery/recommend/recommend_screen.dart';
 import 'package:flutter/material.dart';
 
 class RecommendationPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class RecommendationPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("추천 페이지"),
       ),
-      body: RecommendationPage(),
+      body: RecommendScreen(),
     );
   }
 }

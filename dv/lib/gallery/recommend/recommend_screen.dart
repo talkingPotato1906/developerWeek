@@ -13,7 +13,7 @@ class RecommendScreen extends StatefulWidget {
 
 class _RecommendScreenState extends State<RecommendScreen> {
   List<Map<String, dynamic>> posts = [];
-  Map<String, dynamic>? userData; // userData를 nullable로 변경
+  Map<String, dynamic>? userData;
   bool isLoading = true;
 
   @override
@@ -26,85 +26,78 @@ class _RecommendScreenState extends State<RecommendScreen> {
     await fetchUser();
     await fetchPosts();
     if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
   Future<void> fetchUser() async {
     final getUserData = Provider.of<GetUserData>(context, listen: false);
-
     if (mounted) {
-      setState(() {
-        userData = Map<String, dynamic>.from(getUserData.userData);
-      });
+      userData = getUserData.userData;
     }
   }
 
   Future<void> fetchPosts() async {
-    if (userData == null || !userData!.containsKey("following")) {
-      return; // userData가 없으면 그냥 리턴
-    }
+    if (userData == null || !userData!.containsKey("following")) return;
+    List<dynamic> followingList = List<dynamic>.from(userData!["following"] ?? []);
+    if (followingList.isEmpty) return;
 
-    List<dynamic> followingList =
-        List<dynamic>.from(userData!["following"] ?? []);
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .where("uid", whereIn: followingList)
+          .orderBy("createdAt", descending: true)
+          .limit(50) // 게시물이 많아도 일정 개수 이상 표시되도록 수정
+          .get();
 
-    if (followingList.isEmpty) {
-      return; // 팔로우한 사람이 없으면 그냥 리턴
-    }
-
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('posts')
-        .where("uid", whereIn: followingList)
-        .orderBy("createdAt", descending: true)
-        .get();
-
-    if (mounted) {
-      setState(() {
-        posts = querySnapshot.docs.map((doc) {
-          return {
-            "id": doc.id,
-            "title": doc["title"],
-            "uid": doc["uid"],
-            "createdAt": doc["createdAt"],
-            "imageUrl": doc["imageUrl"],
-            "content": doc["content"],
-            "reactions": doc["reactions"]
-          };
-        }).toList();
-      });
+      if (mounted) {
+        setState(() {
+          posts = querySnapshot.docs.map((doc) {
+            return {
+              "id": doc.id,
+              "title": doc["title"],
+              "uid": doc["uid"],
+              "createdAt": doc["createdAt"],
+              "imageUrl": doc["imageUrl"],
+              "content": doc["content"],
+              "reactions": doc["reactions"]
+            };
+          }).toList();
+        });
+      }
+    } catch (e) {
+      print("Error fetching posts: $e");
     }
   }
 
-  String formatTimestamp(Timestamp timestamp) {
+  String formatTimestamp(Timestamp? timestamp) {
+    if (timestamp == null) return "Unknown date";
     DateTime dateTime = timestamp.toDate();
     return DateFormat("yyyy-MM-dd HH:mm").format(dateTime);
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Scaffold(body: Center(child: CircularProgressIndicator()))
-        : Scaffold(
-            appBar: AppBar(
-              title: Text("팔로우한 게시글"),
+    if (isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    return Scaffold(
+      appBar: AppBar(title: Text("팔로우한 게시글")),
+      body: userData == null || posts.isEmpty
+          ? Center(child: Text("게시글이 없습니다."))
+          : ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                var post = posts[index];
+                return ListTile(
+                  title: Text(post["title"] ?? "No Title"),
+                  subtitle: Text(formatTimestamp(post["createdAt"])),
+                  onTap: () {
+                    // 게시글 상세 페이지 이동 추가 가능
+                  },
+                );
+              },
             ),
-            body: userData == null || posts.isEmpty
-                ? Center(child: Text("게시글이 없습니다."))
-                : ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      var post = posts[index];
-                      return ListTile(
-                        title: Text(post["title"]),
-                        subtitle: Text(formatTimestamp(post["createdAt"])),
-                        onTap: () {
-                          // 게시글 상세 페이지로 이동하는 코드 추가 예정
-                        },
-                      );
-                    },
-                  ),
-          );
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dv/firebase_login/signup_login.dart';
 import 'package:dv/login/login_provider.dart';
 import 'package:dv/login/login_success_page.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_images.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
@@ -173,11 +174,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final themeColors = ColorPalette.palette[themeProvider.selectedThemeIndex];
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: themeColors[0], // 배경색 적용
       appBar: AppBar(
-        title: Text("회원가입", style: TextStyle(color: themeColors[3])),
+        title: Text(languageProvider.getLanguage(message: "회원가입"), style: TextStyle(color: themeColors[3])),
         backgroundColor: themeColors[1],
       ),
       body: Padding(
@@ -188,7 +190,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: "이메일",
+                labelText: languageProvider.getLanguage(message: "이메일"),
                 labelStyle: TextStyle(
                   color: ColorPalette.palette[themeProvider.selectedThemeIndex]
                       [3],
@@ -209,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField(
               controller: passwordController,
               decoration: InputDecoration(
-                labelText: "비밀번호",
+                labelText: languageProvider.getLanguage(message: "비밀번호"),
                 labelStyle: TextStyle(
                   color: ColorPalette.palette[themeProvider.selectedThemeIndex]
                       [3],
@@ -237,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 backgroundColor: themeColors[2], // 버튼 색상 변경
               ),
               onPressed: register,
-              child: Text("회원가입", style: TextStyle(color: themeColors[3])),
+              child: Text(languageProvider.getLanguage(message: "회원가입"), style: TextStyle(color: themeColors[3])),
             ),
           ],
         ),
