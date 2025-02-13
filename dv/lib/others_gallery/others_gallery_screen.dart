@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/category/category_post_screen.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/menu/menu.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,6 +100,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -166,8 +168,8 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                                   },
                                   child: Text(
                                       following.contains(posts[0]["uid"])
-                                          ? "언팔로우"
-                                          : "팔로우"),
+                                          ? languageProvider.getLanguage(message: "언팔로우")
+                                          : languageProvider.getLanguage(message: "팔로우")),
                                 )
                         ],
                       ),
@@ -183,12 +185,12 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("제목",
+                                  Text(languageProvider.getLanguage(message: "제목"),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
                                   Row(
                                     children: [
-                                      Text("날짜",
+                                      Text(languageProvider.getLanguage(message: "날짜"),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
                                       Icon(Icons.arrow_drop_down),
@@ -247,7 +249,7 @@ class _OthersGalleryScreenState extends State<OthersGalleryScreen> {
                                 TextButton(onPressed: () {}, child: Text("3", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
                                 TextButton(onPressed: () {}, child: Text("4", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
                                 TextButton(onPressed: () {}, child: Text("5", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
-                                TextButton(onPressed: () {}, child: Text("다음", style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
+                                TextButton(onPressed: () {}, child: Text(languageProvider.getLanguage(message: "다음"), style: TextStyle(color: ColorPalette.palette[themeProvider.selectedThemeIndex][3]),)),
                               ],
                             )
                           ],

@@ -14,18 +14,18 @@ void showPasswordDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text("비밀번호 확인"),
+        title: Text(languageProvider.getLanguage(message: "비밀번호 확인")),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("비밀번호를 입력해 회원탈퇴를 진행하세요."),
+            Text(languageProvider.getLanguage(message: "비밀번호를 입력해 회원탈퇴를 진행하세요.")),
             SizedBox(height: 10),
             TextField(
               controller: passwordController,
               obscureText: true, // 비밀번호 숨김
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "비밀번호",
+                labelText: languageProvider.getLanguage(message: "비밀번호"),
               ),
             ),
           ],
@@ -36,7 +36,7 @@ void showPasswordDialog(BuildContext context) {
             onPressed: () {
               Navigator.pop(context); // 다이얼로그 닫기
             },
-            child: Text("취소"),
+            child: Text(languageProvider.getLanguage(message: "취소")),
           ),
           // 확인 버튼
           ElevatedButton(
@@ -44,7 +44,7 @@ void showPasswordDialog(BuildContext context) {
               String password = passwordController.text;
               if (password.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("비밀번호를 입력해주세요.")),
+                  SnackBar(content: Text(languageProvider.getLanguage(message: "비밀번호를 입력하세요."))),
                 );
                 return;
               }
@@ -67,7 +67,7 @@ void showPasswordDialog(BuildContext context) {
                 MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
-            child: Text("확인"),
+            child: Text(languageProvider.getLanguage(message: "확인")),
           ),
         ],
       );

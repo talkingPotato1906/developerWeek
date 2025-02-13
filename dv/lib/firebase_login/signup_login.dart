@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/login/login_provider.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -43,7 +44,9 @@ class AuthService with ChangeNotifier {
 
   // 로그인
   Future<String?> login(
+    
       String email, String password, BuildContext context) async {
+        final languageProvider = Provider.of<LanguageProvider>(context);
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -52,7 +55,7 @@ class AuthService with ChangeNotifier {
       return userCredential.user?.uid;
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("이메일 또는 비밀번호가 틀렸습니다.")));
+          .showSnackBar(SnackBar(content: Text(languageProvider.getLanguage(message: "이메일 또는 비밀번호가 틀렸습니다."))));
       return null;
     }
   }

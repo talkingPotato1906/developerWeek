@@ -1,17 +1,20 @@
 //Firebase와 연동하여 비밀번호 확인 및 사용자 데이터를 삭제
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/firebase_login/signup_login_screen.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Future<void> deleteUser(BuildContext context, String password) async {
+  final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
   try {
     // 현재 로그인한 사용자 가져오기
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      throw Exception("사용자가 로그인되어 있지 않습니다.");
+      throw Exception(languageProvider.getLanguage(message: "사용자가 로그인되어 있지 않습니다."));
     }
 
     // 비밀번호로 사용자 인증
@@ -44,7 +47,7 @@ Future<void> deleteUser(BuildContext context, String password) async {
 
     // 성공 메시지
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("회원탈퇴가 완료되었습니다.")),
+      SnackBar(content: Text(languageProvider.getLanguage(message: "회원탈퇴가 완료되었습니다."))),
     );
 
     // 회원탈퇴 후 화면 이동 (예: 로그인 화면)

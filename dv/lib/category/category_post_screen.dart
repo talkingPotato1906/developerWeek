@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/follow_up/providers/follow_provider.dart';
 import 'package:dv/menu/menu.dart';
 import 'package:dv/others_gallery/others_gallery_screen.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -197,6 +198,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     bool isDeletedUser = userData == null; // 탈퇴한 유저 여부 판단
 
     return Scaffold(
@@ -207,7 +209,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : postData == null
-              ? Center(child: Text("존재하지 않는 게시글입니다."))
+              ? Center(child: Text(languageProvider.getLanguage(message: "존재하지 않는 게시글입니다.")))
               : SingleChildScrollView(
                   padding: EdgeInsets.all(16),
                   child: Column(
@@ -238,7 +240,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                               SizedBox(width: 10),
                               isDeletedUser
                                   ? Text(
-                                      "탈퇴한 유저",
+                                      languageProvider.getLanguage(message: "탈퇴한 유저"),
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
@@ -279,8 +281,8 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                                 setState(() {});
                               },
                               child: Text(following.contains(postData!["uid"])
-                                  ? "언팔로우"
-                                  : "팔로우"),
+                                  ? languageProvider.getLanguage(message: "언팔로우")
+                                  : languageProvider.getLanguage(message: "팔로우")),
                             ),
                         ],
                       ),
@@ -295,7 +297,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                         postData!.containsKey("createdAt") &&
                                 postData!["createdAt"] != null
                             ? formatTimestamp(postData!["createdAt"])
-                            : "작성 날짜 없음",
+                            : languageProvider.getLanguage(message: "작성 날짜 없음"),
                         style: TextStyle(fontSize: 12),
                       ),
                       SizedBox(height: 10),
@@ -308,7 +310,7 @@ class _CategoryPostScreenState extends State<CategoryPostScreen> {
                       Text(
                         postData!.containsKey("content")
                             ? postData!["content"]
-                            : "내용 없음",
+                            : languageProvider.getLanguage(message: "내용 없음"),
                         style: TextStyle(fontSize: 16),
                       ),
                       SizedBox(height: 20),

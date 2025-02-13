@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,13 +55,14 @@ class _CollectionScreenState extends State<CollectionScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Trophies",
+          child: Text(languageProvider.getLanguage(message: "트로피"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         trophies.isNotEmpty
@@ -100,12 +102,12 @@ class _CollectionScreenState extends State<CollectionScreen> {
                   );
                 },
               )
-            : Center(child: Text("No trophies yet")),
+            : Center(child: Text(languageProvider.getLanguage(message: "트로피가 없습니다."))),
         // 구분선 추가
         Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Profiles",
+          child: Text(languageProvider.getLanguage(message: "프로필"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         purchasedItems.isNotEmpty
@@ -146,7 +148,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                   );
                 },
               )
-            : Center(child: Text("No purchased items yet")),
+            : Center(child: Text(languageProvider.getLanguage(message: "구매한 프로필이 없습니다."))),
       ],
     );
   }

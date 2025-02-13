@@ -13,7 +13,6 @@ class GetUserData with ChangeNotifier {
       String uid = FirebaseAuth.instance.currentUser?.uid ?? ""; // 🔹 로그인 확인
       if (uid.isEmpty) return;
 
-      print("UID: $uid");
 
       DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -24,13 +23,7 @@ class GetUserData with ChangeNotifier {
         // 🔹 Firestore에서 포인트 값 가져오기 (기본값 0)
         points = userData["points"] ?? 0;
 
-        print("유저 데이터: $userData");
-        print("보유 포인트: $points"); // 디버깅 로그 추가
-      } else {
-        print("유저 데이터 없음");
-      }
-    } catch (e) {
-      print("데이터 가져오기 실패: $e");
+      } 
     } finally {
       isLoading = false;
       notifyListeners();
@@ -49,9 +42,9 @@ class GetUserData with ChangeNotifier {
 
       points = newPoints; // 🔹 로컬 변수도 업데이트
       notifyListeners();
-      print("포인트 업데이트 완료: $points");
+
     } catch (e) {
-      print("포인트 업데이트 실패: $e");
+
     }
   }
 
@@ -69,7 +62,7 @@ class GetUserData with ChangeNotifier {
       userData["nickname"] = newNickname;
       notifyListeners();
     } catch (e) {
-      print("닉네임 업데이트 실패: $e");
+
     }
   }
 
@@ -84,7 +77,7 @@ class GetUserData with ChangeNotifier {
       userData["profileIdx"] = newProfileIndex;
       notifyListeners();
     } catch (e) {
-      print("프로필 인덱스 업데이트 실패: $e");
+
     }
   }
 }

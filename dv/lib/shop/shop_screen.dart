@@ -62,7 +62,6 @@ class _ShopScreenState extends State<ShopScreen> {
                                 children: [
                                   CircularProgressIndicator(),
                                   SizedBox(height: 10),
-                                  Text("포인트 데이터를 불러오는 중입니다..."),
                                 ],
                               ),
                             );
@@ -192,7 +191,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             ? isPurchased
                                 // 🔹 구매 완료된 경우
                                 ? Text(
-                                    "품절", // 🔹 언어 프로바이더 제거 및 직접 텍스트 표시
+                                    languageProvider.getLanguage(message: "품절"), // 🔹 언어 프로바이더 제거 및 직접 텍스트 표시
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 16,

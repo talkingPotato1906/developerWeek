@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/follow_provider.dart';
@@ -57,6 +58,7 @@ class _FollowListItemState extends State<FollowListItem> {
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context);
     final isFollowing = followProvider.following.any((user) => user["uid"] == widget.uid);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
 
     if (!isFollowing) {
       return SizedBox.shrink();
@@ -74,7 +76,7 @@ class _FollowListItemState extends State<FollowListItem> {
                 followProvider.unfollow(widget.uid);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text("언팔로우", style: TextStyle(color: Colors.white)),
+              child: Text(languageProvider.getLanguage(message: "언팔로우"), style: TextStyle(color: Colors.white)),
             ),
           );
   }

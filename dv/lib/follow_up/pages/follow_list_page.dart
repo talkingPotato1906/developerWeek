@@ -27,7 +27,7 @@ class FollowListPage extends StatelessWidget {
             return Column(
               children: [
                 
-                Text("팔로잉",),
+                Text(languageProvider.getLanguage(message: "팔로잉"),),
                 SizedBox(height: 10,),
                 ListView.builder(
                   shrinkWrap: true,

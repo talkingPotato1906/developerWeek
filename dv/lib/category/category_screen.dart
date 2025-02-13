@@ -319,7 +319,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             TextButton(onPressed: () {}, child: Text("3")),
                             TextButton(onPressed: () {}, child: Text("4")),
                             TextButton(onPressed: () {}, child: Text("5")),
-                            TextButton(onPressed: () {}, child: Text("다음")),
+                            TextButton(onPressed: () {}, child: Text(languageProvider.getLanguage(message: "다음"))),
                           ],
                         ),
                       ],

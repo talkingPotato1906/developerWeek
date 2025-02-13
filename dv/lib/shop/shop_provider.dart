@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/language/language_changer.dart';
+import 'package:dv/settings/language/language_provider.dart';
 import 'package:dv/settings/theme/color_palette.dart';
 import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:dv/shop/shop_items.dart'; // 상품 리스트
@@ -109,6 +111,7 @@ class ShopItemProvider extends ChangeNotifier {
   // 🔹 포인트 부족 경고창
   void _showInsufficientPointsDialog(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -116,13 +119,13 @@ class ShopItemProvider extends ChangeNotifier {
           backgroundColor:
               ColorPalette.palette[themeProvider.selectedThemeIndex][0],
           title: Text(
-            "포인트 부족",
+            languageProvider.getLanguage(message: "포인트 부족"),
             style: TextStyle(
                 color: ColorPalette.palette[themeProvider.selectedThemeIndex]
                     [2]),
           ),
           content: Text(
-            "포인트가 부족하여 아이템을 구매할 수 없습니다.",
+            languageProvider.getLanguage(message: "포인트가 부족하여 아이템을 구매할 수 없습니다."),
             style: TextStyle(
                 color: ColorPalette.palette[themeProvider.selectedThemeIndex]
                     [3]),
@@ -133,7 +136,7 @@ class ShopItemProvider extends ChangeNotifier {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
               },
               child: Text(
-                "확인",
+                languageProvider.getLanguage(message: "확인"),
                 style: TextStyle(
                     color: ColorPalette
                         .palette[themeProvider.selectedThemeIndex][2]),

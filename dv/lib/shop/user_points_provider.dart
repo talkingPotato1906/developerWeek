@@ -18,7 +18,6 @@ class UserPointsProvider with ChangeNotifier {
 
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        print("❌ 유저가 로그인하지 않음");
         return;
       }
 
@@ -30,12 +29,7 @@ class UserPointsProvider with ChangeNotifier {
 
       if (userDoc.exists) {
         _points = userDoc["points"] ?? 0;
-        print("✅ Firestore에서 가져온 포인트: $_points");
-      } else {
-        print("❌ 유저 데이터 없음");
       }
-    } catch (e) {
-      print("🔥 Firestore에서 포인트 가져오기 실패: $e");
     } finally {
       _isLoading = false; // 🔹 로딩 완료
       notifyListeners();
@@ -53,11 +47,7 @@ class UserPointsProvider with ChangeNotifier {
 
       // 🔹 Firestore 값 업데이트 후 로컬 포인트만 갱신
       _points = newPoints;
-
-      print("✅ Firestore에서 포인트 업데이트 완료: $_points");
       notifyListeners(); // UI 업데이트
-    } catch (e) {
-      print("🔥 Firestore에서 포인트 업데이트 실패: $e");
-    }
+    } catch (e) {}
   }
 }
