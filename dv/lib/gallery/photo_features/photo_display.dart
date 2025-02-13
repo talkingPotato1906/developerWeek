@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dv/settings/theme/color_palette.dart';
+import 'package:dv/settings/theme/theme_changer.dart';
+import 'package:dv/settings/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Future<bool?> showImageContent(BuildContext context, String postId) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  
 
   return showDialog<bool>(
+    
     context: context,
     builder: (context) {
       return StatefulBuilder(
@@ -52,9 +58,10 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
               String imageUrl = postData["imageUrl"] ?? "";
               int reactions = postData["reactions"] ?? 0;
               bool isAddedToGallery = postData['is_added_to_gallery'] ?? false;
+              final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
               return Dialog(
-                backgroundColor: Colors.white,
+                backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
@@ -97,7 +104,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                                     .size
                                                     .width *
                                                 0.4,
-                                            color: Colors.grey[300],
+                                            color: ColorPalette.palette[themeProvider.selectedThemeIndex][4],
                                             child: const Center(
                                                 child: Text("이미지 없음")),
                                           ),
@@ -110,7 +117,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: Colors.blue.shade100,
+                                        color: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
@@ -136,7 +143,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                     ),
                                     const SizedBox(height: 8),
                                     // 구분선
-                                    Divider(color: Colors.grey[400]),
+                                    Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4]),
                                     const SizedBox(height: 8),
                                     // 내용
                                     Text(
@@ -159,7 +166,7 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             // 구분선
-                            Divider(color: Colors.grey[400]),
+                            Divider(color: ColorPalette.palette[themeProvider.selectedThemeIndex][4]),
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
@@ -190,8 +197,8 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                             BorderRadius.circular(16.0),
                                       ),
                                       backgroundColor: isAddedToGallery
-                                          ? Colors.green
-                                          : Colors.grey,
+                                          ?ColorPalette.palette[themeProvider.selectedThemeIndex][2]
+                                          : ColorPalette.palette[themeProvider.selectedThemeIndex][3],
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20, vertical: 12),
                                     ),
@@ -218,9 +225,10 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                             }
                                           },
                                         ),
-                                        const Text(
+                                        Text(
                                           "갤러리에 추가",
                                           style: TextStyle(fontSize: 14),
+                                          selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0],
                                         ),
                                       ],
                                     ),
@@ -237,11 +245,11 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                           Navigator.of(context).pop(true);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
+                                          backgroundColor:ColorPalette.palette[themeProvider.selectedThemeIndex][2],
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 12),
                                         ),
-                                        child: const Text("삭제"),
+                                        child: Text("삭제",selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][3])
                                       ),
                                       const SizedBox(width: 8),
                                       ElevatedButton(
@@ -249,11 +257,11 @@ Future<bool?> showImageContent(BuildContext context, String postId) async {
                                           Navigator.of(context).pop(false);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.grey,
+                                          backgroundColor: ColorPalette.palette[themeProvider.selectedThemeIndex][4],
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 12),
                                         ),
-                                        child: const Text("닫기"),
+                                        child: Text("닫기",selectionColor: ColorPalette.palette[themeProvider.selectedThemeIndex][0]),
                                       ),
                                     ],
                                   ),

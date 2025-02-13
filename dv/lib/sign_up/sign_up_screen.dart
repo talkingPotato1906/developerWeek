@@ -77,12 +77,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               width: 2.0
                               ),
 
-                        color: Color(0xFFefe3c2), // 포커스 시 테두리 색상
-                        width: 2.0,
+                        
                       ),
 
                     ),
-                  ),
+                  
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
