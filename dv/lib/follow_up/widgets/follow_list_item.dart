@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dv/settings/language/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/follow_provider.dart';
-import 'package:dv/firebase_login/get_user_data.dart';
 
 class FollowListItem extends StatefulWidget {
   final String uid;
 
-  const FollowListItem({super.key, required this.uid});
+  const FollowListItem({super.key, required this.uid, required Color color});
 
   @override
   _FollowListItemState createState() => _FollowListItemState();
@@ -57,8 +57,10 @@ class _FollowListItemState extends State<FollowListItem> {
   @override
   Widget build(BuildContext context) {
     final followProvider = Provider.of<FollowProvider>(context);
+
     final isFollowing = followProvider.following.any((user) => user["uid"] == widget.uid);
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+
 
     if (!isFollowing) {
       return SizedBox.shrink();
