@@ -39,3 +39,5 @@ Through this hackathon, we gained more than just technical skills. We learned:
 ✅ That if we have an idea, **we can build it ourselves**—we don’t have to wait for someone else to create it.  
 
 This was our first hackathon, but it won’t be our last. **Gallery for Mania is just the beginning! 🚀**
+
+p.s. We recommend to use this app on Chrome.
